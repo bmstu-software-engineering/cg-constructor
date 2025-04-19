@@ -12,8 +12,7 @@ part of 'point.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
-);
+    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
 Point _$PointFromJson(Map<String, dynamic> json) {
   return _Point.fromJson(json);
@@ -26,12 +25,8 @@ mixin _$Point {
   String get color => throw _privateConstructorUsedError;
   double get thickness => throw _privateConstructorUsedError;
 
-  /// Serializes this Point to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-
-  /// Create a copy of Point
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   $PointCopyWith<Point> get copyWith => throw _privateConstructorUsedError;
 }
 
@@ -53,8 +48,6 @@ class _$PointCopyWithImpl<$Res, $Val extends Point>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
-  /// Create a copy of Point
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -63,40 +56,32 @@ class _$PointCopyWithImpl<$Res, $Val extends Point>
     Object? color = null,
     Object? thickness = null,
   }) {
-    return _then(
-      _value.copyWith(
-            x:
-                null == x
-                    ? _value.x
-                    : x // ignore: cast_nullable_to_non_nullable
-                        as double,
-            y:
-                null == y
-                    ? _value.y
-                    : y // ignore: cast_nullable_to_non_nullable
-                        as double,
-            color:
-                null == color
-                    ? _value.color
-                    : color // ignore: cast_nullable_to_non_nullable
-                        as String,
-            thickness:
-                null == thickness
-                    ? _value.thickness
-                    : thickness // ignore: cast_nullable_to_non_nullable
-                        as double,
-          )
-          as $Val,
-    );
+    return _then(_value.copyWith(
+      x: null == x
+          ? _value.x
+          : x // ignore: cast_nullable_to_non_nullable
+              as double,
+      y: null == y
+          ? _value.y
+          : y // ignore: cast_nullable_to_non_nullable
+              as double,
+      color: null == color
+          ? _value.color
+          : color // ignore: cast_nullable_to_non_nullable
+              as String,
+      thickness: null == thickness
+          ? _value.thickness
+          : thickness // ignore: cast_nullable_to_non_nullable
+              as double,
+    ) as $Val);
   }
 }
 
 /// @nodoc
 abstract class _$$PointImplCopyWith<$Res> implements $PointCopyWith<$Res> {
   factory _$$PointImplCopyWith(
-    _$PointImpl value,
-    $Res Function(_$PointImpl) then,
-  ) = __$$PointImplCopyWithImpl<$Res>;
+          _$PointImpl value, $Res Function(_$PointImpl) then) =
+      __$$PointImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({double x, double y, String color, double thickness});
@@ -107,12 +92,9 @@ class __$$PointImplCopyWithImpl<$Res>
     extends _$PointCopyWithImpl<$Res, _$PointImpl>
     implements _$$PointImplCopyWith<$Res> {
   __$$PointImplCopyWithImpl(
-    _$PointImpl _value,
-    $Res Function(_$PointImpl) _then,
-  ) : super(_value, _then);
+      _$PointImpl _value, $Res Function(_$PointImpl) _then)
+      : super(_value, _then);
 
-  /// Create a copy of Point
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -121,42 +103,36 @@ class __$$PointImplCopyWithImpl<$Res>
     Object? color = null,
     Object? thickness = null,
   }) {
-    return _then(
-      _$PointImpl(
-        x:
-            null == x
-                ? _value.x
-                : x // ignore: cast_nullable_to_non_nullable
-                    as double,
-        y:
-            null == y
-                ? _value.y
-                : y // ignore: cast_nullable_to_non_nullable
-                    as double,
-        color:
-            null == color
-                ? _value.color
-                : color // ignore: cast_nullable_to_non_nullable
-                    as String,
-        thickness:
-            null == thickness
-                ? _value.thickness
-                : thickness // ignore: cast_nullable_to_non_nullable
-                    as double,
-      ),
-    );
+    return _then(_$PointImpl(
+      x: null == x
+          ? _value.x
+          : x // ignore: cast_nullable_to_non_nullable
+              as double,
+      y: null == y
+          ? _value.y
+          : y // ignore: cast_nullable_to_non_nullable
+              as double,
+      color: null == color
+          ? _value.color
+          : color // ignore: cast_nullable_to_non_nullable
+              as String,
+      thickness: null == thickness
+          ? _value.thickness
+          : thickness // ignore: cast_nullable_to_non_nullable
+              as double,
+    ));
   }
 }
 
 /// @nodoc
 @JsonSerializable()
 class _$PointImpl extends _Point with DiagnosticableTreeMixin {
-  const _$PointImpl({
-    required this.x,
-    required this.y,
-    this.color = '#000000',
-    this.thickness = 1.0,
-  }) : super._();
+  const _$PointImpl(
+      {required this.x,
+      required this.y,
+      this.color = '#000000',
+      this.thickness = 1.0})
+      : super._();
 
   factory _$PointImpl.fromJson(Map<String, dynamic> json) =>
       _$$PointImplFromJson(json);
@@ -188,9 +164,7 @@ class _$PointImpl extends _Point with DiagnosticableTreeMixin {
       ..add(DiagnosticsProperty('thickness', thickness));
   }
 
-  /// Create a copy of Point
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$PointImplCopyWith<_$PointImpl> get copyWith =>
@@ -198,17 +172,18 @@ class _$PointImpl extends _Point with DiagnosticableTreeMixin {
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$PointImplToJson(this);
+    return _$$PointImplToJson(
+      this,
+    );
   }
 }
 
 abstract class _Point extends Point {
-  const factory _Point({
-    required final double x,
-    required final double y,
-    final String color,
-    final double thickness,
-  }) = _$PointImpl;
+  const factory _Point(
+      {required final double x,
+      required final double y,
+      final String color,
+      final double thickness}) = _$PointImpl;
   const _Point._() : super._();
 
   factory _Point.fromJson(Map<String, dynamic> json) = _$PointImpl.fromJson;
@@ -221,11 +196,8 @@ abstract class _Point extends Point {
   String get color;
   @override
   double get thickness;
-
-  /// Create a copy of Point
-  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$PointImplCopyWith<_$PointImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

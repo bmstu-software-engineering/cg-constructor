@@ -1,6 +1,7 @@
 name: viewer
 description: "A new Flutter package project."
 version: 0.0.1
+publish_to: 'none'
 homepage:
 
 environment:
@@ -12,6 +13,8 @@ dependencies:
     sdk: flutter
   freezed_annotation: ^2.4.1
   json_annotation: ^4.8.1
+  models_ns:
+    path: ../models_ns
 
 dev_dependencies:
   flutter_test:

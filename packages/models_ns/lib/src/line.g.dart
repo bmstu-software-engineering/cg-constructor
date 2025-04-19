@@ -7,11 +7,11 @@ part of 'line.dart';
 // **************************************************************************
 
 _$LineImpl _$$LineImplFromJson(Map<String, dynamic> json) => _$LineImpl(
-  a: Point.fromJson(json['a'] as Map<String, dynamic>),
-  b: Point.fromJson(json['b'] as Map<String, dynamic>),
-  color: json['color'] as String? ?? '#000000',
-  thickness: (json['thickness'] as num?)?.toDouble() ?? 1.0,
-);
+      a: Point.fromJson(json['a'] as Map<String, dynamic>),
+      b: Point.fromJson(json['b'] as Map<String, dynamic>),
+      color: json['color'] as String? ?? '#000000',
+      thickness: (json['thickness'] as num?)?.toDouble() ?? 1.0,
+    );
 
 Map<String, dynamic> _$$LineImplToJson(_$LineImpl instance) =>
     <String, dynamic>{

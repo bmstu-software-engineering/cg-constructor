@@ -2,8 +2,8 @@ import 'dart:math';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:models_ns/models_ns.dart';
 
-import 'models/models.dart';
 import 'viewer_interface.dart';
 
 /// Реализация Viewer с использованием Canvas для отрисовки

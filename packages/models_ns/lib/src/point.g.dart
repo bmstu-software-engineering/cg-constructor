@@ -7,11 +7,11 @@ part of 'point.dart';
 // **************************************************************************
 
 _$PointImpl _$$PointImplFromJson(Map<String, dynamic> json) => _$PointImpl(
-  x: (json['x'] as num).toDouble(),
-  y: (json['y'] as num).toDouble(),
-  color: json['color'] as String? ?? '#000000',
-  thickness: (json['thickness'] as num?)?.toDouble() ?? 1.0,
-);
+      x: (json['x'] as num).toDouble(),
+      y: (json['y'] as num).toDouble(),
+      color: json['color'] as String? ?? '#000000',
+      thickness: (json['thickness'] as num?)?.toDouble() ?? 1.0,
+    );
 
 Map<String, dynamic> _$$PointImplToJson(_$PointImpl instance) =>
     <String, dynamic>{

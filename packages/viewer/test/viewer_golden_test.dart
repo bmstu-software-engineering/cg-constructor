@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:viewer/viewer.dart';
+import 'package:models_ns/models_ns.dart';
 
 import 'test_utils.dart';
 
