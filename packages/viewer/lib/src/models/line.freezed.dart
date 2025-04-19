@@ -176,13 +176,13 @@ class __$$LineImplCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$LineImpl with DiagnosticableTreeMixin implements _Line {
+class _$LineImpl extends _Line with DiagnosticableTreeMixin {
   const _$LineImpl({
     required this.a,
     required this.b,
     this.color = '#000000',
     this.thickness = 1.0,
-  });
+  }) : super._();
 
   factory _$LineImpl.fromJson(Map<String, dynamic> json) =>
       _$$LineImplFromJson(json);
@@ -214,22 +214,6 @@ class _$LineImpl with DiagnosticableTreeMixin implements _Line {
       ..add(DiagnosticsProperty('thickness', thickness));
   }
 
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$LineImpl &&
-            (identical(other.a, a) || other.a == a) &&
-            (identical(other.b, b) || other.b == b) &&
-            (identical(other.color, color) || other.color == color) &&
-            (identical(other.thickness, thickness) ||
-                other.thickness == thickness));
-  }
-
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  @override
-  int get hashCode => Object.hash(runtimeType, a, b, color, thickness);
-
   /// Create a copy of Line
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -244,13 +228,14 @@ class _$LineImpl with DiagnosticableTreeMixin implements _Line {
   }
 }
 
-abstract class _Line implements Line {
+abstract class _Line extends Line {
   const factory _Line({
     required final Point a,
     required final Point b,
     final String color,
     final double thickness,
   }) = _$LineImpl;
+  const _Line._() : super._();
 
   factory _Line.fromJson(Map<String, dynamic> json) = _$LineImpl.fromJson;
 

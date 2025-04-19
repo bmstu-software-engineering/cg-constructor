@@ -6,6 +6,8 @@ part 'point.g.dart';
 
 @freezed
 class Point with _$Point {
+  const Point._();
+
   const factory Point({
     required double x,
     required double y,
@@ -14,4 +16,10 @@ class Point with _$Point {
   }) = _Point;
 
   factory Point.fromJson(Map<String, dynamic> json) => _$PointFromJson(json);
+
+  @override
+  bool operator ==(covariant Point other) => other.x == x && other.y == y;
+
+  @override
+  int get hashCode => Object.hash(runtimeType, x, y);
 }

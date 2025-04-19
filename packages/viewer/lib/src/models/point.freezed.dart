@@ -150,13 +150,13 @@ class __$$PointImplCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$PointImpl with DiagnosticableTreeMixin implements _Point {
+class _$PointImpl extends _Point with DiagnosticableTreeMixin {
   const _$PointImpl({
     required this.x,
     required this.y,
     this.color = '#000000',
     this.thickness = 1.0,
-  });
+  }) : super._();
 
   factory _$PointImpl.fromJson(Map<String, dynamic> json) =>
       _$$PointImplFromJson(json);
@@ -188,22 +188,6 @@ class _$PointImpl with DiagnosticableTreeMixin implements _Point {
       ..add(DiagnosticsProperty('thickness', thickness));
   }
 
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$PointImpl &&
-            (identical(other.x, x) || other.x == x) &&
-            (identical(other.y, y) || other.y == y) &&
-            (identical(other.color, color) || other.color == color) &&
-            (identical(other.thickness, thickness) ||
-                other.thickness == thickness));
-  }
-
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  @override
-  int get hashCode => Object.hash(runtimeType, x, y, color, thickness);
-
   /// Create a copy of Point
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -218,13 +202,14 @@ class _$PointImpl with DiagnosticableTreeMixin implements _Point {
   }
 }
 
-abstract class _Point implements Point {
+abstract class _Point extends Point {
   const factory _Point({
     required final double x,
     required final double y,
     final String color,
     final double thickness,
   }) = _$PointImpl;
+  const _Point._() : super._();
 
   factory _Point.fromJson(Map<String, dynamic> json) = _$PointImpl.fromJson;
 
