@@ -1,0 +1,17 @@
+{
+    "dart.flutterSdkPath": "../../.fvm/flutter_sdk",
+    "search.exclude": {
+        "**/.fvm": true
+    },
+    // Remove from file watching
+    "files.watcherExclude": {
+        "**/.fvm": true
+    },
+    "dart.env": {
+        "PUB_HOSTED_URL": "https://pub.dev"
+    },
+    "terminal.integrated.env.osx": {
+        "PUB_HOSTED_URL": "https://pub.dev"
+    },
+    "java.jdt.ls.vmargs": "-XX:+UseParallelGC -XX:GCTimeRatio=4 -XX:AdaptiveSizePolicyWeight=90 -Dsun.zip.disableMemoryMapping=true -Xmx2G -Xms100m -Xlog:disable",
+}
