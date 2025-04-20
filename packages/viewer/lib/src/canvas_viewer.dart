@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:math';
 
 import 'package:flutter/foundation.dart';
@@ -35,7 +36,11 @@ class CanvasViewer with DiagnosticableTreeMixin implements Viewer {
     _points = List.from(points);
     _needsRescale = true;
     _updateBoundingBox();
+    _draw();
   }
+
+  final _updateStream = StreamController.broadcast();
+  void _draw() => _updateStream.add(null);
 
   @override
   void clean() {
@@ -43,6 +48,7 @@ class CanvasViewer with DiagnosticableTreeMixin implements Viewer {
     _points = [];
     _boundingBox = null;
     _needsRescale = true;
+    _draw();
   }
 
   /// Обновляет ограничивающий прямоугольник на основе текущих точек и линий
@@ -77,31 +83,35 @@ class CanvasViewer with DiagnosticableTreeMixin implements Viewer {
   }
 
   @override
-  Widget buildWidget() {
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        return Semantics(
-          label:
-              'Canvas with ${_lines.length} lines and ${_points.length} points',
-          value: 'Scale: $_currentScale',
-          child: CustomPaint(
-            key: ValueKey('canvas_viewer_${_lines.length}_${_points.length}'),
-            size: Size(constraints.maxWidth, constraints.maxHeight),
-            painter: _CanvasPainter(
-              lines: _lines,
-              points: _points,
-              needsRescale: _needsRescale,
-              onRescaled: (scale, offset) {
-                _currentScale = scale;
-                _currentOffset = offset;
-                _needsRescale = true;
-              },
-            ),
-          ),
-        );
-      },
-    );
-  }
+  Widget buildWidget() => LayoutBuilder(
+    builder:
+        (context, constraints) => StreamBuilder(
+          stream: _updateStream.stream,
+          builder: (context, snapshot) {
+            return Semantics(
+              label:
+                  'Canvas with ${_lines.length} lines and ${_points.length} points',
+              value: 'Scale: $_currentScale',
+              child: CustomPaint(
+                key: ValueKey(
+                  'canvas_viewer_${_lines.length}_${_points.length}',
+                ),
+                size: Size(constraints.maxWidth, constraints.maxHeight),
+                painter: _CanvasPainter(
+                  lines: _lines,
+                  points: _points,
+                  needsRescale: _needsRescale,
+                  onRescaled: (scale, offset) {
+                    _currentScale = scale;
+                    _currentOffset = offset;
+                    _needsRescale = true;
+                  },
+                ),
+              ),
+            );
+          },
+        ),
+  );
 
   /// Возвращает текущее состояние масштабирования для тестирования
   Map<String, dynamic> getScalingState() {
