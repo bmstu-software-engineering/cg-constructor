@@ -40,6 +40,10 @@ final class FlowBuilder<D extends FlowData, DD extends FlowDrawData> {
   Widget buildViewerWidget() => _drawStrategy.buildWidget();
 }
 
+abstract interface class FlowBuilderFactory {
+  FlowBuilder create();
+}
+
 abstract interface class FlowData {}
 
 class ViewerDataModel implements FlowData {

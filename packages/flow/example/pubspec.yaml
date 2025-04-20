@@ -43,6 +43,9 @@ dependencies:
   json_annotation: ^4.8.1
   
   # Local packages
+  alogrithms:
+    path: ../../alogrithms
+    
   flow:
     path: ../
   models_ns:

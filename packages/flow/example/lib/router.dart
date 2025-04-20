@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:example/alg_01_40_page.dart';
 import 'package:flutter/material.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:viewer/viewer.dart';
@@ -84,7 +85,7 @@ class MyRouterDelegate extends RouterDelegate<RouteState>
           key: navigatorKey,
           pages: [
             // Домашняя страница всегда присутствует в стеке
-            const MaterialPage(key: ValueKey('HomePage'), child: HomePage()),
+            const MaterialPage(key: ValueKey('HomePage'), child: AlgL01V40()),
             ...route.maybeMap(
               // Страница Viewer добавляется, если текущий путь - viewer
               viewer:

@@ -12,6 +12,9 @@ dependencies:
   flutter:
     sdk: flutter
 
+  alogrithms:
+    path: ../alogrithms
+
   models_ns:
     path: ../models_ns
 
