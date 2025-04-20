@@ -27,7 +27,7 @@ class ListFieldConfig<T> extends FieldConfig<List<T>> {
     String? hint,
     this.minItems = 0,
     this.maxItems,
-    bool isRequired = true,
+    bool isRequired = false,
     required this.createItemField,
     String? Function(List<T>?)? validator,
   }) : super(

@@ -159,17 +159,28 @@ class _ListFieldWidgetState<T, F extends forms.FormField<T>>
             ),
           ),
 
-        if (widget.field.error != null)
-          Padding(
-            padding: const EdgeInsets.only(top: 8.0),
-            child: Text(
-              widget.field.error!,
-              style: TextStyle(
-                color: Theme.of(context).colorScheme.error,
-                fontSize: 12.0,
+        StreamBuilder<String?>(
+          initialData: null,
+          stream: widget.field.errorsStream,
+          builder: (context, snapshot) {
+            final errors = snapshot.data;
+
+            if (errors == null) {
+              return const SizedBox.shrink();
+            }
+
+            return Padding(
+              padding: const EdgeInsets.only(top: 8.0),
+              child: Text(
+                errors,
+                style: TextStyle(
+                  color: Theme.of(context).colorScheme.error,
+                  fontSize: 12.0,
+                ),
               ),
-            ),
-          ),
+            );
+          },
+        ),
       ],
     );
   }

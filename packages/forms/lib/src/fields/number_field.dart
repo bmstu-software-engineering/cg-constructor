@@ -10,12 +10,11 @@ class NumberField extends BaseFormField<double> {
   ///
   /// [config] - конфигурация поля
   /// [initialValue] - начальное значение поля
-  NumberField({required this.config, double? initialValue})
-    : super(
-        initialValue: initialValue,
-        validator: _createValidator(config),
-        isRequired: config.isRequired,
-      );
+  NumberField({required this.config, super.initialValue})
+      : super(
+          validator: _createValidator(config),
+          isRequired: config.isRequired,
+        );
 
   /// Создает валидатор на основе конфигурации
   static String? Function(double?)? _createValidator(NumberFieldConfig config) {
@@ -23,18 +22,16 @@ class NumberField extends BaseFormField<double> {
       if (value == null) return null;
 
       if (config.min != null && value < config.min!) {
-        final minStr =
-            config.min == config.min!.toInt()
-                ? config.min!.toInt()
-                : config.min;
+        final minStr = config.min == config.min!.toInt()
+            ? config.min!.toInt()
+            : config.min;
         return 'Значение должно быть не меньше $minStr';
       }
 
       if (config.max != null && value > config.max!) {
-        final maxStr =
-            config.max == config.max!.toInt()
-                ? config.max!.toInt()
-                : config.max;
+        final maxStr = config.max == config.max!.toInt()
+            ? config.max!.toInt()
+            : config.max;
         return 'Значение должно быть не больше $maxStr';
       }
 

@@ -12,15 +12,15 @@ class PointFieldConfig extends FieldConfig<Point> {
   /// Конфигурация для поля Y
   final NumberFieldConfig yConfig;
 
-  PointFieldConfig({
+  const PointFieldConfig({
     super.hint,
-    super.isRequired = true,
+    super.isRequired = false,
     super.validator,
     super.label,
     NumberFieldConfig? xConfig,
     NumberFieldConfig? yConfig,
-  }) : xConfig = xConfig ?? NumberFieldConfig(label: 'X'),
-       yConfig = yConfig ?? NumberFieldConfig(label: 'Y');
+  })  : xConfig = xConfig ?? const NumberFieldConfig(label: 'X'),
+        yConfig = yConfig ?? const NumberFieldConfig(label: 'Y');
 
   @override
   FormField<Point> createField() {

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/foundation.dart';
 
 import '../config/list_field_config.dart';
@@ -36,6 +38,10 @@ class ListField<T, F extends FormField<T>> extends BaseFormField<List<T>> {
       }
     }
   }
+
+  final _errorsStreamController = StreamController<String?>.broadcast();
+
+  Stream<String?> get errorsStream => _errorsStreamController.stream;
 
   /// Создает валидатор на основе конфигурации
   static String? Function(List<T>?)? _createValidator<T>(
@@ -137,8 +143,12 @@ class ListField<T, F extends FormField<T>> extends BaseFormField<List<T>> {
       }
     }
 
+    final errors = super.validate();
+
+    _errorsStreamController.add(errors);
+
     // Затем валидируем список
-    return super.validate();
+    return errors;
   }
 
   @override

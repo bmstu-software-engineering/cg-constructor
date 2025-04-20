@@ -11,4 +11,5 @@ export 'polygon_field_widget.dart';
 export 'triangle_field_widget.dart';
 export 'rectangle_field_widget.dart';
 export 'list_field_widget.dart';
+export 'line_field_widget.dart';
 export 'dynamic_form_widget.dart';

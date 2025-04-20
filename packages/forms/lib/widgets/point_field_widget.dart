@@ -25,10 +25,10 @@ class PointFieldWidget extends FormFieldWidget<Point, PointField> {
   final double spacing;
 
   @override
-  State<PointFieldWidget> createState() => PointFieldWidgetState();
+  State<PointFieldWidget> createState() => _PointFieldWidgetState();
 }
 
-class PointFieldWidgetState
+class _PointFieldWidgetState
     extends FormFieldWidgetState<Point, PointField, PointFieldWidget> {
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
@@ -44,6 +44,7 @@ class PointFieldWidgetState
 
   @override
   Widget build(BuildContext context) {
+    print('error: ${widget.field.validate()}');
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -57,16 +58,12 @@ class PointFieldWidgetState
             ),
           ),
         Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Expanded(
               child: NumberFieldWidget(
                 field: widget.field.xField,
-                onChanged: (_) {
-                  setState(() {});
-                  if (widget.onChanged != null) {
-                    widget.onChanged!(widget.field.value);
-                  }
-                },
+                onChanged: (value) => _onChange(value),
                 decoration: getDecoration(
                   labelText: widget.field.xField.config.label,
                   errorText: widget.field.xField.error,
@@ -77,12 +74,7 @@ class PointFieldWidgetState
             Expanded(
               child: NumberFieldWidget(
                 field: widget.field.yField,
-                onChanged: (_) {
-                  setState(() {});
-                  if (widget.onChanged != null) {
-                    widget.onChanged!(widget.field.value);
-                  }
-                },
+                onChanged: (value) => _onChange(value),
                 decoration: getDecoration(
                   labelText: widget.field.yField.config.label,
                   errorText: widget.field.yField.error,
@@ -104,5 +96,15 @@ class PointFieldWidgetState
           ),
       ],
     );
+  }
+
+  void _onChange(_) {
+    print('object');
+    if (widget.onChanged != null) {
+      widget.onChanged!(widget.field.value);
+    }
+    setState(() {
+      widget.field.validate();
+    });
   }
 }

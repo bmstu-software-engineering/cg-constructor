@@ -26,4 +26,7 @@ enum FieldType {
 
   /// Поле списка
   list,
+
+  /// Поле линии
+  line,
 }

@@ -1,4 +1,6 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide FormField;
+import 'package:forms/forms.dart';
+import 'package:forms/src/core/form_field.dart';
 
 import '../src/config/field_config_entry.dart';
 import '../src/config/field_type.dart';
@@ -145,19 +147,41 @@ class _DynamicFormWidgetState extends State<DynamicFormWidget> {
           onChanged: (_) => setState(() {}),
         );
       case FieldType.list:
-        // Упрощенная реализация для списка чисел
-        return ListFieldWidget<double, NumberField>(
-          field: field as ListField<double, NumberField>,
+        return ListFieldWidget(
+          field: field as ListField,
           onChanged: (_) => setState(() {}),
-          itemBuilder: (context, itemField, onChanged) {
-            return NumberFieldWidget(
-              field: itemField,
-              onChanged: onChanged,
-            );
-          },
+          itemBuilder: (context, itemField, onChanged) =>
+              itemField.buildWidget((value) {
+            setState(() {});
+            onChanged(value);
+          }),
         );
       default:
         return const SizedBox();
     }
+  }
+}
+
+extension on FormField {
+  Widget buildWidget(void Function(dynamic value) onChanged) {
+    switch (this) {
+      case PointField field:
+        return PointFieldWidget(
+          field: field,
+          onChanged: (value) => onChanged(value),
+        );
+      case LineField field:
+        return LineFieldWidget(
+          field: field,
+          onChanged: (value) => onChanged(value),
+        );
+      case VectorField field:
+        return VectorFieldWidget(
+          field: field,
+          onChanged: (value) => onChanged(value),
+        );
+    }
+
+    throw UnimplementedError();
   }
 }

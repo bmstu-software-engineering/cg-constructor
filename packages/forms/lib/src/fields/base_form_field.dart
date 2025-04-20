@@ -24,9 +24,9 @@ class BaseFormField<T> extends DiagnosticableFormField<T> {
     T? initialValue,
     String? Function(T?)? validator,
     bool isRequired = true,
-  }) : _value = initialValue,
-       _validator = validator,
-       _isRequired = isRequired;
+  })  : _value = initialValue,
+        _validator = validator,
+        _isRequired = isRequired;
 
   @override
   T? get value => _value;
@@ -43,6 +43,7 @@ class BaseFormField<T> extends DiagnosticableFormField<T> {
   @override
   String? validate() {
     if (_isRequired && _value == null) {
+      // throw UnimplementedError();
       _error = 'Это поле обязательно';
       return _error;
     }

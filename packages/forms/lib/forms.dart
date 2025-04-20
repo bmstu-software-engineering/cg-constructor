@@ -23,6 +23,7 @@ export 'src/config/polygon_config.dart';
 export 'src/config/triangle_config.dart';
 export 'src/config/rectangle_config.dart';
 export 'src/config/list_field_config.dart';
+export 'src/config/line_config.dart';
 
 // Экспортируем модели
 export 'src/models/angle.dart';
@@ -44,6 +45,7 @@ export 'src/fields/polygon_field.dart';
 export 'src/fields/triangle_field.dart';
 export 'src/fields/rectangle_field.dart';
 export 'src/fields/list_field.dart';
+export 'src/fields/line_field.dart';
 
 // Экспортируем виджеты
 export 'widgets/widgets.dart';

@@ -58,7 +58,9 @@ class PointField extends BaseFormField<Point> {
     final xValue = _xField.value;
     final yValue = _yField.value;
 
-    if (xValue == null || yValue == null) return null;
+    if (xValue == null || yValue == null) {
+      return null;
+    }
 
     return Point(x: xValue, y: yValue);
   }
@@ -75,6 +77,9 @@ class PointField extends BaseFormField<Point> {
 
     validate();
   }
+
+  @override
+  String? get error => validate();
 
   @override
   String? validate() {

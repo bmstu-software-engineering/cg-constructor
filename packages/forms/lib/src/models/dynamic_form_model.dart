@@ -12,6 +12,7 @@ import '../config/polygon_config.dart';
 import '../config/triangle_config.dart';
 import '../config/rectangle_config.dart';
 import '../config/list_field_config.dart';
+import '../config/line_config.dart';
 import '../core/diagnosticable_form_model.dart';
 import '../core/form_field.dart';
 import '../fields/number_field.dart';
@@ -23,6 +24,7 @@ import '../fields/polygon_field.dart';
 import '../fields/triangle_field.dart';
 import '../fields/rectangle_field.dart';
 import '../fields/list_field.dart';
+import '../fields/line_field.dart';
 
 /// Динамическая модель формы, создаваемая на основе конфига
 class DynamicFormModel extends DiagnosticableFormModel {
@@ -66,12 +68,13 @@ class DynamicFormModel extends DiagnosticableFormModel {
         return TriangleField(config: entry.config as TriangleFieldConfig);
       case FieldType.rectangle:
         return RectangleField(config: entry.config as RectangleFieldConfig);
+      case FieldType.line:
+        return LineField(config: entry.config as LineFieldConfig);
       case FieldType.list:
         final listConfig = entry.config as ListFieldConfig;
         // Для списка нужно создать поле с правильным типом
         // Это упрощенная реализация, которая поддерживает только списки чисел
-        return ListField<double, NumberField>(
-            config: listConfig as ListFieldConfig<double>);
+        return ListField(config: listConfig);
       default:
         throw ArgumentError('Неподдерживаемый тип поля: ${entry.type}');
     }
