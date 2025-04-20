@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import '../src/fields/angle_field.dart';
 import '../src/models/angle.dart';
 import 'form_field_widget.dart';
@@ -29,6 +30,18 @@ class AngleFieldWidget extends FormFieldWidget<Angle, AngleField> {
 
 class _AngleFieldWidgetState
     extends FormFieldWidgetState<Angle, AngleField, AngleFieldWidget> {
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(StringProperty('suffixText', widget.suffixText));
+    properties.add(DiagnosticsProperty('valueField', widget.field.valueField));
+    if (widget.field.value != null) {
+      properties.add(DoubleProperty('angle', widget.field.value?.value));
+      properties
+          .add(DoubleProperty('radians', widget.field.value?.toRadians()));
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return NumberFieldWidget(

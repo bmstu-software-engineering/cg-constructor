@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import '../src/core/form_field.dart' as forms;
 import '../src/fields/list_field.dart';
 import 'form_field_widget.dart';
@@ -36,8 +37,7 @@ class ListFieldWidget<T, F extends forms.FormField<T>>
     BuildContext context,
     F field,
     ValueChanged<T?> onChanged,
-  )
-  itemBuilder;
+  ) itemBuilder;
 
   /// Текст кнопки добавления элемента
   final String addButtonLabel;
@@ -53,8 +53,30 @@ class ListFieldWidget<T, F extends forms.FormField<T>>
 }
 
 class _ListFieldWidgetState<T, F extends forms.FormField<T>>
-    extends
-        FormFieldWidgetState<List<T>, ListField<T, F>, ListFieldWidget<T, F>> {
+    extends FormFieldWidgetState<List<T>, ListField<T, F>,
+        ListFieldWidget<T, F>> {
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DoubleProperty('spacing', widget.spacing));
+    properties.add(StringProperty('addButtonLabel', widget.addButtonLabel));
+    properties
+        .add(StringProperty('removeButtonTooltip', widget.removeButtonTooltip));
+    properties.add(IntProperty('fieldsCount', widget.field.fields.length));
+    properties.add(IntProperty('minItems', widget.field.config.minItems));
+    properties.add(IntProperty('maxItems', widget.field.config.maxItems ?? -1));
+    properties.add(FlagProperty('hasItemLabelBuilder',
+        value: widget.itemLabelBuilder != null,
+        ifTrue: 'custom item labels',
+        ifFalse: 'default item labels'));
+
+    if (widget.field.value != null) {
+      properties
+          .add(IntProperty('valueCount', widget.field.value?.length ?? 0));
+      properties.add(IterableProperty<T>('value', widget.field.value));
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -104,7 +126,11 @@ class _ListFieldWidgetState<T, F extends forms.FormField<T>>
                 ],
               ),
               widget.itemBuilder(context, widget.field.fields[index], (value) {
-                setState(() {});
+                setState(() {
+                  print('validate');
+                  widget.field.validate();
+                });
+
                 if (widget.onChanged != null) {
                   widget.onChanged!(widget.field.value);
                 }

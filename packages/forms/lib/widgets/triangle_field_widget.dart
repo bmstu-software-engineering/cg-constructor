@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import '../src/fields/triangle_field.dart';
 import '../src/models/triangle.dart';
 import 'form_field_widget.dart';
@@ -29,6 +30,34 @@ class TriangleFieldWidget extends FormFieldWidget<Triangle, TriangleField> {
 
 class _TriangleFieldWidgetState
     extends FormFieldWidgetState<Triangle, TriangleField, TriangleFieldWidget> {
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DoubleProperty('spacing', widget.spacing));
+    properties.add(DiagnosticsProperty('aField', widget.field.aField));
+    properties.add(DiagnosticsProperty('bField', widget.field.bField));
+    properties.add(DiagnosticsProperty('cField', widget.field.cField));
+
+    if (widget.field.value != null) {
+      properties.add(DiagnosticsProperty('a', widget.field.value?.a));
+      properties.add(DiagnosticsProperty('b', widget.field.value?.b));
+      properties.add(DiagnosticsProperty('c', widget.field.value?.c));
+      properties.add(DoubleProperty('sideAB', widget.field.value?.sideAB));
+      properties.add(DoubleProperty('sideBC', widget.field.value?.sideBC));
+      properties.add(DoubleProperty('sideCA', widget.field.value?.sideCA));
+      properties
+          .add(DoubleProperty('perimeter', widget.field.value?.perimeter));
+      properties.add(DoubleProperty('area', widget.field.value?.area));
+      properties.add(DiagnosticsProperty('center', widget.field.value?.center));
+      properties.add(DiagnosticsProperty(
+          'isEquilateral', widget.field.value?.isEquilateral));
+      properties.add(
+          DiagnosticsProperty('isIsosceles', widget.field.value?.isIsosceles));
+      properties.add(DiagnosticsProperty(
+          'isRightAngled', widget.field.value?.isRightAngled));
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(

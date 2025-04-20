@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import '../src/fields/rectangle_field.dart';
 import '../src/models/rectangle.dart';
 import 'form_field_widget.dart';
@@ -27,9 +28,45 @@ class RectangleFieldWidget extends FormFieldWidget<Rectangle, RectangleField> {
   State<RectangleFieldWidget> createState() => _RectangleFieldWidgetState();
 }
 
-class _RectangleFieldWidgetState
-    extends
-        FormFieldWidgetState<Rectangle, RectangleField, RectangleFieldWidget> {
+class _RectangleFieldWidgetState extends FormFieldWidgetState<Rectangle,
+    RectangleField, RectangleFieldWidget> {
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DoubleProperty('spacing', widget.spacing));
+    properties
+        .add(DiagnosticsProperty('topLeftField', widget.field.topLeftField));
+    properties
+        .add(DiagnosticsProperty('topRightField', widget.field.topRightField));
+    properties.add(
+        DiagnosticsProperty('bottomLeftField', widget.field.bottomLeftField));
+    properties.add(
+        DiagnosticsProperty('bottomRightField', widget.field.bottomRightField));
+    properties.add(FlagProperty('useCorners',
+        value: widget.field.useCorners,
+        ifTrue: 'using fromCorners constructor',
+        ifFalse: 'using full constructor'));
+
+    if (widget.field.value != null) {
+      properties
+          .add(DiagnosticsProperty('topLeft', widget.field.value?.topLeft));
+      properties
+          .add(DiagnosticsProperty('topRight', widget.field.value?.topRight));
+      properties.add(
+          DiagnosticsProperty('bottomLeft', widget.field.value?.bottomLeft));
+      properties.add(
+          DiagnosticsProperty('bottomRight', widget.field.value?.bottomRight));
+      properties.add(DoubleProperty('width', widget.field.value?.width));
+      properties.add(DoubleProperty('height', widget.field.value?.height));
+      properties
+          .add(DoubleProperty('perimeter', widget.field.value?.perimeter));
+      properties.add(DoubleProperty('area', widget.field.value?.area));
+      properties.add(DiagnosticsProperty('center', widget.field.value?.center));
+      properties
+          .add(DiagnosticsProperty('isSquare', widget.field.value?.isSquare));
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -105,7 +142,6 @@ class _RectangleFieldWidgetState
             ),
             SizedBox(height: widget.spacing),
           ],
-
           if (widget.field.bottomLeftField != null) ...[
             Padding(
               padding: const EdgeInsets.only(bottom: 4.0),
@@ -125,7 +161,6 @@ class _RectangleFieldWidgetState
             ),
             SizedBox(height: widget.spacing),
           ],
-
           if (widget.field.bottomRightField != null) ...[
             Padding(
               padding: const EdgeInsets.only(bottom: 4.0),

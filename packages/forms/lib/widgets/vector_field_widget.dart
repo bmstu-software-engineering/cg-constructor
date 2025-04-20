@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import '../src/fields/vector_field.dart';
 import '../src/models/vector.dart';
 import 'form_field_widget.dart';
@@ -29,6 +30,20 @@ class VectorFieldWidget extends FormFieldWidget<Vector, VectorField> {
 
 class _VectorFieldWidgetState
     extends FormFieldWidgetState<Vector, VectorField, VectorFieldWidget> {
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DoubleProperty('spacing', widget.spacing));
+    properties.add(DiagnosticsProperty('dxField', widget.field.dxField));
+    properties.add(DiagnosticsProperty('dyField', widget.field.dyField));
+    if (widget.field.value != null) {
+      properties.add(DoubleProperty('dx', widget.field.value?.dx));
+      properties.add(DoubleProperty('dy', widget.field.value?.dy));
+      properties.add(DoubleProperty('length', widget.field.value?.length));
+      properties.add(DoubleProperty('angle', widget.field.value?.angle));
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import '../src/fields/polygon_field.dart';
 import '../src/models/polygon.dart';
 import 'form_field_widget.dart';
@@ -39,6 +40,29 @@ class PolygonFieldWidget extends FormFieldWidget<Polygon, PolygonField> {
 
 class _PolygonFieldWidgetState
     extends FormFieldWidgetState<Polygon, PolygonField, PolygonFieldWidget> {
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DoubleProperty('spacing', widget.spacing));
+    properties.add(StringProperty('addButtonLabel', widget.addButtonLabel));
+    properties
+        .add(StringProperty('removeButtonTooltip', widget.removeButtonTooltip));
+    properties
+        .add(IntProperty('pointFieldsCount', widget.field.pointFields.length));
+    properties.add(IntProperty('minPoints', widget.field.config.minPoints));
+    properties
+        .add(IntProperty('maxPoints', widget.field.config.maxPoints ?? -1));
+
+    if (widget.field.value != null) {
+      properties.add(
+          IntProperty('pointsCount', widget.field.value?.points.length ?? 0));
+      properties
+          .add(DoubleProperty('perimeter', widget.field.value?.perimeter));
+      properties.add(DoubleProperty('area', widget.field.value?.area));
+      properties.add(DiagnosticsProperty('center', widget.field.value?.center));
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(

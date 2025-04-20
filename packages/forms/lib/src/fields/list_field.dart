@@ -17,11 +17,11 @@ class ListField<T, F extends FormField<T>> extends BaseFormField<List<T>> {
   /// [config] - конфигурация поля
   /// [initialValue] - начальное значение поля
   ListField({required this.config, List<T>? initialValue})
-    : super(
-        initialValue: initialValue,
-        validator: _createValidator(config),
-        isRequired: config.isRequired,
-      ) {
+      : super(
+          initialValue: initialValue,
+          validator: _createValidator(config),
+          isRequired: config.isRequired,
+        ) {
     // Инициализируем поля
     if (initialValue != null && initialValue.isNotEmpty) {
       for (final value in initialValue) {
@@ -127,6 +127,7 @@ class ListField<T, F extends FormField<T>> extends BaseFormField<List<T>> {
 
   @override
   String? validate() {
+    print('validate');
     // Валидируем каждое поле
     for (int i = 0; i < _fields.length; i++) {
       final field = _fields[i];

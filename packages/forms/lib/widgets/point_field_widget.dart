@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:models_ns/models_ns.dart';
 import '../src/fields/point_field.dart';
 import 'form_field_widget.dart';
@@ -24,11 +25,23 @@ class PointFieldWidget extends FormFieldWidget<Point, PointField> {
   final double spacing;
 
   @override
-  State<PointFieldWidget> createState() => _PointFieldWidgetState();
+  State<PointFieldWidget> createState() => PointFieldWidgetState();
 }
 
-class _PointFieldWidgetState
+class PointFieldWidgetState
     extends FormFieldWidgetState<Point, PointField, PointFieldWidget> {
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DoubleProperty('spacing', widget.spacing));
+    properties.add(DiagnosticsProperty('xField', widget.field.xField));
+    properties.add(DiagnosticsProperty('yField', widget.field.yField));
+    if (widget.field.value != null) {
+      properties.add(DoubleProperty('x', widget.field.value?.x));
+      properties.add(DoubleProperty('y', widget.field.value?.y));
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(

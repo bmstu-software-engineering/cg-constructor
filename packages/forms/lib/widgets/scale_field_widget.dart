@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import '../src/fields/scale_field.dart';
 import '../src/models/scale.dart';
 import 'form_field_widget.dart';
@@ -29,6 +30,24 @@ class ScaleFieldWidget extends FormFieldWidget<Scale, ScaleField> {
 
 class _ScaleFieldWidgetState
     extends FormFieldWidgetState<Scale, ScaleField, ScaleFieldWidget> {
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DoubleProperty('spacing', widget.spacing));
+    properties.add(DiagnosticsProperty('xField', widget.field.xField));
+    properties.add(DiagnosticsProperty('yField', widget.field.yField));
+    properties.add(FlagProperty('isUniform',
+        value: widget.field.isUniform,
+        ifTrue: 'uniform scaling',
+        ifFalse: 'non-uniform scaling'));
+    if (widget.field.value != null) {
+      properties.add(DoubleProperty('x', widget.field.value?.x));
+      properties.add(DoubleProperty('y', widget.field.value?.y));
+      properties.add(DiagnosticsProperty<bool>(
+          'valueIsUniform', widget.field.value?.isUniform));
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     // Если масштабирование равномерное, показываем только одно поле

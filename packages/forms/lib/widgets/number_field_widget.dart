@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import '../src/fields/number_field.dart';
 import 'form_field_widget.dart';
 
@@ -23,6 +24,16 @@ class NumberFieldWidget extends FormFieldWidget<double, NumberField> {
 class _NumberFieldWidgetState
     extends FormFieldWidgetState<double, NumberField, NumberFieldWidget> {
   late TextEditingController _controller;
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(
+        DiagnosticsProperty<TextEditingController>('controller', _controller));
+    properties.add(StringProperty('text', _controller.text));
+    properties.add(DoubleProperty('min', widget.field.config.min));
+    properties.add(DoubleProperty('max', widget.field.config.max));
+  }
 
   @override
   void initState() {
