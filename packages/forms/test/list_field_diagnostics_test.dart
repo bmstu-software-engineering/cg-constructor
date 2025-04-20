@@ -13,7 +13,7 @@ void main() {
           minItems: 1,
           maxItems: 5,
           isRequired: true,
-          createField: () => NumberField(
+          createItemField: () => NumberField(
             config: NumberFieldConfig(
               label: 'Число',
               min: 0,
@@ -66,7 +66,7 @@ void main() {
           minItems: 2,
           maxItems: 4,
           isRequired: true,
-          createField: () => PointField(
+          createItemField: () => PointField(
             config: PointFieldConfig(
               label: 'Точка',
               isRequired: false,
@@ -122,7 +122,7 @@ void main() {
           minItems: 3,
           maxItems: 5,
           isRequired: true,
-          createField: () => NumberField(
+          createItemField: () => NumberField(
             config: NumberFieldConfig(
               label: 'Число',
               min: 0,
@@ -168,7 +168,7 @@ void main() {
           minItems: 1,
           maxItems: 3,
           isRequired: true,
-          createField: () => PointField(
+          createItemField: () => PointField(
             config: PointFieldConfig(
               label: 'Точка',
               xConfig: NumberFieldConfig(
@@ -211,7 +211,7 @@ void main() {
           minItems: 1,
           maxItems: 5,
           isRequired: true,
-          createField: () => NumberField(
+          createItemField: () => NumberField(
             config: NumberFieldConfig(label: 'Число', min: 0, max: 100),
           ),
         ),

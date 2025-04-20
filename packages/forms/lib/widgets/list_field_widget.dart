@@ -127,7 +127,6 @@ class _ListFieldWidgetState<T, F extends forms.FormField<T>>
               ),
               widget.itemBuilder(context, widget.field.fields[index], (value) {
                 setState(() {
-                  print('validate');
                   widget.field.validate();
                 });
 

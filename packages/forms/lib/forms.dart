@@ -11,6 +11,9 @@ export 'src/core/diagnosticable_form_model.dart';
 
 // Экспортируем конфигурации полей
 export 'src/config/field_config.dart';
+export 'src/config/field_type.dart';
+export 'src/config/field_config_entry.dart';
+export 'src/config/form_config.dart';
 export 'src/config/number_config.dart';
 export 'src/config/point_config.dart';
 export 'src/config/angle_config.dart';
@@ -28,6 +31,7 @@ export 'src/models/scale.dart';
 export 'src/models/polygon.dart';
 export 'src/models/triangle.dart';
 export 'src/models/rectangle.dart';
+export 'src/models/dynamic_form_model.dart';
 
 // Экспортируем поля форм
 export 'src/fields/base_form_field.dart';

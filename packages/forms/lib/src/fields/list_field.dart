@@ -25,14 +25,14 @@ class ListField<T, F extends FormField<T>> extends BaseFormField<List<T>> {
     // Инициализируем поля
     if (initialValue != null && initialValue.isNotEmpty) {
       for (final value in initialValue) {
-        final field = config.createField() as F;
+        final field = config.createItemField() as F;
         field.value = value;
         _fields.add(field);
       }
     } else {
       // Создаем минимальное количество полей
       for (int i = 0; i < config.minItems; i++) {
-        _fields.add(config.createField() as F);
+        _fields.add(config.createItemField() as F);
       }
     }
   }
@@ -69,7 +69,7 @@ class ListField<T, F extends FormField<T>> extends BaseFormField<List<T>> {
       return;
     }
 
-    _fields.add(config.createField() as F);
+    _fields.add(config.createItemField() as F);
 
     validate();
   }
@@ -111,12 +111,12 @@ class ListField<T, F extends FormField<T>> extends BaseFormField<List<T>> {
     if (newValue == null || newValue.isEmpty) {
       // Создаем минимальное количество полей
       for (int i = 0; i < config.minItems; i++) {
-        _fields.add(config.createField() as F);
+        _fields.add(config.createItemField() as F);
       }
     } else {
       // Создаем поля для каждого значения
       for (final value in newValue) {
-        final field = config.createField() as F;
+        final field = config.createItemField() as F;
         field.value = value;
         _fields.add(field);
       }
@@ -127,7 +127,6 @@ class ListField<T, F extends FormField<T>> extends BaseFormField<List<T>> {
 
   @override
   String? validate() {
-    print('validate');
     // Валидируем каждое поле
     for (int i = 0; i < _fields.length; i++) {
       final field = _fields[i];
@@ -152,7 +151,7 @@ class ListField<T, F extends FormField<T>> extends BaseFormField<List<T>> {
 
     // Создаем минимальное количество полей
     for (int i = 0; i < config.minItems; i++) {
-      _fields.add(config.createField() as F);
+      _fields.add(config.createItemField() as F);
     }
 
     super.reset();

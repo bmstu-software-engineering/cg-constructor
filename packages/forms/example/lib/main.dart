@@ -3,6 +3,7 @@ import 'package:forms/forms.dart';
 import 'package:models_ns/models_ns.dart';
 
 import 'diagnostics_demo.dart';
+import 'dynamic_form_demo.dart';
 
 void main() {
   runApp(const MyApp());
@@ -51,7 +52,7 @@ class _MyHomePageState extends State<MyHomePage> {
           minItems: 1,
           maxItems: 5,
           isRequired: true,
-          createField:
+          createItemField:
               () => NumberField(
                 config: NumberFieldConfig(label: 'Число', min: 0, max: 100),
               ),
@@ -273,6 +274,19 @@ class _MyHomePageState extends State<MyHomePage> {
             },
             tooltip: 'Diagnostics Demo',
             child: const Icon(Icons.bug_report),
+          ),
+          const SizedBox(width: 16),
+          FloatingActionButton(
+            heroTag: 'dynamic_form_demo',
+            onPressed: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => const DynamicFormDemoPage(),
+                ),
+              );
+            },
+            tooltip: 'Dynamic Form Demo',
+            child: const Icon(Icons.dynamic_form),
           ),
         ],
       ),

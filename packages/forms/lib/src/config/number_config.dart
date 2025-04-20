@@ -9,19 +9,14 @@ class NumberFieldConfig extends FieldConfig<double> {
   /// Максимальное значение
   final double? max;
 
-  NumberFieldConfig({
-    required String label,
-    String? hint,
-    bool isRequired = true,
-    String? Function(double?)? validator,
+  const NumberFieldConfig({
+    required String super.label,
+    super.hint,
+    super.isRequired,
+    super.validator,
     this.min,
     this.max,
-  }) : super(
-         label: label,
-         hint: hint,
-         isRequired: isRequired,
-         validator: validator,
-       );
+  });
 
   @override
   FormField<double> createField() {

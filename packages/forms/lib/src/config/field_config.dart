@@ -14,7 +14,12 @@ abstract class FieldConfig<T> {
   /// Функция валидации
   final String? Function(T?)? validator;
 
-  FieldConfig({this.label, this.hint, this.isRequired = true, this.validator});
+  const FieldConfig({
+    this.label,
+    this.hint,
+    this.isRequired = true,
+    this.validator,
+  });
 
   /// Создает поле формы на основе конфигурации
   FormField<T> createField();

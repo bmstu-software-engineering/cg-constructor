@@ -19,20 +19,20 @@ class VectorField extends BaseFormField<Vector> {
   ///
   /// [config] - конфигурация поля
   /// [initialValue] - начальное значение поля
-  VectorField({required this.config, Vector? initialValue})
-    : _dxField = NumberField(
-        config: config.dxConfig,
-        initialValue: initialValue?.dx,
-      ),
-      _dyField = NumberField(
-        config: config.dyConfig,
-        initialValue: initialValue?.dy,
-      ),
-      super(
-        initialValue: initialValue,
-        validator: _createValidator(config),
-        isRequired: config.isRequired,
-      );
+  VectorField({this.config = const VectorFieldConfig(), Vector? initialValue})
+      : _dxField = NumberField(
+          config: config.dxConfig,
+          initialValue: initialValue?.dx,
+        ),
+        _dyField = NumberField(
+          config: config.dyConfig,
+          initialValue: initialValue?.dy,
+        ),
+        super(
+          initialValue: initialValue,
+          validator: _createValidator(config),
+          isRequired: config.isRequired,
+        );
 
   /// Создает валидатор на основе конфигурации
   static String? Function(Vector?)? _createValidator(VectorFieldConfig config) {

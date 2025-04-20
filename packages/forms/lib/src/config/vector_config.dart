@@ -11,21 +11,14 @@ class VectorFieldConfig extends FieldConfig<Vector> {
   /// Конфигурация для поля dy (смещение по Y)
   final NumberFieldConfig dyConfig;
 
-  VectorFieldConfig({
-    required String label,
-    String? hint,
-    bool isRequired = true,
-    String? Function(Vector?)? validator,
-    NumberFieldConfig? dxConfig,
-    NumberFieldConfig? dyConfig,
-  }) : dxConfig = dxConfig ?? NumberFieldConfig(label: 'Смещение по X'),
-       dyConfig = dyConfig ?? NumberFieldConfig(label: 'Смещение по Y'),
-       super(
-         label: label,
-         hint: hint,
-         isRequired: isRequired,
-         validator: validator,
-       );
+  const VectorFieldConfig({
+    super.label,
+    super.hint,
+    super.isRequired,
+    super.validator,
+    this.dxConfig = const NumberFieldConfig(label: 'Смещение по X'),
+    this.dyConfig = const NumberFieldConfig(label: 'Смещение по Y'),
+  });
 
   @override
   FormField<Vector> createField() {
