@@ -285,8 +285,8 @@ class _CanvasPainter extends CustomPainter {
 
 /// Фабрика для создания экземпляров CanvasViewer
 class CanvasViewerFactory implements ViewerFactory {
+  const CanvasViewerFactory();
+
   @override
-  Viewer create() {
-    return CanvasViewer();
-  }
+  Viewer create() => CanvasViewer();
 }
