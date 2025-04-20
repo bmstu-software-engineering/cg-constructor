@@ -9,8 +9,11 @@ class ViewerTestUtils {
   static CanvasViewer createTestViewer({
     List<Line> lines = const [],
     List<Point> points = const [],
+    bool showCoordinates = false,
   }) {
-    final viewer = CanvasViewerFactory().create() as CanvasViewer;
+    final viewer =
+        CanvasViewerFactory().create(showCoordinates: showCoordinates)
+            as CanvasViewer;
     viewer.draw(lines, points);
     return viewer;
   }

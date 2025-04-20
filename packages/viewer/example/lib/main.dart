@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:models_ns/models_ns.dart';
 import 'package:viewer/viewer.dart';
 
+import 'coordinates_demo.dart';
+
 void main() {
   runApp(const MyApp());
 }
@@ -63,6 +65,12 @@ class HomeScreen extends StatelessWidget {
         builder: (context) => const PointsAndLinesViewerDemo(),
       ),
       DemoOption(
+        title: 'Виджет с отображением координат',
+        description:
+            'Viewer с возможностью включения/выключения отображения координат',
+        builder: (context) => const CoordinatesViewerDemo(),
+      ),
+      DemoOption(
         title: 'Два пустых виджета рядом',
         description: 'Два пустых Viewer расположены рядом',
         builder: (context) => const TwoViewersDemo(),
@@ -81,6 +89,11 @@ class HomeScreen extends StatelessWidget {
         title: 'Два виджета с точками и линиями рядом',
         description: 'Два Viewer с точками и линиями расположены рядом',
         builder: (context) => const TwoViewersWithPointsAndLinesDemo(),
+      ),
+      DemoOption(
+        title: 'Два виджета с разными настройками координат',
+        description: 'Два Viewer с разными настройками отображения координат',
+        builder: (context) => const TwoViewersWithCoordinatesDemo(),
       ),
       DemoOption(
         title: 'Три виджета с точками и линиями рядом',
