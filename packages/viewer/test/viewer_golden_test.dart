@@ -510,5 +510,33 @@ void main() {
         matchesGoldenFile('goldens/three_viewers_with_points_and_lines.png'),
       );
     });
+
+    // Новый тест с дефолтными значениями padding
+    testWidgets('Viewer with default padding', (WidgetTester tester) async {
+      // Создаем тестовые данные
+      final points = createTestPoints();
+      final lines = createTestLines(points);
+
+      // Создаем Viewer с точками и линиями и дефолтными значениями padding
+      final viewer = ViewerTestUtils.createTestViewer(
+        points: points,
+        lines: lines,
+        padding: 40.0, // Дефолтное значение padding
+      );
+
+      // Рендерим виджет
+      await tester.pumpWidget(
+        createGoldenTestWidget(child: viewer.buildWidget()),
+      );
+
+      // Проверяем, что виджет отрендерился
+      await tester.expectCanvasViewerRendered();
+
+      // Сравниваем с эталонным изображением
+      await expectLater(
+        find.byType(MaterialApp),
+        matchesGoldenFile('goldens/viewer_with_points_and_lines.png'),
+      );
+    });
   });
 }

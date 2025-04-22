@@ -10,9 +10,12 @@ class ViewerTestUtils {
     List<Line> lines = const [],
     List<Point> points = const [],
     bool showCoordinates = false,
+    double padding = 40.0,
   }) {
     final viewer =
-        CanvasViewerFactory().create(showCoordinates: showCoordinates)
+        CanvasViewerFactory(
+              padding: padding,
+            ).create(showCoordinates: showCoordinates)
             as CanvasViewer;
     viewer.draw(lines, points);
     return viewer;

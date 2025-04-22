@@ -26,6 +26,9 @@ class CanvasViewer with DiagnosticableTreeMixin implements Viewer {
   // Флаг, указывающий, нужно ли отображать координаты
   bool _showCoordinates = false;
 
+  // Отступы от краев
+  final double padding;
+
   // Геттеры для тестирования
   List<Line> get lines => List.unmodifiable(_lines);
   List<Point> get points => List.unmodifiable(_points);
@@ -33,6 +36,8 @@ class CanvasViewer with DiagnosticableTreeMixin implements Viewer {
   Offset get currentOffset => _currentOffset;
   Rect? get boundingBox => _boundingBox;
   bool get showCoordinates => _showCoordinates;
+
+  CanvasViewer({this.padding = 40.0});
 
   @override
   void draw(List<Line> lines, List<Point> points) {
@@ -118,6 +123,7 @@ class CanvasViewer with DiagnosticableTreeMixin implements Viewer {
                 ),
                 size: Size(constraints.maxWidth, constraints.maxHeight),
                 painter: _CanvasPainter(
+                  padding,
                   lines: _lines,
                   points: _points,
                   needsRescale: _needsRescale,
@@ -205,9 +211,10 @@ class _CanvasPainter extends CustomPainter {
   double _offsetY = 0.0;
 
   // Отступы от краев
-  static const double _padding = 20.0;
+  final double _padding;
 
-  _CanvasPainter({
+  _CanvasPainter(
+    this._padding, {
     required this.lines,
     required this.points,
     required this.needsRescale,
@@ -433,11 +440,13 @@ class _CanvasPainter extends CustomPainter {
 
 /// Фабрика для создания экземпляров CanvasViewer
 class CanvasViewerFactory implements ViewerFactory {
-  const CanvasViewerFactory();
+  const CanvasViewerFactory({this.padding = 40.0});
+
+  final double padding;
 
   @override
   Viewer create({bool showCoordinates = false}) {
-    final viewer = CanvasViewer();
+    final viewer = CanvasViewer(padding: padding);
     if (showCoordinates) {
       viewer.setShowCoordinates(true);
     }
