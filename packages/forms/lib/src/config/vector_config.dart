@@ -1,5 +1,7 @@
+import 'package:models_ns/models_ns.dart';
+
 import '../core/form_field.dart';
-import '../models/vector.dart';
+
 import 'field_config.dart';
 import 'number_config.dart';
 

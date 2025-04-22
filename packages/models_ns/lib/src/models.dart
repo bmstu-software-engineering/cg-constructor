@@ -1,2 +1,9 @@
 export 'point.dart';
 export 'line.dart';
+export 'validatable.dart';
+export 'angle.dart';
+export 'vector.dart';
+export 'scale.dart';
+export 'polygon.dart';
+export 'triangle.dart';
+export 'rectangle.dart';

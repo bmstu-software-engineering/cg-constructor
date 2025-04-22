@@ -1,5 +1,7 @@
+import 'package:models_ns/models_ns.dart';
+
 import '../core/form_field.dart';
-import '../models/angle.dart';
+
 import 'field_config.dart';
 import 'number_config.dart';
 
@@ -26,15 +28,14 @@ class AngleFieldConfig extends FieldConfig<Angle> {
     this.min,
     this.max,
     this.normalize = false,
-  }) : valueConfig =
-           valueConfig ??
-           NumberFieldConfig(label: 'Значение угла', min: min, max: max),
-       super(
-         label: label,
-         hint: hint,
-         isRequired: isRequired,
-         validator: validator,
-       );
+  })  : valueConfig = valueConfig ??
+            NumberFieldConfig(label: 'Значение угла', min: min, max: max),
+        super(
+          label: label,
+          hint: hint,
+          isRequired: isRequired,
+          validator: validator,
+        );
 
   @override
   FormField<Angle> createField() {

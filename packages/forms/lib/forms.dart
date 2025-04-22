@@ -2,7 +2,6 @@
 library forms;
 
 // Экспортируем базовые интерфейсы и классы
-export 'src/core/validatable.dart';
 export 'src/core/form_field.dart';
 export 'src/core/form_model.dart';
 export 'src/core/validators.dart';
@@ -25,14 +24,8 @@ export 'src/config/rectangle_config.dart';
 export 'src/config/list_field_config.dart';
 export 'src/config/line_config.dart';
 
-// Экспортируем модели
-export 'src/models/angle.dart';
-export 'src/models/vector.dart';
-export 'src/models/scale.dart';
-export 'src/models/polygon.dart';
-export 'src/models/triangle.dart';
-export 'src/models/rectangle.dart';
-export 'src/models/dynamic_form_model.dart';
+// Экспортируем модели, которые остались в пакете forms
+export 'src/models/models.dart';
 
 // Экспортируем поля форм
 export 'src/fields/base_form_field.dart';

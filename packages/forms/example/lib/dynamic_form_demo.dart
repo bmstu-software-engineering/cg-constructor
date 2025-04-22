@@ -1,10 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:forms/forms.dart';
-import 'package:forms/src/config/field_config_entry.dart';
-import 'package:forms/src/config/field_type.dart';
-import 'package:forms/src/config/form_config.dart';
-import 'package:forms/src/models/dynamic_form_model.dart';
-import 'package:forms/widgets/dynamic_form_widget.dart';
+
 import 'package:models_ns/models_ns.dart';
 
 /// Демонстрация использования динамической формы

@@ -12,8 +12,7 @@ part of 'polygon.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
-);
+    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
 Polygon _$PolygonFromJson(Map<String, dynamic> json) {
   return _Polygon.fromJson(json);
@@ -25,12 +24,8 @@ mixin _$Polygon {
   String get color => throw _privateConstructorUsedError;
   double get thickness => throw _privateConstructorUsedError;
 
-  /// Serializes this Polygon to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-
-  /// Create a copy of Polygon
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   $PolygonCopyWith<Polygon> get copyWith => throw _privateConstructorUsedError;
 }
 
@@ -52,8 +47,6 @@ class _$PolygonCopyWithImpl<$Res, $Val extends Polygon>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
-  /// Create a copy of Polygon
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -61,35 +54,28 @@ class _$PolygonCopyWithImpl<$Res, $Val extends Polygon>
     Object? color = null,
     Object? thickness = null,
   }) {
-    return _then(
-      _value.copyWith(
-            points:
-                null == points
-                    ? _value.points
-                    : points // ignore: cast_nullable_to_non_nullable
-                        as List<Point>,
-            color:
-                null == color
-                    ? _value.color
-                    : color // ignore: cast_nullable_to_non_nullable
-                        as String,
-            thickness:
-                null == thickness
-                    ? _value.thickness
-                    : thickness // ignore: cast_nullable_to_non_nullable
-                        as double,
-          )
-          as $Val,
-    );
+    return _then(_value.copyWith(
+      points: null == points
+          ? _value.points
+          : points // ignore: cast_nullable_to_non_nullable
+              as List<Point>,
+      color: null == color
+          ? _value.color
+          : color // ignore: cast_nullable_to_non_nullable
+              as String,
+      thickness: null == thickness
+          ? _value.thickness
+          : thickness // ignore: cast_nullable_to_non_nullable
+              as double,
+    ) as $Val);
   }
 }
 
 /// @nodoc
 abstract class _$$PolygonImplCopyWith<$Res> implements $PolygonCopyWith<$Res> {
   factory _$$PolygonImplCopyWith(
-    _$PolygonImpl value,
-    $Res Function(_$PolygonImpl) then,
-  ) = __$$PolygonImplCopyWithImpl<$Res>;
+          _$PolygonImpl value, $Res Function(_$PolygonImpl) then) =
+      __$$PolygonImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({List<Point> points, String color, double thickness});
@@ -100,12 +86,9 @@ class __$$PolygonImplCopyWithImpl<$Res>
     extends _$PolygonCopyWithImpl<$Res, _$PolygonImpl>
     implements _$$PolygonImplCopyWith<$Res> {
   __$$PolygonImplCopyWithImpl(
-    _$PolygonImpl _value,
-    $Res Function(_$PolygonImpl) _then,
-  ) : super(_value, _then);
+      _$PolygonImpl _value, $Res Function(_$PolygonImpl) _then)
+      : super(_value, _then);
 
-  /// Create a copy of Polygon
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -113,25 +96,20 @@ class __$$PolygonImplCopyWithImpl<$Res>
     Object? color = null,
     Object? thickness = null,
   }) {
-    return _then(
-      _$PolygonImpl(
-        points:
-            null == points
-                ? _value._points
-                : points // ignore: cast_nullable_to_non_nullable
-                    as List<Point>,
-        color:
-            null == color
-                ? _value.color
-                : color // ignore: cast_nullable_to_non_nullable
-                    as String,
-        thickness:
-            null == thickness
-                ? _value.thickness
-                : thickness // ignore: cast_nullable_to_non_nullable
-                    as double,
-      ),
-    );
+    return _then(_$PolygonImpl(
+      points: null == points
+          ? _value._points
+          : points // ignore: cast_nullable_to_non_nullable
+              as List<Point>,
+      color: null == color
+          ? _value.color
+          : color // ignore: cast_nullable_to_non_nullable
+              as String,
+      thickness: null == thickness
+          ? _value.thickness
+          : thickness // ignore: cast_nullable_to_non_nullable
+              as double,
+    ));
   }
 }
 
@@ -139,12 +117,12 @@ class __$$PolygonImplCopyWithImpl<$Res>
 
 @JsonSerializable()
 class _$PolygonImpl extends _Polygon {
-  const _$PolygonImpl({
-    required final List<Point> points,
-    this.color = '#000000',
-    this.thickness = 1.0,
-  }) : _points = points,
-       super._();
+  const _$PolygonImpl(
+      {required final List<Point> points,
+      this.color = '#000000',
+      this.thickness = 1.0})
+      : _points = points,
+        super._();
 
   factory _$PolygonImpl.fromJson(Map<String, dynamic> json) =>
       _$$PolygonImplFromJson(json);
@@ -175,18 +153,12 @@ class _$PolygonImpl extends _Polygon {
                 other.thickness == thickness));
   }
 
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(
-    runtimeType,
-    const DeepCollectionEquality().hash(_points),
-    color,
-    thickness,
-  );
+  int get hashCode => Object.hash(runtimeType,
+      const DeepCollectionEquality().hash(_points), color, thickness);
 
-  /// Create a copy of Polygon
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$PolygonImplCopyWith<_$PolygonImpl> get copyWith =>
@@ -194,16 +166,17 @@ class _$PolygonImpl extends _Polygon {
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$PolygonImplToJson(this);
+    return _$$PolygonImplToJson(
+      this,
+    );
   }
 }
 
 abstract class _Polygon extends Polygon {
-  const factory _Polygon({
-    required final List<Point> points,
-    final String color,
-    final double thickness,
-  }) = _$PolygonImpl;
+  const factory _Polygon(
+      {required final List<Point> points,
+      final String color,
+      final double thickness}) = _$PolygonImpl;
   const _Polygon._() : super._();
 
   factory _Polygon.fromJson(Map<String, dynamic> json) = _$PolygonImpl.fromJson;
@@ -214,11 +187,8 @@ abstract class _Polygon extends Polygon {
   String get color;
   @override
   double get thickness;
-
-  /// Create a copy of Polygon
-  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$PolygonImplCopyWith<_$PolygonImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

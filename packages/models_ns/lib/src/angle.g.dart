@@ -6,8 +6,11 @@ part of 'angle.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$AngleImpl _$$AngleImplFromJson(Map<String, dynamic> json) =>
-    _$AngleImpl(value: (json['value'] as num).toDouble());
+_$AngleImpl _$$AngleImplFromJson(Map<String, dynamic> json) => _$AngleImpl(
+      value: (json['value'] as num).toDouble(),
+    );
 
 Map<String, dynamic> _$$AngleImplToJson(_$AngleImpl instance) =>
-    <String, dynamic>{'value': instance.value};
+    <String, dynamic>{
+      'value': instance.value,
+    };

@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
+import 'package:models_ns/models_ns.dart';
 import '../src/fields/rectangle_field.dart';
-import '../src/models/rectangle.dart';
+
 import 'form_field_widget.dart';
 import 'point_field_widget.dart';
 

@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import '../core/validatable.dart';
+import 'validatable.dart';
 
 part 'scale.freezed.dart';
 part 'scale.g.dart';

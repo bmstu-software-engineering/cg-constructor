@@ -12,8 +12,7 @@ part of 'scale.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
-);
+    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
 Scale _$ScaleFromJson(Map<String, dynamic> json) {
   return _Scale.fromJson(json);
@@ -24,12 +23,8 @@ mixin _$Scale {
   double get x => throw _privateConstructorUsedError;
   double get y => throw _privateConstructorUsedError;
 
-  /// Serializes this Scale to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-
-  /// Create a copy of Scale
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   $ScaleCopyWith<Scale> get copyWith => throw _privateConstructorUsedError;
 }
 
@@ -51,35 +46,30 @@ class _$ScaleCopyWithImpl<$Res, $Val extends Scale>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
-  /// Create a copy of Scale
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({Object? x = null, Object? y = null}) {
-    return _then(
-      _value.copyWith(
-            x:
-                null == x
-                    ? _value.x
-                    : x // ignore: cast_nullable_to_non_nullable
-                        as double,
-            y:
-                null == y
-                    ? _value.y
-                    : y // ignore: cast_nullable_to_non_nullable
-                        as double,
-          )
-          as $Val,
-    );
+  $Res call({
+    Object? x = null,
+    Object? y = null,
+  }) {
+    return _then(_value.copyWith(
+      x: null == x
+          ? _value.x
+          : x // ignore: cast_nullable_to_non_nullable
+              as double,
+      y: null == y
+          ? _value.y
+          : y // ignore: cast_nullable_to_non_nullable
+              as double,
+    ) as $Val);
   }
 }
 
 /// @nodoc
 abstract class _$$ScaleImplCopyWith<$Res> implements $ScaleCopyWith<$Res> {
   factory _$$ScaleImplCopyWith(
-    _$ScaleImpl value,
-    $Res Function(_$ScaleImpl) then,
-  ) = __$$ScaleImplCopyWithImpl<$Res>;
+          _$ScaleImpl value, $Res Function(_$ScaleImpl) then) =
+      __$$ScaleImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({double x, double y});
@@ -90,29 +80,25 @@ class __$$ScaleImplCopyWithImpl<$Res>
     extends _$ScaleCopyWithImpl<$Res, _$ScaleImpl>
     implements _$$ScaleImplCopyWith<$Res> {
   __$$ScaleImplCopyWithImpl(
-    _$ScaleImpl _value,
-    $Res Function(_$ScaleImpl) _then,
-  ) : super(_value, _then);
+      _$ScaleImpl _value, $Res Function(_$ScaleImpl) _then)
+      : super(_value, _then);
 
-  /// Create a copy of Scale
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({Object? x = null, Object? y = null}) {
-    return _then(
-      _$ScaleImpl(
-        x:
-            null == x
-                ? _value.x
-                : x // ignore: cast_nullable_to_non_nullable
-                    as double,
-        y:
-            null == y
-                ? _value.y
-                : y // ignore: cast_nullable_to_non_nullable
-                    as double,
-      ),
-    );
+  $Res call({
+    Object? x = null,
+    Object? y = null,
+  }) {
+    return _then(_$ScaleImpl(
+      x: null == x
+          ? _value.x
+          : x // ignore: cast_nullable_to_non_nullable
+              as double,
+      y: null == y
+          ? _value.y
+          : y // ignore: cast_nullable_to_non_nullable
+              as double,
+    ));
   }
 }
 
@@ -139,13 +125,11 @@ class _$ScaleImpl extends _Scale {
             (identical(other.y, y) || other.y == y));
   }
 
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(runtimeType, x, y);
 
-  /// Create a copy of Scale
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$ScaleImplCopyWith<_$ScaleImpl> get copyWith =>
@@ -153,7 +137,9 @@ class _$ScaleImpl extends _Scale {
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$ScaleImplToJson(this);
+    return _$$ScaleImplToJson(
+      this,
+    );
   }
 }
 
@@ -168,11 +154,8 @@ abstract class _Scale extends Scale {
   double get x;
   @override
   double get y;
-
-  /// Create a copy of Scale
-  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$ScaleImplCopyWith<_$ScaleImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

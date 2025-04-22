@@ -1,5 +1,7 @@
+import 'package:models_ns/models_ns.dart';
+
 import '../core/form_field.dart';
-import '../models/scale.dart';
+
 import 'field_config.dart';
 import 'number_config.dart';
 
@@ -15,31 +17,23 @@ class ScaleFieldConfig extends FieldConfig<Scale> {
   final bool uniform;
 
   ScaleFieldConfig({
-    required String label,
-    String? hint,
-    bool isRequired = true,
-    String? Function(Scale?)? validator,
+    required String super.label,
+    super.hint,
+    super.isRequired,
+    super.validator,
     NumberFieldConfig? xConfig,
     NumberFieldConfig? yConfig,
     this.uniform = false,
-  }) : xConfig =
-           xConfig ??
-           NumberFieldConfig(
-             label: 'Масштаб по X',
-             min: 0.0001, // Предотвращаем деление на ноль
-           ),
-       yConfig =
-           yConfig ??
-           NumberFieldConfig(
-             label: 'Масштаб по Y',
-             min: 0.0001, // Предотвращаем деление на ноль
-           ),
-       super(
-         label: label,
-         hint: hint,
-         isRequired: isRequired,
-         validator: validator,
-       );
+  })  : xConfig = xConfig ??
+            const NumberFieldConfig(
+              label: 'Масштаб по X',
+              min: 0.0001, // Предотвращаем деление на ноль
+            ),
+        yConfig = yConfig ??
+            const NumberFieldConfig(
+              label: 'Масштаб по Y',
+              min: 0.0001, // Предотвращаем деление на ноль
+            );
 
   @override
   FormField<Scale> createField() {

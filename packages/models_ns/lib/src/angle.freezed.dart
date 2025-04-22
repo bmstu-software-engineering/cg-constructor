@@ -12,8 +12,7 @@ part of 'angle.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
-);
+    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
 Angle _$AngleFromJson(Map<String, dynamic> json) {
   return _Angle.fromJson(json);
@@ -23,12 +22,8 @@ Angle _$AngleFromJson(Map<String, dynamic> json) {
 mixin _$Angle {
   double get value => throw _privateConstructorUsedError;
 
-  /// Serializes this Angle to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-
-  /// Create a copy of Angle
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   $AngleCopyWith<Angle> get copyWith => throw _privateConstructorUsedError;
 }
 
@@ -50,30 +45,25 @@ class _$AngleCopyWithImpl<$Res, $Val extends Angle>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
-  /// Create a copy of Angle
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({Object? value = null}) {
-    return _then(
-      _value.copyWith(
-            value:
-                null == value
-                    ? _value.value
-                    : value // ignore: cast_nullable_to_non_nullable
-                        as double,
-          )
-          as $Val,
-    );
+  $Res call({
+    Object? value = null,
+  }) {
+    return _then(_value.copyWith(
+      value: null == value
+          ? _value.value
+          : value // ignore: cast_nullable_to_non_nullable
+              as double,
+    ) as $Val);
   }
 }
 
 /// @nodoc
 abstract class _$$AngleImplCopyWith<$Res> implements $AngleCopyWith<$Res> {
   factory _$$AngleImplCopyWith(
-    _$AngleImpl value,
-    $Res Function(_$AngleImpl) then,
-  ) = __$$AngleImplCopyWithImpl<$Res>;
+          _$AngleImpl value, $Res Function(_$AngleImpl) then) =
+      __$$AngleImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({double value});
@@ -84,24 +74,20 @@ class __$$AngleImplCopyWithImpl<$Res>
     extends _$AngleCopyWithImpl<$Res, _$AngleImpl>
     implements _$$AngleImplCopyWith<$Res> {
   __$$AngleImplCopyWithImpl(
-    _$AngleImpl _value,
-    $Res Function(_$AngleImpl) _then,
-  ) : super(_value, _then);
+      _$AngleImpl _value, $Res Function(_$AngleImpl) _then)
+      : super(_value, _then);
 
-  /// Create a copy of Angle
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({Object? value = null}) {
-    return _then(
-      _$AngleImpl(
-        value:
-            null == value
-                ? _value.value
-                : value // ignore: cast_nullable_to_non_nullable
-                    as double,
-      ),
-    );
+  $Res call({
+    Object? value = null,
+  }) {
+    return _then(_$AngleImpl(
+      value: null == value
+          ? _value.value
+          : value // ignore: cast_nullable_to_non_nullable
+              as double,
+    ));
   }
 }
 
@@ -125,13 +111,11 @@ class _$AngleImpl extends _Angle {
             (identical(other.value, value) || other.value == value));
   }
 
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(runtimeType, value);
 
-  /// Create a copy of Angle
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$AngleImplCopyWith<_$AngleImpl> get copyWith =>
@@ -139,7 +123,9 @@ class _$AngleImpl extends _Angle {
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$AngleImplToJson(this);
+    return _$$AngleImplToJson(
+      this,
+    );
   }
 }
 
@@ -151,11 +137,8 @@ abstract class _Angle extends Angle {
 
   @override
   double get value;
-
-  /// Create a copy of Angle
-  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$AngleImplCopyWith<_$AngleImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

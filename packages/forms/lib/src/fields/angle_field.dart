@@ -1,6 +1,7 @@
+import 'package:models_ns/models_ns.dart';
+
 import '../config/angle_config.dart';
-import '../core/form_field.dart';
-import '../models/angle.dart';
+
 import 'base_form_field.dart';
 import 'number_field.dart';
 
@@ -17,15 +18,15 @@ class AngleField extends BaseFormField<Angle> {
   /// [config] - конфигурация поля
   /// [initialValue] - начальное значение поля
   AngleField({required this.config, Angle? initialValue})
-    : _valueField = NumberField(
-        config: config.valueConfig,
-        initialValue: initialValue?.value,
-      ),
-      super(
-        initialValue: initialValue,
-        validator: _createValidator(config),
-        isRequired: config.isRequired,
-      );
+      : _valueField = NumberField(
+          config: config.valueConfig,
+          initialValue: initialValue?.value,
+        ),
+        super(
+          initialValue: initialValue,
+          validator: _createValidator(config),
+          isRequired: config.isRequired,
+        );
 
   /// Создает валидатор на основе конфигурации
   static String? Function(Angle?)? _createValidator(AngleFieldConfig config) {

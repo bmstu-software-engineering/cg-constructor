@@ -1,6 +1,7 @@
+import 'package:models_ns/models_ns.dart';
+
 import '../config/scale_config.dart';
-import '../core/form_field.dart';
-import '../models/scale.dart';
+
 import 'base_form_field.dart';
 import 'number_field.dart';
 
@@ -20,19 +21,19 @@ class ScaleField extends BaseFormField<Scale> {
   /// [config] - конфигурация поля
   /// [initialValue] - начальное значение поля
   ScaleField({required this.config, Scale? initialValue})
-    : _xField = NumberField(
-        config: config.xConfig,
-        initialValue: initialValue?.x,
-      ),
-      _yField = NumberField(
-        config: config.yConfig,
-        initialValue: initialValue?.y,
-      ),
-      super(
-        initialValue: initialValue,
-        validator: _createValidator(config),
-        isRequired: config.isRequired,
-      );
+      : _xField = NumberField(
+          config: config.xConfig,
+          initialValue: initialValue?.x,
+        ),
+        _yField = NumberField(
+          config: config.yConfig,
+          initialValue: initialValue?.y,
+        ),
+        super(
+          initialValue: initialValue,
+          validator: _createValidator(config),
+          isRequired: config.isRequired,
+        );
 
   /// Создает валидатор на основе конфигурации
   static String? Function(Scale?)? _createValidator(ScaleFieldConfig config) {

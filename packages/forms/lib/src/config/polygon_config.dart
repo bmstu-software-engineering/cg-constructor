@@ -1,7 +1,7 @@
 import 'package:models_ns/models_ns.dart';
 
 import '../core/form_field.dart';
-import '../models/polygon.dart';
+
 import 'field_config.dart';
 import 'point_config.dart';
 
@@ -32,13 +32,13 @@ class PolygonFieldConfig extends FieldConfig<Polygon> {
     this.maxPoints,
     this.defaultColor = '#000000',
     this.defaultThickness = 1.0,
-  }) : pointConfig = pointConfig ?? PointFieldConfig(label: 'Точка'),
-       super(
-         label: label,
-         hint: hint,
-         isRequired: isRequired,
-         validator: validator ?? _defaultValidator,
-       );
+  })  : pointConfig = pointConfig ?? PointFieldConfig(label: 'Точка'),
+        super(
+          label: label,
+          hint: hint,
+          isRequired: isRequired,
+          validator: validator ?? _defaultValidator,
+        );
 
   /// Валидатор по умолчанию для многоугольника
   static String? _defaultValidator(Polygon? polygon) {

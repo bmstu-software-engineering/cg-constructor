@@ -1,5 +1,7 @@
+import 'package:models_ns/models_ns.dart';
+
 import '../config/triangle_config.dart';
-import '../models/triangle.dart';
+
 import 'base_form_field.dart';
 import 'point_field.dart';
 
@@ -22,23 +24,23 @@ class TriangleField extends BaseFormField<Triangle> {
   /// [config] - конфигурация поля
   /// [initialValue] - начальное значение поля
   TriangleField({required this.config, Triangle? initialValue})
-    : _aField = PointField(
-        config: config.aConfig,
-        initialValue: initialValue?.a,
-      ),
-      _bField = PointField(
-        config: config.bConfig,
-        initialValue: initialValue?.b,
-      ),
-      _cField = PointField(
-        config: config.cConfig,
-        initialValue: initialValue?.c,
-      ),
-      super(
-        initialValue: initialValue,
-        validator: _createValidator(config),
-        isRequired: config.isRequired,
-      );
+      : _aField = PointField(
+          config: config.aConfig,
+          initialValue: initialValue?.a,
+        ),
+        _bField = PointField(
+          config: config.bConfig,
+          initialValue: initialValue?.b,
+        ),
+        _cField = PointField(
+          config: config.cConfig,
+          initialValue: initialValue?.c,
+        ),
+        super(
+          initialValue: initialValue,
+          validator: _createValidator(config),
+          isRequired: config.isRequired,
+        );
 
   /// Создает валидатор на основе конфигурации
   static String? Function(Triangle?)? _createValidator(

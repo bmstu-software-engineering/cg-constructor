@@ -8,10 +8,9 @@ part of 'polygon.dart';
 
 _$PolygonImpl _$$PolygonImplFromJson(Map<String, dynamic> json) =>
     _$PolygonImpl(
-      points:
-          (json['points'] as List<dynamic>)
-              .map((e) => Point.fromJson(e as Map<String, dynamic>))
-              .toList(),
+      points: (json['points'] as List<dynamic>)
+          .map((e) => Point.fromJson(e as Map<String, dynamic>))
+          .toList(),
       color: json['color'] as String? ?? '#000000',
       thickness: (json['thickness'] as num?)?.toDouble() ?? 1.0,
     );

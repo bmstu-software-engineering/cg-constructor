@@ -1,28 +1,6 @@
 import 'package:flutter/material.dart' hide FormField;
 import 'package:forms/forms.dart';
-import 'package:forms/src/core/form_field.dart';
-
-import '../src/config/field_config_entry.dart';
-import '../src/config/field_type.dart';
-import '../src/fields/angle_field.dart';
-import '../src/fields/list_field.dart';
-import '../src/fields/number_field.dart';
-import '../src/fields/point_field.dart';
-import '../src/fields/polygon_field.dart';
-import '../src/fields/rectangle_field.dart';
-import '../src/fields/scale_field.dart';
-import '../src/fields/triangle_field.dart';
-import '../src/fields/vector_field.dart';
-import '../src/models/dynamic_form_model.dart';
-import 'angle_field_widget.dart';
-import 'list_field_widget.dart';
-import 'number_field_widget.dart';
-import 'point_field_widget.dart';
-import 'polygon_field_widget.dart';
-import 'rectangle_field_widget.dart';
-import 'scale_field_widget.dart';
-import 'triangle_field_widget.dart';
-import 'vector_field_widget.dart';
+import 'package:forms/src/models/dynamic_form_model.dart';
 
 /// Виджет для отображения динамической формы
 class DynamicFormWidget extends StatefulWidget {
@@ -45,12 +23,12 @@ class DynamicFormWidget extends StatefulWidget {
   /// [submitButtonText] - текст кнопки отправки
   /// [fieldSpacing] - отступы между полями
   const DynamicFormWidget({
-    Key? key,
+    super.key,
     required this.model,
     this.onSubmit,
     this.submitButtonText = 'Отправить',
     this.fieldSpacing = 16.0,
-  }) : super(key: key);
+  });
 
   @override
   State<DynamicFormWidget> createState() => _DynamicFormWidgetState();

@@ -1,8 +1,7 @@
 import 'package:models_ns/models_ns.dart';
 
 import '../config/rectangle_config.dart';
-import '../core/form_field.dart';
-import '../models/rectangle.dart';
+
 import 'base_form_field.dart';
 import 'point_field.dart';
 
@@ -27,37 +26,33 @@ class RectangleField extends BaseFormField<Rectangle> {
   ///
   /// [config] - конфигурация поля
   /// [initialValue] - начальное значение поля
-  RectangleField({required this.config, Rectangle? initialValue})
-    : _topLeftField = PointField(
-        config: config.topLeftConfig,
-        initialValue: initialValue?.topLeft,
-      ),
-      _bottomRightField =
-          config.useCorners
-              ? PointField(
+  RectangleField({required this.config, super.initialValue})
+      : _topLeftField = PointField(
+          config: config.topLeftConfig,
+          initialValue: initialValue?.topLeft,
+        ),
+        _bottomRightField = config.useCorners
+            ? PointField(
                 config: config.bottomRightConfig,
                 initialValue: initialValue?.bottomRight,
               )
-              : null,
-      _topRightField =
-          !config.useCorners
-              ? PointField(
+            : null,
+        _topRightField = !config.useCorners
+            ? PointField(
                 config: config.topRightConfig ?? config.topLeftConfig,
                 initialValue: initialValue?.topRight,
               )
-              : null,
-      _bottomLeftField =
-          !config.useCorners
-              ? PointField(
+            : null,
+        _bottomLeftField = !config.useCorners
+            ? PointField(
                 config: config.bottomLeftConfig ?? config.bottomRightConfig,
                 initialValue: initialValue?.bottomLeft,
               )
-              : null,
-      super(
-        initialValue: initialValue,
-        validator: _createValidator(config),
-        isRequired: config.isRequired,
-      );
+            : null,
+        super(
+          validator: _createValidator(config),
+          isRequired: config.isRequired,
+        );
 
   /// Создает валидатор на основе конфигурации
   static String? Function(Rectangle?)? _createValidator(

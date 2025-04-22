@@ -1,11 +1,12 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:forms/forms.dart';
+import 'package:models_ns/models_ns.dart';
 
 void main() {
   group('Diagnostics Tests', () {
     test('Angle diagnostics', () {
-      final angle = Angle(value: 45);
+      const angle = Angle(value: 45);
 
       // Создаем DiagnosticPropertiesBuilder для проверки свойств
       final builder = DiagnosticPropertiesBuilder();
@@ -24,7 +25,7 @@ void main() {
     });
 
     test('Vector diagnostics', () {
-      final vector = Vector(dx: 3, dy: 4);
+      const vector = Vector(dx: 3, dy: 4);
 
       final builder = DiagnosticPropertiesBuilder();
       vector.debugFillProperties(builder);
@@ -39,7 +40,7 @@ void main() {
     });
 
     test('Scale diagnostics', () {
-      final scale = Scale(x: 2, y: 3);
+      const scale = Scale(x: 2, y: 3);
 
       final builder = DiagnosticPropertiesBuilder();
       scale.debugFillProperties(builder);
@@ -59,7 +60,7 @@ void main() {
     test('DiagnosticableFormField diagnostics', () {
       // Создаем тестовое поле, наследующееся от DiagnosticableFormField
       final field = NumberField(
-        config: NumberFieldConfig(label: 'Test', min: 0, max: 100),
+        config: const NumberFieldConfig(label: 'Test', min: 0, max: 100),
       );
 
       field.value = 42;
@@ -104,7 +105,7 @@ void main() {
     test('Widget diagnostics integration', () {
       // Создаем тестовое поле
       final field = NumberField(
-        config: NumberFieldConfig(label: 'Test', min: 0, max: 100),
+        config: const NumberFieldConfig(label: 'Test', min: 0, max: 100),
       );
 
       field.value = 42;
@@ -133,12 +134,12 @@ void main() {
 // Тестовая модель формы для проверки DiagnosticableFormModel
 class TestFormModel extends DiagnosticableFormModel {
   final field1 = NumberField(
-    config: NumberFieldConfig(
+    config: const NumberFieldConfig(
         label: 'Field 1', min: 0, max: 100, isRequired: false),
   );
 
   final field2 = NumberField(
-    config: NumberFieldConfig(
+    config: const NumberFieldConfig(
         label: 'Field 2', min: 0, max: 100, isRequired: false),
   );
 

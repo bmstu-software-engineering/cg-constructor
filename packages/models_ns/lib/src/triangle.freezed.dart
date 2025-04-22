@@ -12,8 +12,7 @@ part of 'triangle.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
-);
+    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
 Triangle _$TriangleFromJson(Map<String, dynamic> json) {
   return _Triangle.fromJson(json);
@@ -27,12 +26,8 @@ mixin _$Triangle {
   String get color => throw _privateConstructorUsedError;
   double get thickness => throw _privateConstructorUsedError;
 
-  /// Serializes this Triangle to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-
-  /// Create a copy of Triangle
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   $TriangleCopyWith<Triangle> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -59,8 +54,6 @@ class _$TriangleCopyWithImpl<$Res, $Val extends Triangle>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
-  /// Create a copy of Triangle
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -70,40 +63,30 @@ class _$TriangleCopyWithImpl<$Res, $Val extends Triangle>
     Object? color = null,
     Object? thickness = null,
   }) {
-    return _then(
-      _value.copyWith(
-            a:
-                null == a
-                    ? _value.a
-                    : a // ignore: cast_nullable_to_non_nullable
-                        as Point,
-            b:
-                null == b
-                    ? _value.b
-                    : b // ignore: cast_nullable_to_non_nullable
-                        as Point,
-            c:
-                null == c
-                    ? _value.c
-                    : c // ignore: cast_nullable_to_non_nullable
-                        as Point,
-            color:
-                null == color
-                    ? _value.color
-                    : color // ignore: cast_nullable_to_non_nullable
-                        as String,
-            thickness:
-                null == thickness
-                    ? _value.thickness
-                    : thickness // ignore: cast_nullable_to_non_nullable
-                        as double,
-          )
-          as $Val,
-    );
+    return _then(_value.copyWith(
+      a: null == a
+          ? _value.a
+          : a // ignore: cast_nullable_to_non_nullable
+              as Point,
+      b: null == b
+          ? _value.b
+          : b // ignore: cast_nullable_to_non_nullable
+              as Point,
+      c: null == c
+          ? _value.c
+          : c // ignore: cast_nullable_to_non_nullable
+              as Point,
+      color: null == color
+          ? _value.color
+          : color // ignore: cast_nullable_to_non_nullable
+              as String,
+      thickness: null == thickness
+          ? _value.thickness
+          : thickness // ignore: cast_nullable_to_non_nullable
+              as double,
+    ) as $Val);
   }
 
-  /// Create a copy of Triangle
-  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $PointCopyWith<$Res> get a {
@@ -112,8 +95,6 @@ class _$TriangleCopyWithImpl<$Res, $Val extends Triangle>
     });
   }
 
-  /// Create a copy of Triangle
-  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $PointCopyWith<$Res> get b {
@@ -122,8 +103,6 @@ class _$TriangleCopyWithImpl<$Res, $Val extends Triangle>
     });
   }
 
-  /// Create a copy of Triangle
-  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $PointCopyWith<$Res> get c {
@@ -137,9 +116,8 @@ class _$TriangleCopyWithImpl<$Res, $Val extends Triangle>
 abstract class _$$TriangleImplCopyWith<$Res>
     implements $TriangleCopyWith<$Res> {
   factory _$$TriangleImplCopyWith(
-    _$TriangleImpl value,
-    $Res Function(_$TriangleImpl) then,
-  ) = __$$TriangleImplCopyWithImpl<$Res>;
+          _$TriangleImpl value, $Res Function(_$TriangleImpl) then) =
+      __$$TriangleImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({Point a, Point b, Point c, String color, double thickness});
@@ -157,12 +135,9 @@ class __$$TriangleImplCopyWithImpl<$Res>
     extends _$TriangleCopyWithImpl<$Res, _$TriangleImpl>
     implements _$$TriangleImplCopyWith<$Res> {
   __$$TriangleImplCopyWithImpl(
-    _$TriangleImpl _value,
-    $Res Function(_$TriangleImpl) _then,
-  ) : super(_value, _then);
+      _$TriangleImpl _value, $Res Function(_$TriangleImpl) _then)
+      : super(_value, _then);
 
-  /// Create a copy of Triangle
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -172,35 +147,28 @@ class __$$TriangleImplCopyWithImpl<$Res>
     Object? color = null,
     Object? thickness = null,
   }) {
-    return _then(
-      _$TriangleImpl(
-        a:
-            null == a
-                ? _value.a
-                : a // ignore: cast_nullable_to_non_nullable
-                    as Point,
-        b:
-            null == b
-                ? _value.b
-                : b // ignore: cast_nullable_to_non_nullable
-                    as Point,
-        c:
-            null == c
-                ? _value.c
-                : c // ignore: cast_nullable_to_non_nullable
-                    as Point,
-        color:
-            null == color
-                ? _value.color
-                : color // ignore: cast_nullable_to_non_nullable
-                    as String,
-        thickness:
-            null == thickness
-                ? _value.thickness
-                : thickness // ignore: cast_nullable_to_non_nullable
-                    as double,
-      ),
-    );
+    return _then(_$TriangleImpl(
+      a: null == a
+          ? _value.a
+          : a // ignore: cast_nullable_to_non_nullable
+              as Point,
+      b: null == b
+          ? _value.b
+          : b // ignore: cast_nullable_to_non_nullable
+              as Point,
+      c: null == c
+          ? _value.c
+          : c // ignore: cast_nullable_to_non_nullable
+              as Point,
+      color: null == color
+          ? _value.color
+          : color // ignore: cast_nullable_to_non_nullable
+              as String,
+      thickness: null == thickness
+          ? _value.thickness
+          : thickness // ignore: cast_nullable_to_non_nullable
+              as double,
+    ));
   }
 }
 
@@ -208,13 +176,13 @@ class __$$TriangleImplCopyWithImpl<$Res>
 
 @JsonSerializable()
 class _$TriangleImpl extends _Triangle {
-  const _$TriangleImpl({
-    required this.a,
-    required this.b,
-    required this.c,
-    this.color = '#000000',
-    this.thickness = 1.0,
-  }) : super._();
+  const _$TriangleImpl(
+      {required this.a,
+      required this.b,
+      required this.c,
+      this.color = '#000000',
+      this.thickness = 1.0})
+      : super._();
 
   factory _$TriangleImpl.fromJson(Map<String, dynamic> json) =>
       _$$TriangleImplFromJson(json);
@@ -245,13 +213,11 @@ class _$TriangleImpl extends _Triangle {
                 other.thickness == thickness));
   }
 
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(runtimeType, a, b, c, color, thickness);
 
-  /// Create a copy of Triangle
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$TriangleImplCopyWith<_$TriangleImpl> get copyWith =>
@@ -259,18 +225,19 @@ class _$TriangleImpl extends _Triangle {
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$TriangleImplToJson(this);
+    return _$$TriangleImplToJson(
+      this,
+    );
   }
 }
 
 abstract class _Triangle extends Triangle {
-  const factory _Triangle({
-    required final Point a,
-    required final Point b,
-    required final Point c,
-    final String color,
-    final double thickness,
-  }) = _$TriangleImpl;
+  const factory _Triangle(
+      {required final Point a,
+      required final Point b,
+      required final Point c,
+      final String color,
+      final double thickness}) = _$TriangleImpl;
   const _Triangle._() : super._();
 
   factory _Triangle.fromJson(Map<String, dynamic> json) =
@@ -286,11 +253,8 @@ abstract class _Triangle extends Triangle {
   String get color;
   @override
   double get thickness;
-
-  /// Create a copy of Triangle
-  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$TriangleImplCopyWith<_$TriangleImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

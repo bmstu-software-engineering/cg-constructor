@@ -7,9 +7,12 @@ part of 'vector.dart';
 // **************************************************************************
 
 _$VectorImpl _$$VectorImplFromJson(Map<String, dynamic> json) => _$VectorImpl(
-  dx: (json['dx'] as num).toDouble(),
-  dy: (json['dy'] as num).toDouble(),
-);
+      dx: (json['dx'] as num).toDouble(),
+      dy: (json['dy'] as num).toDouble(),
+    );
 
 Map<String, dynamic> _$$VectorImplToJson(_$VectorImpl instance) =>
-    <String, dynamic>{'dx': instance.dx, 'dy': instance.dy};
+    <String, dynamic>{
+      'dx': instance.dx,
+      'dy': instance.dy,
+    };

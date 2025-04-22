@@ -12,8 +12,7 @@ part of 'vector.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
-);
+    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
 Vector _$VectorFromJson(Map<String, dynamic> json) {
   return _Vector.fromJson(json);
@@ -24,12 +23,8 @@ mixin _$Vector {
   double get dx => throw _privateConstructorUsedError;
   double get dy => throw _privateConstructorUsedError;
 
-  /// Serializes this Vector to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-
-  /// Create a copy of Vector
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   $VectorCopyWith<Vector> get copyWith => throw _privateConstructorUsedError;
 }
 
@@ -51,35 +46,30 @@ class _$VectorCopyWithImpl<$Res, $Val extends Vector>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
-  /// Create a copy of Vector
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({Object? dx = null, Object? dy = null}) {
-    return _then(
-      _value.copyWith(
-            dx:
-                null == dx
-                    ? _value.dx
-                    : dx // ignore: cast_nullable_to_non_nullable
-                        as double,
-            dy:
-                null == dy
-                    ? _value.dy
-                    : dy // ignore: cast_nullable_to_non_nullable
-                        as double,
-          )
-          as $Val,
-    );
+  $Res call({
+    Object? dx = null,
+    Object? dy = null,
+  }) {
+    return _then(_value.copyWith(
+      dx: null == dx
+          ? _value.dx
+          : dx // ignore: cast_nullable_to_non_nullable
+              as double,
+      dy: null == dy
+          ? _value.dy
+          : dy // ignore: cast_nullable_to_non_nullable
+              as double,
+    ) as $Val);
   }
 }
 
 /// @nodoc
 abstract class _$$VectorImplCopyWith<$Res> implements $VectorCopyWith<$Res> {
   factory _$$VectorImplCopyWith(
-    _$VectorImpl value,
-    $Res Function(_$VectorImpl) then,
-  ) = __$$VectorImplCopyWithImpl<$Res>;
+          _$VectorImpl value, $Res Function(_$VectorImpl) then) =
+      __$$VectorImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({double dx, double dy});
@@ -90,29 +80,25 @@ class __$$VectorImplCopyWithImpl<$Res>
     extends _$VectorCopyWithImpl<$Res, _$VectorImpl>
     implements _$$VectorImplCopyWith<$Res> {
   __$$VectorImplCopyWithImpl(
-    _$VectorImpl _value,
-    $Res Function(_$VectorImpl) _then,
-  ) : super(_value, _then);
+      _$VectorImpl _value, $Res Function(_$VectorImpl) _then)
+      : super(_value, _then);
 
-  /// Create a copy of Vector
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({Object? dx = null, Object? dy = null}) {
-    return _then(
-      _$VectorImpl(
-        dx:
-            null == dx
-                ? _value.dx
-                : dx // ignore: cast_nullable_to_non_nullable
-                    as double,
-        dy:
-            null == dy
-                ? _value.dy
-                : dy // ignore: cast_nullable_to_non_nullable
-                    as double,
-      ),
-    );
+  $Res call({
+    Object? dx = null,
+    Object? dy = null,
+  }) {
+    return _then(_$VectorImpl(
+      dx: null == dx
+          ? _value.dx
+          : dx // ignore: cast_nullable_to_non_nullable
+              as double,
+      dy: null == dy
+          ? _value.dy
+          : dy // ignore: cast_nullable_to_non_nullable
+              as double,
+    ));
   }
 }
 
@@ -139,13 +125,11 @@ class _$VectorImpl extends _Vector {
             (identical(other.dy, dy) || other.dy == dy));
   }
 
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(runtimeType, dx, dy);
 
-  /// Create a copy of Vector
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$VectorImplCopyWith<_$VectorImpl> get copyWith =>
@@ -153,7 +137,9 @@ class _$VectorImpl extends _Vector {
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$VectorImplToJson(this);
+    return _$$VectorImplToJson(
+      this,
+    );
   }
 }
 
@@ -168,11 +154,8 @@ abstract class _Vector extends Vector {
   double get dx;
   @override
   double get dy;
-
-  /// Create a copy of Vector
-  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$VectorImplCopyWith<_$VectorImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

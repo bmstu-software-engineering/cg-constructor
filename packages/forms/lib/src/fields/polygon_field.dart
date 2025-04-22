@@ -1,8 +1,7 @@
 import 'package:models_ns/models_ns.dart';
 
 import '../config/polygon_config.dart';
-import '../core/form_field.dart';
-import '../models/polygon.dart';
+
 import 'base_form_field.dart';
 import 'point_field.dart';
 
@@ -19,11 +18,11 @@ class PolygonField extends BaseFormField<Polygon> {
   /// [config] - конфигурация поля
   /// [initialValue] - начальное значение поля
   PolygonField({required this.config, Polygon? initialValue})
-    : super(
-        initialValue: initialValue,
-        validator: _createValidator(config),
-        isRequired: config.isRequired,
-      ) {
+      : super(
+          initialValue: initialValue,
+          validator: _createValidator(config),
+          isRequired: config.isRequired,
+        ) {
     // Инициализируем поля для точек
     if (initialValue != null && initialValue.points.isNotEmpty) {
       for (final point in initialValue.points) {

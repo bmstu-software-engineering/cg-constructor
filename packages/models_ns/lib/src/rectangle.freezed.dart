@@ -12,8 +12,7 @@ part of 'rectangle.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
-);
+    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
 Rectangle _$RectangleFromJson(Map<String, dynamic> json) {
   return _Rectangle.fromJson(json);
@@ -28,12 +27,8 @@ mixin _$Rectangle {
   String get color => throw _privateConstructorUsedError;
   double get thickness => throw _privateConstructorUsedError;
 
-  /// Serializes this Rectangle to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-
-  /// Create a copy of Rectangle
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   $RectangleCopyWith<Rectangle> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -43,14 +38,13 @@ abstract class $RectangleCopyWith<$Res> {
   factory $RectangleCopyWith(Rectangle value, $Res Function(Rectangle) then) =
       _$RectangleCopyWithImpl<$Res, Rectangle>;
   @useResult
-  $Res call({
-    Point topLeft,
-    Point topRight,
-    Point bottomRight,
-    Point bottomLeft,
-    String color,
-    double thickness,
-  });
+  $Res call(
+      {Point topLeft,
+      Point topRight,
+      Point bottomRight,
+      Point bottomLeft,
+      String color,
+      double thickness});
 
   $PointCopyWith<$Res> get topLeft;
   $PointCopyWith<$Res> get topRight;
@@ -68,8 +62,6 @@ class _$RectangleCopyWithImpl<$Res, $Val extends Rectangle>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
-  /// Create a copy of Rectangle
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -80,45 +72,34 @@ class _$RectangleCopyWithImpl<$Res, $Val extends Rectangle>
     Object? color = null,
     Object? thickness = null,
   }) {
-    return _then(
-      _value.copyWith(
-            topLeft:
-                null == topLeft
-                    ? _value.topLeft
-                    : topLeft // ignore: cast_nullable_to_non_nullable
-                        as Point,
-            topRight:
-                null == topRight
-                    ? _value.topRight
-                    : topRight // ignore: cast_nullable_to_non_nullable
-                        as Point,
-            bottomRight:
-                null == bottomRight
-                    ? _value.bottomRight
-                    : bottomRight // ignore: cast_nullable_to_non_nullable
-                        as Point,
-            bottomLeft:
-                null == bottomLeft
-                    ? _value.bottomLeft
-                    : bottomLeft // ignore: cast_nullable_to_non_nullable
-                        as Point,
-            color:
-                null == color
-                    ? _value.color
-                    : color // ignore: cast_nullable_to_non_nullable
-                        as String,
-            thickness:
-                null == thickness
-                    ? _value.thickness
-                    : thickness // ignore: cast_nullable_to_non_nullable
-                        as double,
-          )
-          as $Val,
-    );
+    return _then(_value.copyWith(
+      topLeft: null == topLeft
+          ? _value.topLeft
+          : topLeft // ignore: cast_nullable_to_non_nullable
+              as Point,
+      topRight: null == topRight
+          ? _value.topRight
+          : topRight // ignore: cast_nullable_to_non_nullable
+              as Point,
+      bottomRight: null == bottomRight
+          ? _value.bottomRight
+          : bottomRight // ignore: cast_nullable_to_non_nullable
+              as Point,
+      bottomLeft: null == bottomLeft
+          ? _value.bottomLeft
+          : bottomLeft // ignore: cast_nullable_to_non_nullable
+              as Point,
+      color: null == color
+          ? _value.color
+          : color // ignore: cast_nullable_to_non_nullable
+              as String,
+      thickness: null == thickness
+          ? _value.thickness
+          : thickness // ignore: cast_nullable_to_non_nullable
+              as double,
+    ) as $Val);
   }
 
-  /// Create a copy of Rectangle
-  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $PointCopyWith<$Res> get topLeft {
@@ -127,8 +108,6 @@ class _$RectangleCopyWithImpl<$Res, $Val extends Rectangle>
     });
   }
 
-  /// Create a copy of Rectangle
-  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $PointCopyWith<$Res> get topRight {
@@ -137,8 +116,6 @@ class _$RectangleCopyWithImpl<$Res, $Val extends Rectangle>
     });
   }
 
-  /// Create a copy of Rectangle
-  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $PointCopyWith<$Res> get bottomRight {
@@ -147,8 +124,6 @@ class _$RectangleCopyWithImpl<$Res, $Val extends Rectangle>
     });
   }
 
-  /// Create a copy of Rectangle
-  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $PointCopyWith<$Res> get bottomLeft {
@@ -162,19 +137,17 @@ class _$RectangleCopyWithImpl<$Res, $Val extends Rectangle>
 abstract class _$$RectangleImplCopyWith<$Res>
     implements $RectangleCopyWith<$Res> {
   factory _$$RectangleImplCopyWith(
-    _$RectangleImpl value,
-    $Res Function(_$RectangleImpl) then,
-  ) = __$$RectangleImplCopyWithImpl<$Res>;
+          _$RectangleImpl value, $Res Function(_$RectangleImpl) then) =
+      __$$RectangleImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({
-    Point topLeft,
-    Point topRight,
-    Point bottomRight,
-    Point bottomLeft,
-    String color,
-    double thickness,
-  });
+  $Res call(
+      {Point topLeft,
+      Point topRight,
+      Point bottomRight,
+      Point bottomLeft,
+      String color,
+      double thickness});
 
   @override
   $PointCopyWith<$Res> get topLeft;
@@ -191,12 +164,9 @@ class __$$RectangleImplCopyWithImpl<$Res>
     extends _$RectangleCopyWithImpl<$Res, _$RectangleImpl>
     implements _$$RectangleImplCopyWith<$Res> {
   __$$RectangleImplCopyWithImpl(
-    _$RectangleImpl _value,
-    $Res Function(_$RectangleImpl) _then,
-  ) : super(_value, _then);
+      _$RectangleImpl _value, $Res Function(_$RectangleImpl) _then)
+      : super(_value, _then);
 
-  /// Create a copy of Rectangle
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -207,40 +177,32 @@ class __$$RectangleImplCopyWithImpl<$Res>
     Object? color = null,
     Object? thickness = null,
   }) {
-    return _then(
-      _$RectangleImpl(
-        topLeft:
-            null == topLeft
-                ? _value.topLeft
-                : topLeft // ignore: cast_nullable_to_non_nullable
-                    as Point,
-        topRight:
-            null == topRight
-                ? _value.topRight
-                : topRight // ignore: cast_nullable_to_non_nullable
-                    as Point,
-        bottomRight:
-            null == bottomRight
-                ? _value.bottomRight
-                : bottomRight // ignore: cast_nullable_to_non_nullable
-                    as Point,
-        bottomLeft:
-            null == bottomLeft
-                ? _value.bottomLeft
-                : bottomLeft // ignore: cast_nullable_to_non_nullable
-                    as Point,
-        color:
-            null == color
-                ? _value.color
-                : color // ignore: cast_nullable_to_non_nullable
-                    as String,
-        thickness:
-            null == thickness
-                ? _value.thickness
-                : thickness // ignore: cast_nullable_to_non_nullable
-                    as double,
-      ),
-    );
+    return _then(_$RectangleImpl(
+      topLeft: null == topLeft
+          ? _value.topLeft
+          : topLeft // ignore: cast_nullable_to_non_nullable
+              as Point,
+      topRight: null == topRight
+          ? _value.topRight
+          : topRight // ignore: cast_nullable_to_non_nullable
+              as Point,
+      bottomRight: null == bottomRight
+          ? _value.bottomRight
+          : bottomRight // ignore: cast_nullable_to_non_nullable
+              as Point,
+      bottomLeft: null == bottomLeft
+          ? _value.bottomLeft
+          : bottomLeft // ignore: cast_nullable_to_non_nullable
+              as Point,
+      color: null == color
+          ? _value.color
+          : color // ignore: cast_nullable_to_non_nullable
+              as String,
+      thickness: null == thickness
+          ? _value.thickness
+          : thickness // ignore: cast_nullable_to_non_nullable
+              as double,
+    ));
   }
 }
 
@@ -248,14 +210,14 @@ class __$$RectangleImplCopyWithImpl<$Res>
 
 @JsonSerializable()
 class _$RectangleImpl extends _Rectangle {
-  const _$RectangleImpl({
-    required this.topLeft,
-    required this.topRight,
-    required this.bottomRight,
-    required this.bottomLeft,
-    this.color = '#000000',
-    this.thickness = 1.0,
-  }) : super._();
+  const _$RectangleImpl(
+      {required this.topLeft,
+      required this.topRight,
+      required this.bottomRight,
+      required this.bottomLeft,
+      this.color = '#000000',
+      this.thickness = 1.0})
+      : super._();
 
   factory _$RectangleImpl.fromJson(Map<String, dynamic> json) =>
       _$$RectangleImplFromJson(json);
@@ -292,21 +254,12 @@ class _$RectangleImpl extends _Rectangle {
                 other.thickness == thickness));
   }
 
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(
-    runtimeType,
-    topLeft,
-    topRight,
-    bottomRight,
-    bottomLeft,
-    color,
-    thickness,
-  );
+  int get hashCode => Object.hash(runtimeType, topLeft, topRight, bottomRight,
+      bottomLeft, color, thickness);
 
-  /// Create a copy of Rectangle
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$RectangleImplCopyWith<_$RectangleImpl> get copyWith =>
@@ -314,19 +267,20 @@ class _$RectangleImpl extends _Rectangle {
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$RectangleImplToJson(this);
+    return _$$RectangleImplToJson(
+      this,
+    );
   }
 }
 
 abstract class _Rectangle extends Rectangle {
-  const factory _Rectangle({
-    required final Point topLeft,
-    required final Point topRight,
-    required final Point bottomRight,
-    required final Point bottomLeft,
-    final String color,
-    final double thickness,
-  }) = _$RectangleImpl;
+  const factory _Rectangle(
+      {required final Point topLeft,
+      required final Point topRight,
+      required final Point bottomRight,
+      required final Point bottomLeft,
+      final String color,
+      final double thickness}) = _$RectangleImpl;
   const _Rectangle._() : super._();
 
   factory _Rectangle.fromJson(Map<String, dynamic> json) =
@@ -344,11 +298,8 @@ abstract class _Rectangle extends Rectangle {
   String get color;
   @override
   double get thickness;
-
-  /// Create a copy of Rectangle
-  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$RectangleImplCopyWith<_$RectangleImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

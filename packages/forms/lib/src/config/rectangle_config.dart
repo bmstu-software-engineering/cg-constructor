@@ -1,7 +1,7 @@
 import 'package:models_ns/models_ns.dart';
 
 import '../core/form_field.dart';
-import '../models/rectangle.dart';
+
 import 'field_config.dart';
 import 'point_config.dart';
 
@@ -40,16 +40,16 @@ class RectangleFieldConfig extends FieldConfig<Rectangle> {
     this.bottomLeftConfig,
     this.defaultColor = '#000000',
     this.defaultThickness = 1.0,
-  }) : topLeftConfig =
-           topLeftConfig ?? PointFieldConfig(label: 'Верхний левый угол'),
-       bottomRightConfig =
-           bottomRightConfig ?? PointFieldConfig(label: 'Нижний правый угол'),
-       super(
-         label: label,
-         hint: hint,
-         isRequired: isRequired,
-         validator: validator,
-       );
+  })  : topLeftConfig =
+            topLeftConfig ?? PointFieldConfig(label: 'Верхний левый угол'),
+        bottomRightConfig =
+            bottomRightConfig ?? PointFieldConfig(label: 'Нижний правый угол'),
+        super(
+          label: label,
+          hint: hint,
+          isRequired: isRequired,
+          validator: validator,
+        );
 
   @override
   FormField<Rectangle> createField() {

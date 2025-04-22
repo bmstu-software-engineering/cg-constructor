@@ -1,9 +1,8 @@
 import 'dart:math' as math;
 import 'package:flutter/foundation.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:models_ns/models_ns.dart';
-
-import '../core/validatable.dart';
+import 'point.dart';
+import 'validatable.dart';
 
 part 'rectangle.freezed.dart';
 part 'rectangle.g.dart';

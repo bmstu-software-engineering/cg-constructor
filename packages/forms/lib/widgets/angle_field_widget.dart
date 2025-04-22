@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
-import '../src/fields/angle_field.dart';
-import '../src/models/angle.dart';
-import 'form_field_widget.dart';
-import 'number_field_widget.dart';
+import 'package:models_ns/models_ns.dart';
+import '../forms.dart';
 
 /// Виджет для поля угла
 class AngleFieldWidget extends FormFieldWidget<Angle, AngleField> {

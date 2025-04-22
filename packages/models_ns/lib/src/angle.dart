@@ -1,7 +1,7 @@
 import 'dart:math' as math;
 import 'package:flutter/foundation.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import '../core/validatable.dart';
+import 'validatable.dart';
 
 part 'angle.freezed.dart';
 part 'angle.g.dart';
