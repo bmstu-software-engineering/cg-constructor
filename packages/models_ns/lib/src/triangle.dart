@@ -9,6 +9,7 @@ part 'triangle.g.dart';
 
 /// Модель треугольника
 @freezed
+@JsonSerializable()
 class Triangle with _$Triangle, DiagnosticableTreeMixin implements Validatable {
   /// Приватный конструктор
   const Triangle._();
@@ -20,7 +21,6 @@ class Triangle with _$Triangle, DiagnosticableTreeMixin implements Validatable {
   /// [c] - третья точка треугольника
   /// [color] - цвет треугольника (по умолчанию черный)
   /// [thickness] - толщина линий треугольника (по умолчанию 1.0)
-  @JsonSerializable()
   const factory Triangle({
     required Point a,
     required Point b,

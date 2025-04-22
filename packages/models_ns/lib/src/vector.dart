@@ -8,6 +8,7 @@ part 'vector.g.dart';
 
 /// Модель вектора перемещения
 @freezed
+@JsonSerializable()
 class Vector with _$Vector, DiagnosticableTreeMixin implements Validatable {
   /// Приватный конструктор
   const Vector._();
@@ -16,7 +17,6 @@ class Vector with _$Vector, DiagnosticableTreeMixin implements Validatable {
   ///
   /// [dx] - смещение по оси X
   /// [dy] - смещение по оси Y
-  @JsonSerializable()
   const factory Vector({required double dx, required double dy}) = _Vector;
 
   /// Создает вектор из JSON

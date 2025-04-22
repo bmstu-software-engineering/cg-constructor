@@ -8,6 +8,7 @@ part 'angle.g.dart';
 
 /// Модель угла поворота
 @freezed
+@JsonSerializable()
 class Angle with _$Angle, DiagnosticableTreeMixin implements Validatable {
   /// Приватный конструктор
   const Angle._();
@@ -15,7 +16,6 @@ class Angle with _$Angle, DiagnosticableTreeMixin implements Validatable {
   /// Создает угол поворота
   ///
   /// [value] - значение угла в градусах
-  @JsonSerializable()
   const factory Angle({required double value}) = _Angle;
 
   /// Создает угол из JSON

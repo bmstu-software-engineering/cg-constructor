@@ -7,6 +7,7 @@ part 'scale.g.dart';
 
 /// Модель коэффициентов масштабирования
 @freezed
+@JsonSerializable()
 class Scale with _$Scale, DiagnosticableTreeMixin implements Validatable {
   /// Приватный конструктор
   const Scale._();
@@ -15,7 +16,6 @@ class Scale with _$Scale, DiagnosticableTreeMixin implements Validatable {
   ///
   /// [x] - коэффициент масштабирования по оси X
   /// [y] - коэффициент масштабирования по оси Y
-  @JsonSerializable()
   const factory Scale({required double x, required double y}) = _Scale;
 
   /// Создает равномерное масштабирование (одинаковое по обеим осям)

@@ -9,6 +9,7 @@ part 'polygon.g.dart';
 
 /// Модель многоугольника
 @freezed
+@JsonSerializable()
 class Polygon with _$Polygon, DiagnosticableTreeMixin implements Validatable {
   /// Приватный конструктор
   const Polygon._();
@@ -18,7 +19,6 @@ class Polygon with _$Polygon, DiagnosticableTreeMixin implements Validatable {
   /// [points] - список точек многоугольника
   /// [color] - цвет многоугольника (по умолчанию черный)
   /// [thickness] - толщина линий многоугольника (по умолчанию 1.0)
-  @JsonSerializable()
   const factory Polygon({
     required List<Point> points,
     @Default('#000000') String color,

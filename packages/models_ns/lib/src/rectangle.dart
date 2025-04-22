@@ -9,6 +9,7 @@ part 'rectangle.g.dart';
 
 /// Модель прямоугольника
 @freezed
+@JsonSerializable()
 class Rectangle
     with _$Rectangle, DiagnosticableTreeMixin
     implements Validatable {
@@ -23,7 +24,6 @@ class Rectangle
   /// [bottomLeft] - нижняя левая точка
   /// [color] - цвет прямоугольника (по умолчанию черный)
   /// [thickness] - толщина линий прямоугольника (по умолчанию 1.0)
-  @JsonSerializable()
   const factory Rectangle({
     required Point topLeft,
     required Point topRight,
