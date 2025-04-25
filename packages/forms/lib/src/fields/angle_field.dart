@@ -17,13 +17,12 @@ class AngleField extends BaseFormField<Angle> {
   ///
   /// [config] - конфигурация поля
   /// [initialValue] - начальное значение поля
-  AngleField({required this.config, Angle? initialValue})
+  AngleField({required this.config, super.initialValue})
       : _valueField = NumberField(
           config: config.valueConfig,
           initialValue: initialValue?.value,
         ),
         super(
-          initialValue: initialValue,
           validator: _createValidator(config),
           isRequired: config.isRequired,
         );
@@ -42,7 +41,9 @@ class AngleField extends BaseFormField<Angle> {
   }
 
   /// Получает поле для ввода значения угла
-  NumberField get valueField => _valueField;
+  NumberField get valueField {
+    return _valueField;
+  }
 
   @override
   Angle? get value {

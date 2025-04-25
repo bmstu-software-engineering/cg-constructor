@@ -124,16 +124,18 @@ class RectangleField extends BaseFormField<Rectangle> {
   set value(Rectangle? newValue) {
     if (newValue == null) {
       _topLeftField.value = null;
-      if (_bottomRightField != null) _bottomRightField!.value = null;
-      if (_topRightField != null) _topRightField!.value = null;
-      if (_bottomLeftField != null) _bottomLeftField!.value = null;
+      if (_bottomRightField != null) _bottomRightField.value = null;
+      if (_topRightField != null) _topRightField.value = null;
+      if (_bottomLeftField != null) _bottomLeftField.value = null;
     } else {
       _topLeftField.value = newValue.topLeft;
-      if (_bottomRightField != null)
-        _bottomRightField!.value = newValue.bottomRight;
-      if (_topRightField != null) _topRightField!.value = newValue.topRight;
-      if (_bottomLeftField != null)
-        _bottomLeftField!.value = newValue.bottomLeft;
+      if (_bottomRightField != null) {
+        _bottomRightField.value = newValue.bottomRight;
+      }
+      if (_topRightField != null) _topRightField.value = newValue.topRight;
+      if (_bottomLeftField != null) {
+        _bottomLeftField.value = newValue.bottomLeft;
+      }
     }
 
     validate();
@@ -149,14 +151,14 @@ class RectangleField extends BaseFormField<Rectangle> {
     }
 
     if (config.useCorners && _bottomRightField != null) {
-      final bottomRightError = _bottomRightField!.validate();
+      final bottomRightError = _bottomRightField.validate();
       if (bottomRightError != null) {
         setError('Ошибка в нижней правой точке: $bottomRightError');
         return bottomRightError;
       }
     } else {
       if (_topRightField != null) {
-        final topRightError = _topRightField!.validate();
+        final topRightError = _topRightField.validate();
         if (topRightError != null) {
           setError('Ошибка в верхней правой точке: $topRightError');
           return topRightError;
@@ -164,7 +166,7 @@ class RectangleField extends BaseFormField<Rectangle> {
       }
 
       if (_bottomLeftField != null) {
-        final bottomLeftError = _bottomLeftField!.validate();
+        final bottomLeftError = _bottomLeftField.validate();
         if (bottomLeftError != null) {
           setError('Ошибка в нижней левой точке: $bottomLeftError');
           return bottomLeftError;
@@ -172,7 +174,7 @@ class RectangleField extends BaseFormField<Rectangle> {
       }
 
       if (_bottomRightField != null) {
-        final bottomRightError = _bottomRightField!.validate();
+        final bottomRightError = _bottomRightField.validate();
         if (bottomRightError != null) {
           setError('Ошибка в нижней правой точке: $bottomRightError');
           return bottomRightError;
@@ -187,9 +189,9 @@ class RectangleField extends BaseFormField<Rectangle> {
   @override
   void reset() {
     _topLeftField.reset();
-    if (_bottomRightField != null) _bottomRightField!.reset();
-    if (_topRightField != null) _topRightField!.reset();
-    if (_bottomLeftField != null) _bottomLeftField!.reset();
+    if (_bottomRightField != null) _bottomRightField.reset();
+    if (_topRightField != null) _topRightField.reset();
+    if (_bottomLeftField != null) _bottomLeftField.reset();
     super.reset();
   }
 }

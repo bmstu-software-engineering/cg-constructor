@@ -16,11 +16,11 @@ class TriangleFieldWidget extends FormFieldWidget<Triangle, TriangleField> {
   /// [spacing] - расстояние между полями точек
   const TriangleFieldWidget({
     super.key,
-    required TriangleField field,
-    ValueChanged<Triangle?>? onChanged,
-    InputDecoration? decoration,
+    required super.field,
+    super.onChanged,
+    super.decoration,
     this.spacing = 16.0,
-  }) : super(field: field, onChanged: onChanged, decoration: decoration);
+  });
 
   /// Расстояние между полями точек
   final double spacing;

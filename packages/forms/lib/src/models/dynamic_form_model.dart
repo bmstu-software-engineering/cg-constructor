@@ -75,8 +75,6 @@ class DynamicFormModel extends DiagnosticableFormModel {
         // Для списка нужно создать поле с правильным типом
         // Это упрощенная реализация, которая поддерживает только списки чисел
         return ListField(config: listConfig);
-      default:
-        throw ArgumentError('Неподдерживаемый тип поля: ${entry.type}');
     }
   }
 
@@ -106,7 +104,7 @@ class DynamicFormModel extends DiagnosticableFormModel {
       if (field != null) {
         // Обработка списков с преобразованием типов
         if (field is ListField && entry.value is List) {
-          final listField = field as ListField;
+          final listField = field;
           if (listField.config is ListFieldConfig<double>) {
             // Преобразуем элементы списка в double
             final doubleList = (entry.value as List)

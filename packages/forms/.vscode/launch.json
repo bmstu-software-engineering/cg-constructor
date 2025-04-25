@@ -8,6 +8,7 @@
             "name": "sample",
             "cwd": "./example",
             "request": "launch",
+            "flutterMode": "debug",
             "type": "dart",
             "args": [],
         },

@@ -13,11 +13,11 @@ class AngleFieldWidget extends FormFieldWidget<Angle, AngleField> {
   /// [suffixText] - текст суффикса (по умолчанию '°')
   const AngleFieldWidget({
     super.key,
-    required AngleField field,
-    ValueChanged<Angle?>? onChanged,
-    InputDecoration? decoration,
+    required super.field,
+    super.onChanged,
+    super.decoration,
     this.suffixText = '°',
-  }) : super(field: field, onChanged: onChanged, decoration: decoration);
+  });
 
   /// Текст суффикса
   final String suffixText;
@@ -44,7 +44,7 @@ class _AngleFieldWidgetState
   Widget build(BuildContext context) {
     return NumberFieldWidget(
       field: widget.field.valueField,
-      onChanged: (_) {
+      onChanged: (value) {
         setState(() {});
         if (widget.onChanged != null) {
           widget.onChanged!(widget.field.value);

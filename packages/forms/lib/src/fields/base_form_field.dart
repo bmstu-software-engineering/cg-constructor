@@ -1,4 +1,3 @@
-import '../core/form_field.dart';
 import '../core/diagnosticable_form_field.dart';
 
 /// Базовая реализация поля формы
@@ -49,7 +48,7 @@ class BaseFormField<T> extends DiagnosticableFormField<T> {
     }
 
     if (_validator != null) {
-      _error = _validator!(_value);
+      _error = _validator(_value);
       return _error;
     }
 

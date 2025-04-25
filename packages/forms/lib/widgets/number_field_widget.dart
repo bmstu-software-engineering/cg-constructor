@@ -50,9 +50,9 @@ class _NumberFieldWidgetState
   @override
   void didUpdateWidget(NumberFieldWidget oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (widget.field.value != oldWidget.field.value) {
-      _controller.text = widget.field.getAsString() ?? '';
-    }
+    // if (widget.field.value != oldWidget.field.value) {
+    //   _controller.text = widget.field.getAsString() ?? '';
+    // }
   }
 
   @override

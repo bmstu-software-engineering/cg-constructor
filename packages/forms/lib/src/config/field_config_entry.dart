@@ -1,4 +1,3 @@
-import '../core/form_field.dart';
 import 'field_config.dart';
 import 'field_type.dart';
 
