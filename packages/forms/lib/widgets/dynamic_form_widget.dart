@@ -57,23 +57,24 @@ class _DynamicFormWidgetState extends State<DynamicFormWidget> {
         }).toList(),
 
         // Кнопка отправки
-        ElevatedButton(
-          onPressed: () {
-            if (widget.model.isValid()) {
-              final values = widget.model.getValues();
-              widget.onSubmit?.call(values);
-            } else {
-              widget.model.validate();
-              setState(() {});
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text('Пожалуйста, исправьте ошибки в форме'),
-                ),
-              );
-            }
-          },
-          child: Text(widget.submitButtonText),
-        ),
+        if (widget.onSubmit != null)
+          ElevatedButton(
+            onPressed: () {
+              if (widget.model.isValid()) {
+                final values = widget.model.getValues();
+                widget.onSubmit?.call(values);
+              } else {
+                widget.model.validate();
+                setState(() {});
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text('Пожалуйста, исправьте ошибки в форме'),
+                  ),
+                );
+              }
+            },
+            child: Text(widget.submitButtonText),
+          ),
       ],
     );
   }

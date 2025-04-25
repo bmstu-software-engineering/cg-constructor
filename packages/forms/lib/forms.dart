@@ -44,15 +44,4 @@ export 'src/fields/line_field.dart';
 export 'widgets/widgets.dart';
 
 // Экспортируем генератор типизированных форм
-// export 'forms_generator.dart'
-//     hide
-//         NumberField,
-//         PointField,
-//         AngleField,
-//         VectorField,
-//         ScaleField,
-//         PolygonField,
-//         TriangleField,
-//         RectangleField,
-//         LineField,
-//         ListField;
+export 'src/typed_form_base.dart';

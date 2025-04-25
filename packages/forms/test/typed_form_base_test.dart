@@ -1,6 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:forms/forms.dart';
-import 'package:forms/typed_form_base.dart';
 import 'package:models_ns/models_ns.dart';
 
 /// Тесты для базовых классов типизированных форм

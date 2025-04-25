@@ -92,8 +92,8 @@ class _FormExampleScreenState extends State<FormExampleScreen> {
         SnackBar(
           content: Text(
             'Форма сохранена: Возраст=${values.age}, '
-            'Координаты=(${values.location.x}, ${values.location.y}), '
-            'Угол=${values.rotation.value}°',
+            'Координаты=(${values.location.x}, ${values.location.y}), ',
+            // 'Угол=${values.rotation.value}°',
           ),
         ),
       );
@@ -109,26 +109,10 @@ class _FormExampleScreenState extends State<FormExampleScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Поле для возраста
-            NumberFieldWidget(
-              field: formModel.ageField,
-              onChanged: (_) => setState(() {}),
+            // Используем DynamicFormWidget для автоматического создания виджетов полей
+            Expanded(
+              child: DynamicFormWidget(model: formModel.toDynamicFormModel()),
             ),
-            const SizedBox(height: 16),
-
-            // Поле для координат
-            PointFieldWidget(
-              field: formModel.locationField,
-              onChanged: (_) => setState(() {}),
-            ),
-            const SizedBox(height: 16),
-
-            // Поле для угла поворота
-            AngleFieldWidget(
-              field: formModel.rotationField,
-              onChanged: (_) => setState(() {}),
-            ),
-            const SizedBox(height: 24),
 
             // Отображение ошибки валидации
             if (validationError != null)
@@ -175,7 +159,7 @@ class _FormExampleScreenState extends State<FormExampleScreen> {
           children: [
             Text('Возраст: ${values.age}'),
             Text('Координаты: (${values.location.x}, ${values.location.y})'),
-            Text('Угол поворота: ${values.rotation.value}°'),
+            // Text('Угол поворота: ${values.rotation.value}°'),
           ],
         ),
       ),
