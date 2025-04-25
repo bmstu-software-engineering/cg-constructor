@@ -4,6 +4,7 @@ import 'package:models_ns/models_ns.dart';
 
 import 'diagnostics_demo.dart';
 import 'dynamic_form_demo.dart';
+import 'form_example.dart';
 
 void main() {
   runApp(const MyApp());
@@ -287,6 +288,19 @@ class _MyHomePageState extends State<MyHomePage> {
             },
             tooltip: 'Dynamic Form Demo',
             child: const Icon(Icons.dynamic_form),
+          ),
+          const SizedBox(width: 16),
+          FloatingActionButton(
+            heroTag: 'form_example',
+            onPressed: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => const FormExampleScreen(),
+                ),
+              );
+            },
+            tooltip: 'Typed Form Example',
+            child: const Icon(Icons.code),
           ),
         ],
       ),
