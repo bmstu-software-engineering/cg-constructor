@@ -1,7 +1,7 @@
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:forms/forms.dart' hide Line;
+import 'package:forms/forms.dart';
 import 'package:models_ns/models_ns.dart';
 
 void main() {
@@ -11,12 +11,12 @@ void main() {
       final lineField = LineField(
         config: LineFieldConfig(
           label: 'Тестовая линия',
-          startConfig: PointFieldConfig(
+          startConfig: const PointFieldConfig(
             label: 'Начало',
             xConfig: NumberFieldConfig(label: 'X', min: 0, max: 100),
             yConfig: NumberFieldConfig(label: 'Y', min: 0, max: 100),
           ),
-          endConfig: PointFieldConfig(
+          endConfig: const PointFieldConfig(
             label: 'Конец',
             xConfig: NumberFieldConfig(label: 'X', min: 0, max: 100),
             yConfig: NumberFieldConfig(label: 'Y', min: 0, max: 100),
@@ -89,7 +89,7 @@ void main() {
           },
         ),
         // Устанавливаем начальное значение, чтобы избежать ошибки обязательного поля
-        initialValue: Line(
+        initialValue: const Line(
           a: Point(x: 0, y: 0),
           b: Point(x: 3, y: 4),
         ),
@@ -114,7 +114,7 @@ void main() {
                         lineField.setError('Линия слишком короткая');
                         setState(() {});
                       },
-                      child: Text('Показать ошибку'),
+                      child: const Text('Показать ошибку'),
                     ),
                     ElevatedButton(
                       onPressed: () {
@@ -122,7 +122,7 @@ void main() {
                         lineField.setError(null);
                         setState(() {});
                       },
-                      child: Text('Скрыть ошибку'),
+                      child: const Text('Скрыть ошибку'),
                     ),
                   ],
                 );

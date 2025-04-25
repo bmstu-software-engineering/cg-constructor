@@ -1,12 +1,12 @@
 import 'dart:math' as math;
 import 'package:flutter_test/flutter_test.dart';
-import 'package:forms/forms.dart' hide Line;
+import 'package:forms/forms.dart';
 import 'package:models_ns/models_ns.dart';
 
 void main() {
   group('LineField', () {
     test('Создание поля с начальным значением', () {
-      final line = Line(
+      const line = Line(
         a: Point(x: 10, y: 20),
         b: Point(x: 30, y: 40),
       );
@@ -14,12 +14,12 @@ void main() {
       final lineField = LineField(
         config: LineFieldConfig(
           label: 'Тестовая линия',
-          startConfig: PointFieldConfig(
+          startConfig: const PointFieldConfig(
             label: 'Начало',
             xConfig: NumberFieldConfig(label: 'X'),
             yConfig: NumberFieldConfig(label: 'Y'),
           ),
-          endConfig: PointFieldConfig(
+          endConfig: const PointFieldConfig(
             label: 'Конец',
             xConfig: NumberFieldConfig(label: 'X'),
             yConfig: NumberFieldConfig(label: 'Y'),
@@ -44,7 +44,7 @@ void main() {
 
       expect(lineField.value, isNull);
 
-      final line = Line(
+      const line = Line(
         a: Point(x: 10, y: 20),
         b: Point(x: 30, y: 40),
       );
@@ -78,7 +78,7 @@ void main() {
           validator: customValidator,
         ),
         // Сразу устанавливаем начальное значение, чтобы избежать ошибки обязательного поля
-        initialValue: Line(
+        initialValue: const Line(
           a: Point(x: 0, y: 0),
           b: Point(x: 3, y: 4),
         ),
@@ -91,7 +91,7 @@ void main() {
       expect(lineField.isValid(), isFalse);
 
       // Установка валидного значения
-      lineField.value = Line(
+      lineField.value = const Line(
         a: Point(x: 0, y: 0),
         b: Point(x: 30, y: 40),
       );
@@ -106,18 +106,18 @@ void main() {
       final lineField = LineField(
         config: LineFieldConfig(
           label: 'Тестовая линия',
-          startConfig: PointFieldConfig(
+          startConfig: const PointFieldConfig(
             label: 'Начало',
             xConfig: NumberFieldConfig(label: 'X', min: 0, max: 100),
             yConfig: NumberFieldConfig(label: 'Y', min: 0, max: 100),
           ),
-          endConfig: PointFieldConfig(
+          endConfig: const PointFieldConfig(
             label: 'Конец',
             xConfig: NumberFieldConfig(label: 'X', min: 0, max: 100),
             yConfig: NumberFieldConfig(label: 'Y', min: 0, max: 100),
           ),
         ),
-        initialValue: Line(
+        initialValue: const Line(
           a: Point(x: 10, y: 20),
           b: Point(x: 30, y: 40),
         ),
@@ -151,7 +151,7 @@ void main() {
     });
 
     test('Сброс значения', () {
-      final line = Line(
+      const line = Line(
         a: Point(x: 10, y: 20),
         b: Point(x: 30, y: 40),
       );
@@ -174,7 +174,7 @@ void main() {
     });
 
     test('Валидация линии с совпадающими точками', () {
-      final line = Line(
+      const line = Line(
         a: Point(x: 10, y: 20),
         b: Point(x: 10, y: 20),
       );
