@@ -1,6 +1,5 @@
 import 'package:alogrithms/algorithms/lab_01_40.dart';
 import 'package:alogrithms/algorithms/registry.dart';
-import 'package:alogrithms/src/algorithm_interface.dart';
 
 /// Фабрика для создания экземпляров алгоритма AlgorithmL01V40
 class AlgorithmL01V40Factory implements AlgorithmFactory<AlgorithmL01V40> {

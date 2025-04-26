@@ -1,4 +1,3 @@
-import 'package:alogrithms/algorithms/lab_01_40_factory.dart';
 import 'package:alogrithms/algorithms/registry.dart';
 import 'package:flow/flow.dart';
 import 'package:flutter/material.dart';
@@ -6,7 +5,7 @@ import 'package:viewer/viewer.dart';
 
 void main() {
   // Регистрируем алгоритмы при запуске приложения
-  registerAlgorithmL01V40();
+  registerAlgorithms();
 
   runApp(const FlowExampleApp());
 }

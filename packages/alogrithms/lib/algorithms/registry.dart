@@ -1,4 +1,6 @@
 import 'package:alogrithms/src/algorithm_interface.dart';
+import 'package:alogrithms/algorithms/lab_01_40_factory.dart';
+import 'package:alogrithms/algorithms/lab_01_basic_factory.dart';
 
 /// Фабрика для создания экземпляров алгоритмов
 abstract class AlgorithmFactory<T extends Algorithm> {
@@ -10,6 +12,12 @@ abstract class AlgorithmFactory<T extends Algorithm> {
 
   /// Возвращает описание алгоритма
   String get description;
+}
+
+/// Регистрация алгоритмов
+void registerAlgorithms() {
+  registerAlgorithmL01V40();
+  registerAlgorithmL01VBasic();
 }
 
 /// Реестр доступных алгоритмов
