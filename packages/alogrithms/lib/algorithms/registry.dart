@@ -1,6 +1,6 @@
 import 'package:alogrithms/src/algorithm_interface.dart';
 import 'package:alogrithms/algorithms/lab_01_40_factory.dart';
-import 'package:alogrithms/algorithms/lab_01_basic_factory.dart';
+import 'package:alogrithms/algorithms/lab_01_basic/lab_01_basic_factory.dart';
 
 /// Фабрика для создания экземпляров алгоритмов
 abstract class AlgorithmFactory<T extends Algorithm> {
