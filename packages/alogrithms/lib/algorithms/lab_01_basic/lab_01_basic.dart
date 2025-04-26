@@ -4,34 +4,22 @@ import 'package:forms/forms.dart';
 import 'package:models_ns/models_ns.dart';
 import 'lab_01_basic_data_model.dart';
 
-class AlgorithmL01VBasic implements Algorithm<DataModel, ViewerResultModel> {
-  /// Флаг для переключения между реализациями
-  final bool useFormsCodegen;
-
-  AlgorithmL01VBasic({this.useFormsCodegen = false});
+class AlgorithmL01VBasic
+    implements Algorithm<FormsDataModel, ViewerResultModel> {
+  AlgorithmL01VBasic();
 
   @override
-  DataModel getDataModel() {
-    if (useFormsCodegen) {
-      return AlgorithmL01VBasicCodegenDataModelImpl();
-    } else {
-      return AlgorithmL01V41FormsDataModelImpl();
-    }
+  FormsDataModel getDataModel() {
+    return AlgorithmL01VBasicCodegenDataModelImpl();
   }
 
   @override
-  ViewerResultModel calculate(DataModel dataModel) {
-    List<Point> points;
-
-    if (useFormsCodegen &&
-        dataModel is AlgorithmL01VBasicCodegenDataModelImpl) {
-      points = dataModel.data.points;
-    } else if (!useFormsCodegen &&
-        dataModel is AlgorithmL01V41FormsDataModelImpl) {
-      points = dataModel.data.points;
-    } else {
+  ViewerResultModel calculate(FormsDataModel dataModel) {
+    if (dataModel is! AlgorithmL01VBasicCodegenDataModelImpl) {
       throw InvalidDataException('Неверный тип модели данных');
     }
+
+    final points = dataModel.data.points;
 
     // Пример обработки точек и создания результата
     List<Point> resultPoints =
@@ -54,13 +42,6 @@ class _CodegenData implements AlgorithmData {
   List<Point> get points => _model.points;
 
   const _CodegenData(this._model);
-}
-
-/// Класс данных для текущей реализации
-class _Data implements AlgorithmData {
-  final List<Point> points;
-
-  const _Data(this.points);
 }
 
 /// Реализация модели данных с использованием кодогенерации
@@ -89,50 +70,6 @@ class AlgorithmL01VBasicCodegenDataModelImpl implements FormsDataModel {
       } else {
         throw InvalidDataException('Данные не прошли валидацию');
       }
-    } catch (e) {
-      throw InvalidDataException(
-        'Ошибка при обработке данных: ${e.toString()}',
-      );
-    }
-  }
-}
-
-/// Текущая реализация модели данных
-class AlgorithmL01V41FormsDataModelImpl implements FormsDataModel {
-  _Data? _data;
-
-  @override
-  FormConfig get config => FormConfig(
-    name: 'Lab 01, Variant 41',
-    fields: [
-      FieldConfigEntry(
-        id: 'points',
-        type: FieldType.list,
-        config: ListFieldConfig<Point>(
-          label: 'Множество точек',
-          minItems: 1,
-          maxItems: 999,
-          createItemField: () => PointField(config: PointFieldConfig()),
-        ),
-      ),
-    ],
-  );
-
-  @override
-  _Data get data => _data ?? (throw Exception('Данные не установлены'));
-
-  @override
-  set rawData(Map<String, dynamic>? rawData) {
-    if (rawData == null) {
-      throw InvalidDataException('Данные не предоставлены');
-    }
-
-    if (!rawData.containsKey('points')) {
-      throw InvalidDataException('Отсутствуют обязательные поля данных');
-    }
-
-    try {
-      _data = _Data((rawData['points'] as List).whereType<Point>().toList());
     } catch (e) {
       throw InvalidDataException(
         'Ошибка при обработке данных: ${e.toString()}',

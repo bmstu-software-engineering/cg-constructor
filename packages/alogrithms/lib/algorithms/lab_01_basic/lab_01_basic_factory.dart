@@ -4,15 +4,12 @@ import 'package:alogrithms/algorithms/registry.dart';
 /// Фабрика для создания экземпляров алгоритма AlgorithmL01VBasic
 class AlgorithmL01VBasicFactory
     implements AlgorithmFactory<AlgorithmL01VBasic> {
-  /// Флаг для переключения между реализациями
-  final bool useFormsCodegen;
-
   /// Конструктор фабрики
-  AlgorithmL01VBasicFactory({this.useFormsCodegen = false});
+  AlgorithmL01VBasicFactory();
 
   @override
   AlgorithmL01VBasic create() {
-    return AlgorithmL01VBasic(useFormsCodegen: useFormsCodegen);
+    return AlgorithmL01VBasic();
   }
 
   @override
@@ -25,12 +22,6 @@ class AlgorithmL01VBasicFactory
 
 /// Регистрация фабрики алгоритма в реестре
 void registerAlgorithmL01VBasic() {
-  // Регистрация текущей реализации
+  // Регистрация алгоритма с использованием кодогенерации
   AlgorithmRegistry.register('lab_01_41', AlgorithmL01VBasicFactory());
-
-  // Регистрация реализации с использованием кодогенерации
-  AlgorithmRegistry.register(
-    'lab_01_41_codegen',
-    AlgorithmL01VBasicFactory(useFormsCodegen: true),
-  );
 }
