@@ -170,8 +170,20 @@ class FormGenerator extends GeneratorForAnnotation<FormGenAnnotation> {
     buffer.writeln('  @override');
     buffer.writeln('  void fromMap(Map<String, dynamic> map) {');
     for (final field in fields) {
-      buffer.writeln(
-          '    if (map.containsKey(\'${field.name}\')) ${field.name}Field.value = map[\'${field.name}\'] as ${field.type};');
+      final annotationType = field.annotation.objectValue.type!
+          .getDisplayString(withNullability: false);
+
+      if (annotationType == 'ListField' ||
+          annotationType == 'ListFieldAnnotation') {
+        // Для списков используем специальную обработку
+        final elementType = _getListElementTypeForCast(field.type);
+        buffer.writeln(
+            '    if (map.containsKey(\'${field.name}\')) ${field.name}Field.value = map[\'${field.name}\'] as ${field.type};');
+      } else {
+        // Для остальных типов используем стандартную обработку
+        buffer.writeln(
+            '    if (map.containsKey(\'${field.name}\')) ${field.name}Field.value = map[\'${field.name}\'] as ${field.type};');
+      }
     }
     buffer.writeln('  }');
     buffer.writeln('}');
@@ -213,6 +225,114 @@ class FormGenerator extends GeneratorForAnnotation<FormGenAnnotation> {
         final uniform = field.annotation.peek('uniform')?.boolValue ?? false;
         if (uniform) configParams.write('uniform: true, ');
         break;
+      case 'ListField':
+      case 'ListFieldAnnotation':
+        final minItems = field.annotation.peek('minItems')?.intValue;
+        final maxItems = field.annotation.peek('maxItems')?.intValue;
+        if (minItems != null) configParams.write('minItems: $minItems, ');
+        if (maxItems != null) configParams.write('maxItems: $maxItems, ');
+
+        // Добавляем обработку itemConfig
+        final itemConfig = field.annotation.peek('itemConfig');
+        if (itemConfig != null) {
+          final itemConfigType = itemConfig.objectValue.type!
+              .getDisplayString(withNullability: false);
+
+          // Получаем тип элемента списка из типа поля
+          final elementType = _getListElementType(field.type);
+
+          // Генерируем функцию createItemField
+          configParams.write('createItemField: () => ');
+
+          switch (itemConfigType) {
+            case 'NumberFieldAnnotation':
+            case 'NumberField':
+              final min = itemConfig.peek('min')?.doubleValue;
+              final max = itemConfig.peek('max')?.doubleValue;
+              final itemLabel =
+                  itemConfig.peek('label')?.stringValue ?? 'Элемент';
+
+              configParams.write('NumberField(');
+              configParams.write('config: NumberFieldConfig(');
+              configParams.write('label: \'$itemLabel\', ');
+              if (min != null) configParams.write('min: $min, ');
+              if (max != null) configParams.write('max: $max, ');
+              configParams.write(')), ');
+              break;
+            case 'PointFieldAnnotation':
+            case 'PointField':
+              final itemLabel =
+                  itemConfig.peek('label')?.stringValue ?? 'Точка';
+
+              configParams.write('PointField(');
+              configParams.write('config: PointFieldConfig(');
+              configParams.write('label: \'$itemLabel\', ');
+              configParams.write(')), ');
+              break;
+            case 'ListFieldAnnotation':
+            case 'ListField':
+              // Обработка вложенных списков
+              final nestedMinItems = itemConfig.peek('minItems')?.intValue;
+              final nestedMaxItems = itemConfig.peek('maxItems')?.intValue;
+              final itemLabel =
+                  itemConfig.peek('label')?.stringValue ?? 'Список';
+
+              configParams.write(
+                  'ListField<${_getListElementType(elementType)}, FormField<${_getListElementType(elementType)}>>(');
+              configParams.write(
+                  'config: ListFieldConfig<${_getListElementType(elementType)}>(');
+              configParams.write('label: \'$itemLabel\', ');
+              if (nestedMinItems != null)
+                configParams.write('minItems: $nestedMinItems, ');
+              if (nestedMaxItems != null)
+                configParams.write('maxItems: $nestedMaxItems, ');
+
+              // Рекурсивная обработка вложенных itemConfig
+              final nestedItemConfig = itemConfig.peek('itemConfig');
+              if (nestedItemConfig != null) {
+                final nestedItemConfigType = nestedItemConfig.objectValue.type!
+                    .getDisplayString(withNullability: false);
+
+                configParams.write('createItemField: () => ');
+
+                switch (nestedItemConfigType) {
+                  case 'NumberFieldAnnotation':
+                  case 'NumberField':
+                    final min = nestedItemConfig.peek('min')?.doubleValue;
+                    final max = nestedItemConfig.peek('max')?.doubleValue;
+                    final nestedItemLabel =
+                        nestedItemConfig.peek('label')?.stringValue ??
+                            'Элемент';
+
+                    configParams.write('NumberField(');
+                    configParams.write('config: NumberFieldConfig(');
+                    configParams.write('label: \'$nestedItemLabel\', ');
+                    if (min != null) configParams.write('min: $min, ');
+                    if (max != null) configParams.write('max: $max, ');
+                    configParams.write(')), ');
+                    break;
+                  default:
+                    configParams.write(
+                        'FormField<${_getListElementType(elementType)}>(initialValue: null), ');
+                }
+              } else {
+                configParams.write(
+                    'createItemField: () => FormField<${_getListElementType(elementType)}>(initialValue: null), ');
+              }
+
+              configParams.write(')), ');
+              break;
+            default:
+              configParams
+                  .write('FormField<$elementType>(initialValue: null), ');
+          }
+        } else {
+          // Если itemConfig не указан, создаем базовое поле
+          final elementType = _getListElementType(field.type);
+          configParams.write(
+              'createItemField: () => FormField<$elementType>(initialValue: null), ');
+        }
+        break;
       // Другие типы полей можно добавить по аналогии
     }
 
@@ -240,6 +360,24 @@ class FormGenerator extends GeneratorForAnnotation<FormGenAnnotation> {
       }
     }
     return result.toString();
+  }
+
+  /// Получает тип элемента списка из типа поля
+  String _getListElementType(String listType) {
+    // Извлекаем тип элемента из List<ElementType>
+    if (listType.startsWith('List<') && listType.endsWith('>')) {
+      return listType.substring(5, listType.length - 1);
+    }
+    return 'dynamic';
+  }
+
+  /// Получает тип элемента списка для приведения типов в fromMap
+  String _getListElementTypeForCast(String listType) {
+    final elementType = _getListElementType(listType);
+    if (elementType.endsWith('?')) {
+      return elementType;
+    }
+    return elementType;
   }
 
   /// Получает тип поля формы
@@ -276,7 +414,51 @@ class FormGenerator extends GeneratorForAnnotation<FormGenAnnotation> {
         return 'LineField';
       case 'ListField':
       case 'ListFieldAnnotation':
-        return 'ListField';
+        // Получаем тип элемента списка
+        final elementType = _getListElementType(field.type);
+
+        // Определяем тип поля для элемента списка
+        String itemFieldType;
+        final itemConfig = field.annotation.peek('itemConfig');
+        if (itemConfig != null) {
+          final itemConfigType = itemConfig.objectValue.type!
+              .getDisplayString(withNullability: false);
+
+          switch (itemConfigType) {
+            case 'NumberFieldAnnotation':
+            case 'NumberField':
+              itemFieldType = 'NumberField';
+              break;
+            case 'PointFieldAnnotation':
+            case 'PointField':
+              itemFieldType = 'PointField';
+              break;
+            case 'ListFieldAnnotation':
+            case 'ListField':
+              // Для вложенных списков
+              final nestedElementType = _getListElementType(elementType);
+              itemFieldType =
+                  'ListField<$nestedElementType, FormField<$nestedElementType>>';
+              break;
+            default:
+              itemFieldType = 'FormField<$elementType>';
+          }
+        } else {
+          // Если itemConfig не указан, используем базовый тип
+          if (elementType == 'double') {
+            itemFieldType = 'NumberField';
+          } else if (elementType == 'Point') {
+            itemFieldType = 'PointField';
+          } else if (elementType.startsWith('List<')) {
+            final nestedElementType = _getListElementType(elementType);
+            itemFieldType =
+                'ListField<$nestedElementType, FormField<$nestedElementType>>';
+          } else {
+            itemFieldType = 'FormField<$elementType>';
+          }
+        }
+
+        return 'ListField<$elementType, $itemFieldType>';
       default:
         throw InvalidGenerationSourceError(
           'Неподдерживаемый тип аннотации: $annotationType',
