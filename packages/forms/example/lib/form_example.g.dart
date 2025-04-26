@@ -35,6 +35,7 @@ class UserFormFormConfig extends TypedFormConfig<UserForm> {
               min: 0.0,
               max: 360.0,
               normalize: true,
+              isRequired: false,
             )),
       ];
 
@@ -59,7 +60,7 @@ class UserFormFormModel extends TypedFormModel<UserForm> {
   UserForm get values => UserForm(
         age: ageField.value!,
         location: locationField.value!,
-        rotation: rotationField.value!,
+        rotation: rotationField.value,
       );
 
   @override
@@ -82,6 +83,6 @@ class UserFormFormModel extends TypedFormModel<UserForm> {
     if (map.containsKey('location'))
       locationField.value = map['location'] as Point;
     if (map.containsKey('rotation'))
-      rotationField.value = map['rotation'] as Angle;
+      rotationField.value = map['rotation'] as Angle?;
   }
 }

@@ -12,10 +12,10 @@ class NumberFieldWidget extends FormFieldWidget<double, NumberField> {
   /// [decoration] - декорация поля ввода
   const NumberFieldWidget({
     super.key,
-    required NumberField field,
-    ValueChanged<double?>? onChanged,
-    InputDecoration? decoration,
-  }) : super(field: field, onChanged: onChanged, decoration: decoration);
+    required super.field,
+    super.onChanged,
+    super.decoration,
+  });
 
   @override
   State<NumberFieldWidget> createState() => _NumberFieldWidgetState();

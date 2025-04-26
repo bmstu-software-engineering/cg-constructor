@@ -27,8 +27,9 @@ class UserForm {
     min: 0,
     max: 360,
     normalize: true,
+    isRequired: false,
   )
-  final Angle rotation;
+  final Angle? rotation;
 
   /// Создает форму пользователя
   const UserForm({

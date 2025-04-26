@@ -20,22 +20,16 @@ class AngleFieldConfig extends FieldConfig<Angle> {
   final bool normalize;
 
   AngleFieldConfig({
-    required String label,
-    String? hint,
-    bool isRequired = true,
-    String? Function(Angle?)? validator,
+    required String super.label,
+    super.hint,
+    super.isRequired,
+    super.validator,
     NumberFieldConfig? valueConfig,
     this.min,
     this.max,
     this.normalize = false,
-  })  : valueConfig = valueConfig ??
-            NumberFieldConfig(label: 'Значение угла', min: min, max: max),
-        super(
-          label: label,
-          hint: hint,
-          isRequired: isRequired,
-          validator: validator,
-        );
+  }) : valueConfig = valueConfig ??
+            NumberFieldConfig(label: 'Значение угла', min: min, max: max);
 
   @override
   FormField<Angle> createField() {
