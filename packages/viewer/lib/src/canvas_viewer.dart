@@ -26,6 +26,16 @@ class CanvasViewer with DiagnosticableTreeMixin implements Viewer {
   // Флаг, указывающий, нужно ли отображать координаты
   bool _showCoordinates = false;
 
+  // Флаг, указывающий, включен ли режим добавления точек
+  bool _pointInputModeEnabled = false;
+
+  // Обработчик для добавленных точек
+  void Function(Point point)? _onPointAddedCallback;
+
+  // Поток для отправки добавленных точек
+  final StreamController<Point> _pointsStreamController =
+      StreamController.broadcast();
+
   // Отступы от краев
   final double padding;
 
@@ -36,6 +46,12 @@ class CanvasViewer with DiagnosticableTreeMixin implements Viewer {
   Offset get currentOffset => _currentOffset;
   Rect? get boundingBox => _boundingBox;
   bool get showCoordinates => _showCoordinates;
+
+  @override
+  bool get pointInputModeEnabled => _pointInputModeEnabled;
+
+  @override
+  Stream<Point> get pointsStream => _pointsStreamController.stream;
 
   CanvasViewer({this.padding = 40.0});
 
@@ -68,12 +84,58 @@ class CanvasViewer with DiagnosticableTreeMixin implements Viewer {
       // Обновляем ключ CustomPaint
       _updateStream.add(null);
     }
-    if (_showCoordinates != show) {
-      _showCoordinates = show;
+  }
+
+  @override
+  void setPointInputMode(bool enabled) {
+    if (_pointInputModeEnabled != enabled) {
+      _pointInputModeEnabled = enabled;
       _draw();
       // Обновляем ключ CustomPaint
       _updateStream.add(null);
     }
+  }
+
+  @override
+  void setOnPointAddedCallback(void Function(Point point)? onPointAdded) {
+    _onPointAddedCallback = onPointAdded;
+  }
+
+  /// Добавляет точку по координатам экрана
+  void _addPoint(double screenX, double screenY) {
+    if (!_pointInputModeEnabled) return;
+
+    // Преобразуем координаты экрана в координаты модели
+    final modelCoordinates = _convertToModelCoordinates(screenX, screenY);
+
+    // Создаем новую точку
+    final point = Point(
+      x: modelCoordinates.dx,
+      y: modelCoordinates.dy,
+      color: '#000000', // Можно сделать настраиваемым
+      thickness: 5.0, // Можно сделать настраиваемым
+    );
+
+    // Добавляем точку к существующим
+    _points = [..._points, point];
+
+    // Обновляем ограничивающий прямоугольник и перерисовываем
+    _updateBoundingBox();
+    _draw();
+
+    // Вызываем обработчик, если он установлен
+    _onPointAddedCallback?.call(point);
+
+    // Отправляем точку в поток
+    _pointsStreamController.add(point);
+  }
+
+  /// Преобразует координаты экрана в координаты модели
+  Offset _convertToModelCoordinates(double screenX, double screenY) {
+    // Обратное преобразование с учетом масштаба и смещения
+    final modelX = (screenX - _currentOffset.dx) / _currentScale;
+    final modelY = (screenY - _currentOffset.dy) / _currentScale;
+    return Offset(modelX, modelY);
   }
 
   /// Обновляет ограничивающий прямоугольник на основе текущих точек и линий
@@ -117,22 +179,33 @@ class CanvasViewer with DiagnosticableTreeMixin implements Viewer {
               label:
                   'Canvas with ${_lines.length} lines and ${_points.length} points',
               value: 'Scale: $_currentScale',
-              child: CustomPaint(
-                key: ValueKey(
-                  'canvas_viewer_${_lines.length}_${_points.length}_${_showCoordinates ? 'with_coords' : 'no_coords'}',
-                ),
-                size: Size(constraints.maxWidth, constraints.maxHeight),
-                painter: _CanvasPainter(
-                  padding,
-                  lines: _lines,
-                  points: _points,
-                  needsRescale: _needsRescale,
-                  showCoordinates: _showCoordinates,
-                  onRescaled: (scale, offset) {
-                    _currentScale = scale;
-                    _currentOffset = offset;
-                    _needsRescale = true;
-                  },
+              child: GestureDetector(
+                onTapDown:
+                    _pointInputModeEnabled
+                        ? (details) {
+                          _addPoint(
+                            details.localPosition.dx,
+                            details.localPosition.dy,
+                          );
+                        }
+                        : null,
+                child: CustomPaint(
+                  key: ValueKey(
+                    'canvas_viewer_${_lines.length}_${_points.length}_${_showCoordinates ? 'with_coords' : 'no_coords'}_${_pointInputModeEnabled ? 'input_mode' : 'view_mode'}',
+                  ),
+                  size: Size(constraints.maxWidth, constraints.maxHeight),
+                  painter: _CanvasPainter(
+                    padding,
+                    lines: _lines,
+                    points: _points,
+                    needsRescale: _needsRescale,
+                    showCoordinates: _showCoordinates,
+                    onRescaled: (scale, offset) {
+                      _currentScale = scale;
+                      _currentOffset = offset;
+                      _needsRescale = false;
+                    },
+                  ),
                 ),
               ),
             );
@@ -148,6 +221,7 @@ class CanvasViewer with DiagnosticableTreeMixin implements Viewer {
       'boundingBox': _boundingBox,
       'needsRescale': _needsRescale,
       'showCoordinates': _showCoordinates,
+      'pointInputModeEnabled': _pointInputModeEnabled,
     };
   }
 
@@ -162,6 +236,10 @@ class CanvasViewer with DiagnosticableTreeMixin implements Viewer {
       DiagnosticsProperty<int>('lineCount', _lines.length),
       DiagnosticsProperty<int>('pointCount', _points.length),
       DiagnosticsProperty<bool>('showCoordinates', _showCoordinates),
+      DiagnosticsProperty<bool>(
+        'pointInputModeEnabled',
+        _pointInputModeEnabled,
+      ),
     ];
   }
 
@@ -189,11 +267,19 @@ class CanvasViewer with DiagnosticableTreeMixin implements Viewer {
         ifFalse: 'coordinates hidden',
       ),
     );
+    properties.add(
+      FlagProperty(
+        'pointInputModeEnabled',
+        value: _pointInputModeEnabled,
+        ifTrue: 'point input enabled',
+        ifFalse: 'point input disabled',
+      ),
+    );
   }
 
   @override
   String toStringShort() {
-    return 'CanvasViewer(lines: ${_lines.length}, points: ${_points.length}, showCoordinates: $_showCoordinates)';
+    return 'CanvasViewer(lines: ${_lines.length}, points: ${_points.length}, showCoordinates: $_showCoordinates, pointInputMode: $_pointInputModeEnabled)';
   }
 }
 
@@ -440,16 +526,41 @@ class _CanvasPainter extends CustomPainter {
 
 /// Фабрика для создания экземпляров CanvasViewer
 class CanvasViewerFactory implements ViewerFactory {
-  const CanvasViewerFactory({this.padding = 40.0});
+  const CanvasViewerFactory({
+    this.padding = 40.0,
+    this.pointInputModeEnabled = false,
+    this.onPointAdded,
+  });
 
   final double padding;
+  final bool pointInputModeEnabled;
+  final void Function(Point point)? onPointAdded;
 
   @override
-  Viewer create({bool showCoordinates = false}) {
+  Viewer create({
+    bool showCoordinates = false,
+    bool pointInputModeEnabled = false,
+    void Function(Point point)? onPointAdded,
+  }) {
     final viewer = CanvasViewer(padding: padding);
+
+    // Применяем настройки из параметров конструктора, если не переопределены
+    final usePointInputMode =
+        pointInputModeEnabled || this.pointInputModeEnabled;
+    final useOnPointAdded = onPointAdded ?? this.onPointAdded;
+
     if (showCoordinates) {
       viewer.setShowCoordinates(true);
     }
+
+    if (usePointInputMode) {
+      viewer.setPointInputMode(true);
+    }
+
+    if (useOnPointAdded != null) {
+      viewer.setOnPointAddedCallback(useOnPointAdded);
+    }
+
     return viewer;
   }
 }
