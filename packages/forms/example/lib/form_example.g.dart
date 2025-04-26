@@ -13,31 +13,28 @@ class UserFormFormConfig extends TypedFormConfig<UserForm> {
 
   @override
   List<FieldConfigEntry> get fields => [
-        FieldConfigEntry(
-            id: 'age',
-            type: FieldType.number,
-            config: NumberFieldConfig(
-              label: 'Возраст',
-              min: 18.0,
-              max: 100.0,
-            )),
-        FieldConfigEntry(
-            id: 'location',
-            type: FieldType.point,
-            config: PointFieldConfig(
-              label: 'Координаты',
-            )),
-        FieldConfigEntry(
-            id: 'rotation',
-            type: FieldType.angle,
-            config: AngleFieldConfig(
-              label: 'Угол поворота',
-              min: 0.0,
-              max: 360.0,
-              normalize: true,
-              isRequired: false,
-            )),
-      ];
+    FieldConfigEntry(
+      id: 'age',
+      type: FieldType.number,
+      config: NumberFieldConfig(label: 'Возраст', min: 18.0, max: 100.0),
+    ),
+    FieldConfigEntry(
+      id: 'location',
+      type: FieldType.point,
+      config: PointFieldConfig(label: 'Координаты'),
+    ),
+    FieldConfigEntry(
+      id: 'rotation',
+      type: FieldType.angle,
+      config: AngleFieldConfig(
+        label: 'Угол поворота',
+        min: 0.0,
+        max: 360.0,
+        normalize: true,
+        isRequired: false,
+      ),
+    ),
+  ];
 
   @override
   UserFormFormModel createModel() => UserFormFormModel(config: toFormConfig());
@@ -58,10 +55,10 @@ class UserFormFormModel extends TypedFormModel<UserForm> {
 
   @override
   UserForm get values => UserForm(
-        age: ageField.value!,
-        location: locationField.value!,
-        rotation: rotationField.value,
-      );
+    age: ageField.value!,
+    location: locationField.value!,
+    rotation: rotationField.value,
+  );
 
   @override
   set values(UserForm newValues) {
@@ -72,10 +69,10 @@ class UserFormFormModel extends TypedFormModel<UserForm> {
 
   @override
   Map<String, dynamic> toMap() => {
-        'age': ageField.value,
-        'location': locationField.value,
-        'rotation': rotationField.value,
-      };
+    'age': ageField.value,
+    'location': locationField.value,
+    'rotation': rotationField.value,
+  };
 
   @override
   void fromMap(Map<String, dynamic> map) {

@@ -23,19 +23,14 @@ class ListFieldConfig<T> extends FieldConfig<List<T>> {
   /// [createItemField] - функция для создания нового поля элемента списка
   /// [validator] - функция валидации
   ListFieldConfig({
-    String? label,
-    String? hint,
+    super.label,
+    super.hint,
     this.minItems = 0,
     this.maxItems,
-    bool isRequired = false,
+    super.isRequired = false,
     required this.createItemField,
-    String? Function(List<T>?)? validator,
-  }) : super(
-          label: label,
-          hint: hint,
-          isRequired: isRequired,
-          validator: validator,
-        );
+    super.validator,
+  });
 
   @override
   FormField<List<T>> createField() {

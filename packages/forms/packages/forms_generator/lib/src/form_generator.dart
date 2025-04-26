@@ -175,10 +175,30 @@ class FormGenerator extends GeneratorForAnnotation<FormGenAnnotation> {
 
       if (annotationType == 'ListField' ||
           annotationType == 'ListFieldAnnotation') {
-        // Для списков используем специальную обработку
-        final elementType = _getListElementTypeForCast(field.type);
-        buffer.writeln(
-            '    if (map.containsKey(\'${field.name}\')) ${field.name}Field.value = map[\'${field.name}\'] as ${field.type};');
+        // Для списков используем cast для безопасного приведения типов
+        final elementType = _getListElementType(field.type);
+        // Получаем тип элемента списка без учета nullable
+        String elementTypeNonNull = elementType;
+        if (elementTypeNonNull.endsWith('?')) {
+          elementTypeNonNull =
+              elementTypeNonNull.substring(0, elementTypeNonNull.length - 1);
+        }
+
+        // Получаем тип элемента списка без учета nullable для поля
+        String elementTypeForField = elementType;
+        if (field.type.startsWith('List<') && field.type.endsWith('>?')) {
+          elementTypeForField = field.type.substring(5, field.type.length - 2);
+        }
+
+        if (field.type.endsWith('?')) {
+          // Для необязательных списков
+          buffer.writeln(
+              '    if (map.containsKey(\'${field.name}\')) ${field.name}Field.value = (map[\'${field.name}\'] as List<dynamic>?)?.cast<$elementTypeForField>();');
+        } else {
+          // Для обязательных списков
+          buffer.writeln(
+              '    if (map.containsKey(\'${field.name}\')) ${field.name}Field.value = (map[\'${field.name}\'] as List<dynamic>).cast<$elementTypeForField>();');
+        }
       } else {
         // Для остальных типов используем стандартную обработку
         buffer.writeln(
@@ -197,6 +217,24 @@ class FormGenerator extends GeneratorForAnnotation<FormGenAnnotation> {
         .getDisplayString(withNullability: false);
     final fieldType = _getFieldType(field);
     final fieldTypeEnum = _getFieldTypeEnum(annotationType);
+
+    // Определяем тип конфигурации
+    String configType;
+    if (annotationType == 'ListField' ||
+        annotationType == 'ListFieldAnnotation') {
+      // Для списков используем ListFieldConfig<ElementType>
+      String elementType = _getListElementType(field.type);
+
+      // Если тип поля - List<double>?, то тип элемента - double
+      if (field.type.startsWith('List<') && field.type.endsWith('>?')) {
+        elementType = field.type.substring(5, field.type.length - 2);
+      }
+
+      configType = 'ListFieldConfig<$elementType>';
+    } else {
+      // Для остальных типов используем соответствующий тип конфигурации
+      configType = '${fieldType}Config';
+    }
 
     final configParams = StringBuffer();
     configParams.write('label: \'${_getLabel(field)}\', ');
@@ -313,24 +351,34 @@ class FormGenerator extends GeneratorForAnnotation<FormGenAnnotation> {
                     break;
                   default:
                     configParams.write(
-                        'FormField<${_getListElementType(elementType)}>(initialValue: null), ');
+                        'NumberField(config: NumberFieldConfig(label: \'Элемент\')), ');
                 }
               } else {
                 configParams.write(
-                    'createItemField: () => FormField<${_getListElementType(elementType)}>(initialValue: null), ');
+                    'createItemField: () => NumberField(config: NumberFieldConfig(label: \'Элемент\')), ');
               }
 
               configParams.write(')), ');
               break;
             default:
-              configParams
-                  .write('FormField<$elementType>(initialValue: null), ');
+              configParams.write(
+                  'NumberField(config: NumberFieldConfig(label: \'Элемент\')), ');
           }
         } else {
           // Если itemConfig не указан, создаем базовое поле
           final elementType = _getListElementType(field.type);
-          configParams.write(
-              'createItemField: () => FormField<$elementType>(initialValue: null), ');
+          // Если тип элемента - double, используем NumberField
+          if (elementType == 'double') {
+            configParams.write(
+                'createItemField: () => NumberField(config: NumberFieldConfig(label: \'Элемент\')), ');
+          } else if (elementType == 'Point') {
+            configParams.write(
+                'createItemField: () => PointField(config: PointFieldConfig(label: \'Точка\')), ');
+          } else {
+            // Для других типов используем NumberField с преобразованием
+            configParams.write(
+                'createItemField: () => NumberField(config: NumberFieldConfig(label: \'Элемент\')), ');
+          }
         }
         break;
       // Другие типы полей можно добавить по аналогии
@@ -339,7 +387,7 @@ class FormGenerator extends GeneratorForAnnotation<FormGenAnnotation> {
     final isRequired = field.annotation.peek('isRequired')?.boolValue ?? true;
     if (!isRequired) configParams.write('isRequired: false, ');
 
-    return 'FieldConfigEntry(id: \'${field.name}\', type: FieldType.$fieldTypeEnum, config: ${fieldType}Config($configParams))';
+    return 'FieldConfigEntry(id: \'${field.name}\', type: FieldType.$fieldTypeEnum, config: $configType($configParams))';
   }
 
   /// Получает метку поля
@@ -415,7 +463,12 @@ class FormGenerator extends GeneratorForAnnotation<FormGenAnnotation> {
       case 'ListField':
       case 'ListFieldAnnotation':
         // Получаем тип элемента списка
-        final elementType = _getListElementType(field.type);
+        String elementType = _getListElementType(field.type);
+
+        // Если тип поля - List<double>?, то тип элемента - double
+        if (field.type.startsWith('List<') && field.type.endsWith('>?')) {
+          elementType = field.type.substring(5, field.type.length - 2);
+        }
 
         // Определяем тип поля для элемента списка
         String itemFieldType;
@@ -424,38 +477,11 @@ class FormGenerator extends GeneratorForAnnotation<FormGenAnnotation> {
           final itemConfigType = itemConfig.objectValue.type!
               .getDisplayString(withNullability: false);
 
-          switch (itemConfigType) {
-            case 'NumberFieldAnnotation':
-            case 'NumberField':
-              itemFieldType = 'NumberField';
-              break;
-            case 'PointFieldAnnotation':
-            case 'PointField':
-              itemFieldType = 'PointField';
-              break;
-            case 'ListFieldAnnotation':
-            case 'ListField':
-              // Для вложенных списков
-              final nestedElementType = _getListElementType(elementType);
-              itemFieldType =
-                  'ListField<$nestedElementType, FormField<$nestedElementType>>';
-              break;
-            default:
-              itemFieldType = 'FormField<$elementType>';
-          }
+          // Для всех типов используем FormField<T>
+          itemFieldType = 'FormField<$elementType>';
         } else {
-          // Если itemConfig не указан, используем базовый тип
-          if (elementType == 'double') {
-            itemFieldType = 'NumberField';
-          } else if (elementType == 'Point') {
-            itemFieldType = 'PointField';
-          } else if (elementType.startsWith('List<')) {
-            final nestedElementType = _getListElementType(elementType);
-            itemFieldType =
-                'ListField<$nestedElementType, FormField<$nestedElementType>>';
-          } else {
-            itemFieldType = 'FormField<$elementType>';
-          }
+          // Для всех типов используем FormField<T>
+          itemFieldType = 'FormField<$elementType>';
         }
 
         return 'ListField<$elementType, $itemFieldType>';

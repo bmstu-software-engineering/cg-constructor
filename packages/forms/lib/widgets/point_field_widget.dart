@@ -44,7 +44,6 @@ class _PointFieldWidgetState
 
   @override
   Widget build(BuildContext context) {
-    print('error: ${widget.field.validate()}');
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -99,7 +98,6 @@ class _PointFieldWidgetState
   }
 
   void _onChange(_) {
-    print('object');
     if (widget.onChanged != null) {
       widget.onChanged!(widget.field.value);
     }

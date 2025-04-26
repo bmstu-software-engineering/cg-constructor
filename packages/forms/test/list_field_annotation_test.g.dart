@@ -39,11 +39,12 @@ class NumberListFormFormModel extends TypedFormModel<NumberListForm> {
   NumberListFormFormModel({required super.config});
 
   /// Поле для numbers
-  ListField get numbersField => getField<ListField>('numbers')!;
+  ListField<double, FormField<double>> get numbersField =>
+      getField<ListField<double, FormField<double>>>('numbers')!;
 
   @override
   NumberListForm get values => NumberListForm(
-        numbers: (numbersField.value as List<dynamic>?)?.cast<double>() ?? [],
+        numbers: numbersField.value!,
       );
 
   @override
@@ -94,11 +95,12 @@ class PointListFormFormModel extends TypedFormModel<PointListForm> {
   PointListFormFormModel({required super.config});
 
   /// Поле для points
-  ListField get pointsField => getField<ListField>('points')!;
+  ListField<Point, FormField<Point>> get pointsField =>
+      getField<ListField<Point, FormField<Point>>>('points')!;
 
   @override
   PointListForm get values => PointListForm(
-        points: (pointsField.value as List<dynamic>?)?.cast<Point>() ?? [],
+        points: pointsField.value!,
       );
 
   @override
@@ -130,10 +132,8 @@ class SimpleListFormFormConfig extends TypedFormConfig<SimpleListForm> {
             type: FieldType.list,
             config: ListFieldConfig<double>(
               label: 'Простой список',
-              createItemField: () => NumberField(
-                  config: NumberFieldConfig(
-                label: 'Элемент',
-              )),
+              createItemField: () =>
+                  NumberField(config: NumberFieldConfig(label: 'Элемент')),
             )),
       ];
 
@@ -147,12 +147,12 @@ class SimpleListFormFormModel extends TypedFormModel<SimpleListForm> {
   SimpleListFormFormModel({required super.config});
 
   /// Поле для simpleList
-  ListField get simpleListField => getField<ListField>('simpleList')!;
+  ListField<double, FormField<double>> get simpleListField =>
+      getField<ListField<double, FormField<double>>>('simpleList')!;
 
   @override
   SimpleListForm get values => SimpleListForm(
-        simpleList:
-            (simpleListField.value as List<dynamic>?)?.cast<double>() ?? [],
+        simpleList: simpleListField.value!,
       );
 
   @override
@@ -205,12 +205,12 @@ class OptionalListFormFormModel extends TypedFormModel<OptionalListForm> {
   OptionalListFormFormModel({required super.config});
 
   /// Поле для optionalList
-  ListField get optionalListField => getField<ListField>('optionalList')!;
+  ListField<double, FormField<double>> get optionalListField =>
+      getField<ListField<double, FormField<double>>>('optionalList')!;
 
   @override
   OptionalListForm get values => OptionalListForm(
-        optionalList:
-            (optionalListField.value as List<dynamic>?)?.cast<double>(),
+        optionalList: optionalListField.value,
       );
 
   @override
@@ -245,7 +245,7 @@ class NestedListFormFormConfig extends TypedFormConfig<NestedListForm> {
               label: 'Вложенный список',
               minItems: 1,
               maxItems: 3,
-              createItemField: () => ListField<double, NumberField>(
+              createItemField: () => ListField<double, FormField<double>>(
                   config: ListFieldConfig<double>(
                 label: 'Внутренний список',
                 minItems: 2,
@@ -270,14 +270,12 @@ class NestedListFormFormModel extends TypedFormModel<NestedListForm> {
   NestedListFormFormModel({required super.config});
 
   /// Поле для nestedList
-  ListField get nestedListField => getField<ListField>('nestedList')!;
+  ListField<List<double>, FormField<List<double>>> get nestedListField =>
+      getField<ListField<List<double>, FormField<List<double>>>>('nestedList')!;
 
   @override
   NestedListForm get values => NestedListForm(
-        nestedList: (nestedListField.value as List<dynamic>?)
-                ?.map((item) => (item as List<dynamic>).cast<double>())
-                .toList() ??
-            [],
+        nestedList: nestedListField.value!,
       );
 
   @override
@@ -293,8 +291,7 @@ class NestedListFormFormModel extends TypedFormModel<NestedListForm> {
   @override
   void fromMap(Map<String, dynamic> map) {
     if (map.containsKey('nestedList'))
-      nestedListField.value = (map['nestedList'] as List<dynamic>)
-          .map((item) => (item as List<dynamic>).cast<double>())
-          .toList();
+      nestedListField.value =
+          (map['nestedList'] as List<dynamic>).cast<List<double>>();
   }
 }

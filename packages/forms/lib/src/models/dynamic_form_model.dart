@@ -73,14 +73,21 @@ class DynamicFormModel extends DiagnosticableFormModel {
       case FieldType.list:
         final listConfig = entry.config as ListFieldConfig;
         // Для списка нужно создать поле с правильным типом
-        // Это упрощенная реализация, которая поддерживает только списки чисел
-        return ListField(config: listConfig);
+        // Используем метод createField из конфигурации, который создаст
+        // поле с правильными типами параметров
+        return listConfig.createField();
     }
   }
 
   /// Получение поля по ID
   T? getField<T extends FormField>(String id) {
-    return _fields[id] as T?;
+    final field = _fields[id];
+    if (field == null) return null;
+
+    // Для всех типов полей просто возвращаем поле как есть
+    // Это работает, потому что в Dart приведение типов проверяется только во время компиляции,
+    // а во время выполнения типы стираются (type erasure)
+    return field as T?;
   }
 
   /// Получение значения поля по ID
