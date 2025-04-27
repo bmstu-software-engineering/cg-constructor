@@ -54,7 +54,7 @@ class _DynamicFormWidgetState extends State<DynamicFormWidget> {
             padding: EdgeInsets.only(bottom: this.widget.fieldSpacing),
             child: widget,
           );
-        }).toList(),
+        }),
 
         // Кнопка отправки
         if (widget.onSubmit != null)
@@ -135,8 +135,16 @@ class _DynamicFormWidgetState extends State<DynamicFormWidget> {
             onChanged(value);
           }),
         );
-      default:
-        return const SizedBox();
+      case FieldType.line:
+        return LineFieldWidget(
+          field: field as LineField,
+          onChanged: (_) => setState(() {}),
+        );
+      case FieldType.enumSelect:
+        return EnumSelectFieldWidget(
+          field: field as EnumSelectField,
+          onChanged: (_) => setState(() {}),
+        );
     }
   }
 }
@@ -156,6 +164,11 @@ extension on FormField {
         );
       case VectorField field:
         return VectorFieldWidget(
+          field: field,
+          onChanged: (value) => onChanged(value),
+        );
+      case EnumSelectField field:
+        return EnumSelectFieldWidget(
           field: field,
           onChanged: (value) => onChanged(value),
         );

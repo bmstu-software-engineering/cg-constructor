@@ -11,9 +11,9 @@ class FormGenerator extends GeneratorForAnnotation<FormGenAnnotation> {
     ConstantReader annotation,
     BuildStep buildStep,
   ) {
-    if (element is! ClassElement) {
+    if (element is! ClassElement && element is! EnumElement) {
       throw InvalidGenerationSourceError(
-        'Аннотация @FormGen может быть применена только к классам.',
+        'Аннотация @FormGen может быть применена только к классам или enum.',
         element: element,
       );
     }
@@ -22,7 +22,7 @@ class FormGenerator extends GeneratorForAnnotation<FormGenAnnotation> {
     final formName = annotation.peek('name')?.stringValue ?? className;
     final fields = _getFormFields(element);
 
-    if (fields.isEmpty) {
+    if (fields.isEmpty && element is! EnumElement) {
       throw InvalidGenerationSourceError(
         'Класс $className не содержит полей с аннотациями FieldGen.',
         element: element,
@@ -32,20 +32,29 @@ class FormGenerator extends GeneratorForAnnotation<FormGenAnnotation> {
     return _generateFormCode(className, formName, fields);
   }
 
-  /// Получает поля формы из класса
-  List<_FormField> _getFormFields(ClassElement classElement) {
+  /// Получает поля формы из класса или enum
+  List<_FormField> _getFormFields(Element element) {
     final fields = <_FormField>[];
 
-    for (final field in classElement.fields) {
-      if (field.isStatic) continue;
+    if (element is ClassElement) {
+      for (final field in element.fields) {
+        if (field.isStatic) continue;
 
-      final fieldGen = _getFieldGenAnnotation(field);
-      if (fieldGen == null) continue;
+        final fieldGen = _getFieldGenAnnotation(field);
+        if (fieldGen == null) continue;
 
+        fields.add(_FormField(
+          name: field.name,
+          type: field.type.getDisplayString(withNullability: true),
+          annotation: fieldGen,
+        ));
+      }
+    } else if (element is EnumElement) {
+      // Для enum добавляем специальное поле для выбора значения
       fields.add(_FormField(
-        name: field.name,
-        type: field.type.getDisplayString(withNullability: true),
-        annotation: fieldGen,
+        name: 'value',
+        type: element.name,
+        annotation: ConstantReader(null), // Пустая аннотация для enum
       ));
     }
 
@@ -55,14 +64,33 @@ class FormGenerator extends GeneratorForAnnotation<FormGenAnnotation> {
   /// Получает аннотацию FieldGen из поля
   ConstantReader? _getFieldGenAnnotation(FieldElement field) {
     for (final metadata in field.metadata) {
-      final annotation = ConstantReader(metadata.computeConstantValue());
-      final annotationType = annotation.objectValue.type;
-      if (annotationType == null) continue;
+      try {
+        final annotation = ConstantReader(metadata.computeConstantValue());
+        final objectValue = annotation.objectValue;
+        if (objectValue == null) continue;
 
-      final annotationTypeName =
-          annotationType.getDisplayString(withNullability: false);
-      if (_isFieldGenAnnotation(annotationTypeName)) {
-        return annotation;
+        final annotationType = objectValue.type;
+        if (annotationType == null) continue;
+
+        final annotationTypeName =
+            annotationType.getDisplayString(withNullability: false);
+
+        // Проверяем, является ли аннотация FieldGen
+        if (_isFieldGenAnnotation(annotationTypeName)) {
+          return annotation;
+        }
+
+        // Проверяем, является ли аннотация FieldGen с префиксом
+        final lastDotIndex = annotationTypeName.lastIndexOf('.');
+        if (lastDotIndex != -1) {
+          final shortName = annotationTypeName.substring(lastDotIndex + 1);
+          if (_isFieldGenAnnotation(shortName)) {
+            return annotation;
+          }
+        }
+      } catch (e) {
+        // Игнорируем ошибки при обработке аннотаций
+        continue;
       }
     }
 
@@ -71,43 +99,55 @@ class FormGenerator extends GeneratorForAnnotation<FormGenAnnotation> {
 
   /// Проверяет, является ли тип аннотацией FieldGen
   bool _isFieldGenAnnotation(String typeName) {
-    return typeName == 'NumberFieldAnnotation' ||
-        typeName == 'PointFieldAnnotation' ||
-        typeName == 'AngleFieldAnnotation' ||
-        typeName == 'VectorFieldAnnotation' ||
-        typeName == 'ScaleFieldAnnotation' ||
-        typeName == 'PolygonFieldAnnotation' ||
-        typeName == 'TriangleFieldAnnotation' ||
-        typeName == 'RectangleFieldAnnotation' ||
-        typeName == 'LineFieldAnnotation' ||
-        typeName == 'ListFieldAnnotation' ||
+    // Проверяем, содержит ли тип префикс
+    final lastDotIndex = typeName.lastIndexOf('.');
+    final shortName =
+        lastDotIndex != -1 ? typeName.substring(lastDotIndex + 1) : typeName;
+
+    return shortName == 'NumberFieldAnnotation' ||
+        shortName == 'PointFieldAnnotation' ||
+        shortName == 'AngleFieldAnnotation' ||
+        shortName == 'VectorFieldAnnotation' ||
+        shortName == 'ScaleFieldAnnotation' ||
+        shortName == 'PolygonFieldAnnotation' ||
+        shortName == 'TriangleFieldAnnotation' ||
+        shortName == 'RectangleFieldAnnotation' ||
+        shortName == 'LineFieldAnnotation' ||
+        shortName == 'ListFieldAnnotation' ||
+        shortName == 'EnumSelectFieldAnnotation' ||
         // Для обратной совместимости
-        typeName == 'NumberField' ||
-        typeName == 'PointField' ||
-        typeName == 'AngleField' ||
-        typeName == 'VectorField' ||
-        typeName == 'ScaleField' ||
-        typeName == 'PolygonField' ||
-        typeName == 'TriangleField' ||
-        typeName == 'RectangleField' ||
-        typeName == 'LineField' ||
-        typeName == 'ListField';
+        shortName == 'NumberField' ||
+        shortName == 'PointField' ||
+        shortName == 'AngleField' ||
+        shortName == 'VectorField' ||
+        shortName == 'ScaleField' ||
+        shortName == 'PolygonField' ||
+        shortName == 'TriangleField' ||
+        shortName == 'RectangleField' ||
+        shortName == 'LineField' ||
+        shortName == 'ListField' ||
+        shortName == 'EnumSelectField';
   }
 
   /// Генерирует код для формы
   String _generateFormCode(
-    String className,
-    String formName,
+    String? className,
+    String? formName,
     List<_FormField> fields,
   ) {
+    // Убедимся, что className и formName не null
+    final safeClassName = className ?? 'UnknownClass';
+    final safeFormName = formName ?? 'Форма';
+    // Проверяем, является ли класс enum
+    final isEnum = fields.length == 1 && fields[0].name == 'value';
     final buffer = StringBuffer();
 
     // Генерируем код для конфигурации формы
-    buffer.writeln('/// Типизированная конфигурация формы для $className');
+    buffer.writeln('/// Типизированная конфигурация формы для $safeClassName');
     buffer.writeln(
-        'class ${className}FormConfig extends TypedFormConfig<$className> {');
+        'class ${safeClassName}FormConfig extends TypedFormConfig<$safeClassName> {');
     buffer.writeln('  @override');
-    buffer.writeln('  String get name => \'$formName\';');
+    buffer.writeln('  String get name => \'$safeFormName\';');
     buffer.writeln();
     buffer.writeln('  @override');
     buffer.writeln('  List<FieldConfigEntry> get fields => [');
@@ -121,15 +161,15 @@ class FormGenerator extends GeneratorForAnnotation<FormGenAnnotation> {
     buffer.writeln();
     buffer.writeln('  @override');
     buffer.writeln(
-        '  ${className}FormModel createModel() => ${className}FormModel(config: toFormConfig());');
+        '  ${safeClassName}FormModel createModel() => ${safeClassName}FormModel(config: toFormConfig());');
     buffer.writeln('}');
     buffer.writeln();
 
     // Генерируем код для модели формы
-    buffer.writeln('/// Типизированная модель формы для $className');
+    buffer.writeln('/// Типизированная модель формы для $safeClassName');
     buffer.writeln(
-        'class ${className}FormModel extends TypedFormModel<$className> {');
-    buffer.writeln('  ${className}FormModel({required super.config});');
+        'class ${safeClassName}FormModel extends TypedFormModel<$safeClassName> {');
+    buffer.writeln('  ${safeClassName}FormModel({required super.config});');
     buffer.writeln();
 
     // Генерируем геттеры для полей формы
@@ -142,70 +182,106 @@ class FormGenerator extends GeneratorForAnnotation<FormGenAnnotation> {
 
     // Генерируем геттер и сеттер для values
     buffer.writeln('  @override');
-    buffer.writeln('  $className get values => $className(');
-    for (final field in fields) {
-      buffer.writeln(
-          '    ${field.name}: ${field.name}Field.value${field.type.endsWith('?') ? '' : '!'},');
+    if (isEnum) {
+      // Для enum просто возвращаем значение поля value
+      buffer.writeln('  $safeClassName get values => valueField.value!;');
+    } else {
+      // Для обычных классов создаем экземпляр класса с полями
+      buffer.writeln('  $safeClassName get values => $safeClassName(');
+      for (final field in fields) {
+        buffer.writeln(
+            '    ${field.name}: ${field.name}Field.value${field.type.endsWith('?') ? '' : '!'},');
+      }
+      buffer.writeln('  );');
     }
-    buffer.writeln('  );');
     buffer.writeln();
 
     buffer.writeln('  @override');
-    buffer.writeln('  set values($className newValues) {');
-    for (final field in fields) {
-      buffer.writeln('    ${field.name}Field.value = newValues.${field.name};');
+    if (isEnum) {
+      // Для enum просто устанавливаем значение поля value
+      buffer.writeln('  set values($safeClassName newValues) {');
+      buffer.writeln('    valueField.value = newValues;');
+      buffer.writeln('  }');
+    } else {
+      // Для обычных классов устанавливаем значения всех полей
+      buffer.writeln('  set values($safeClassName newValues) {');
+      for (final field in fields) {
+        buffer
+            .writeln('    ${field.name}Field.value = newValues.${field.name};');
+      }
+      buffer.writeln('  }');
     }
-    buffer.writeln('  }');
     buffer.writeln();
 
     // Генерируем методы toMap и fromMap
     buffer.writeln('  @override');
-    buffer.writeln('  Map<String, dynamic> toMap() => {');
-    for (final field in fields) {
-      buffer.writeln('    \'${field.name}\': ${field.name}Field.value,');
+    if (isEnum) {
+      // Для enum просто возвращаем значение поля value как строку
+      buffer.writeln('  Map<String, dynamic> toMap() => {');
+      buffer.writeln('    \'value\': valueField.value?.index,');
+      buffer.writeln('  };');
+    } else {
+      // Для обычных классов возвращаем значения всех полей
+      buffer.writeln('  Map<String, dynamic> toMap() => {');
+      for (final field in fields) {
+        buffer.writeln('    \'${field.name}\': ${field.name}Field.value,');
+      }
+      buffer.writeln('  };');
     }
-    buffer.writeln('  };');
     buffer.writeln();
 
     buffer.writeln('  @override');
-    buffer.writeln('  void fromMap(Map<String, dynamic> map) {');
-    for (final field in fields) {
-      final annotationType = field.annotation.objectValue.type!
-          .getDisplayString(withNullability: false);
+    if (isEnum) {
+      // Для enum устанавливаем значение поля value из индекса
+      buffer.writeln('  void fromMap(Map<String, dynamic> map) {');
+      buffer.writeln(
+          '    if (map.containsKey(\'value\') && map[\'value\'] != null) {');
+      buffer.writeln('      final index = map[\'value\'] as int;');
+      buffer.writeln('      valueField.value = $safeClassName.values[index];');
+      buffer.writeln('    }');
+      buffer.writeln('  }');
+    } else {
+      // Для обычных классов устанавливаем значения всех полей
+      buffer.writeln('  void fromMap(Map<String, dynamic> map) {');
+      for (final field in fields) {
+        final annotationType = field.annotation.objectValue?.type
+            ?.getDisplayString(withNullability: false);
 
-      if (annotationType == 'ListField' ||
-          annotationType == 'ListFieldAnnotation') {
-        // Для списков используем cast для безопасного приведения типов
-        final elementType = _getListElementType(field.type);
-        // Получаем тип элемента списка без учета nullable
-        String elementTypeNonNull = elementType;
-        if (elementTypeNonNull.endsWith('?')) {
-          elementTypeNonNull =
-              elementTypeNonNull.substring(0, elementTypeNonNull.length - 1);
-        }
+        if (annotationType == 'ListField' ||
+            annotationType == 'ListFieldAnnotation') {
+          // Для списков используем cast для безопасного приведения типов
+          final elementType = _getListElementType(field.type);
+          // Получаем тип элемента списка без учета nullable
+          String elementTypeNonNull = elementType;
+          if (elementTypeNonNull.endsWith('?')) {
+            elementTypeNonNull =
+                elementTypeNonNull.substring(0, elementTypeNonNull.length - 1);
+          }
 
-        // Получаем тип элемента списка без учета nullable для поля
-        String elementTypeForField = elementType;
-        if (field.type.startsWith('List<') && field.type.endsWith('>?')) {
-          elementTypeForField = field.type.substring(5, field.type.length - 2);
-        }
+          // Получаем тип элемента списка без учета nullable для поля
+          String elementTypeForField = elementType;
+          if (field.type.startsWith('List<') && field.type.endsWith('>?')) {
+            elementTypeForField =
+                field.type.substring(5, field.type.length - 2);
+          }
 
-        if (field.type.endsWith('?')) {
-          // Для необязательных списков
-          buffer.writeln(
-              '    if (map.containsKey(\'${field.name}\')) ${field.name}Field.value = (map[\'${field.name}\'] as List<dynamic>?)?.cast<$elementTypeForField>();');
+          if (field.type.endsWith('?')) {
+            // Для необязательных списков
+            buffer.writeln(
+                '    if (map.containsKey(\'${field.name}\')) ${field.name}Field.value = (map[\'${field.name}\'] as List<dynamic>?)?.cast<$elementTypeForField>();');
+          } else {
+            // Для обязательных списков
+            buffer.writeln(
+                '    if (map.containsKey(\'${field.name}\')) ${field.name}Field.value = (map[\'${field.name}\'] as List<dynamic>).cast<$elementTypeForField>();');
+          }
         } else {
-          // Для обязательных списков
+          // Для остальных типов используем стандартную обработку
           buffer.writeln(
-              '    if (map.containsKey(\'${field.name}\')) ${field.name}Field.value = (map[\'${field.name}\'] as List<dynamic>).cast<$elementTypeForField>();');
+              '    if (map.containsKey(\'${field.name}\')) ${field.name}Field.value = map[\'${field.name}\'] as ${field.type};');
         }
-      } else {
-        // Для остальных типов используем стандартную обработку
-        buffer.writeln(
-            '    if (map.containsKey(\'${field.name}\')) ${field.name}Field.value = map[\'${field.name}\'] as ${field.type};');
       }
+      buffer.writeln('  }');
     }
-    buffer.writeln('  }');
     buffer.writeln('}');
 
     return buffer.toString();
@@ -213,7 +289,22 @@ class FormGenerator extends GeneratorForAnnotation<FormGenAnnotation> {
 
   /// Генерирует код для конфигурации поля
   String _generateFieldConfigEntry(_FormField field) {
-    final annotationType = field.annotation.objectValue.type!
+    // Для enum создаем специальную конфигурацию
+    if (field.name == 'value') {
+      return 'FieldConfigEntry(id: \'value\', type: FieldType.enumSelect, config: EnumSelectConfig<${field.type}>(label: \'Значение\', values: ${field.type}.values))';
+    }
+
+    // Проверяем, что objectValue не null
+    if (field.annotation.objectValue == null) {
+      return 'FieldConfigEntry(id: \'${field.name}\', type: FieldType.enumSelect, config: EnumSelectConfig<${field.type}>(label: \'${field.name.substring(0, 1).toUpperCase() + field.name.substring(1)}\', values: []))';
+    }
+
+    // Проверяем, что type не null
+    if (field.annotation.objectValue!.type == null) {
+      return 'FieldConfigEntry(id: \'${field.name}\', type: FieldType.enumSelect, config: EnumSelectConfig<${field.type}>(label: \'${_getLabel(field)}\', values: []))';
+    }
+
+    final annotationType = field.annotation.objectValue!.type!
         .getDisplayString(withNullability: false);
     final fieldType = _getFieldType(field);
     final fieldTypeEnum = _getFieldTypeEnum(annotationType);
@@ -231,6 +322,10 @@ class FormGenerator extends GeneratorForAnnotation<FormGenAnnotation> {
       }
 
       configType = 'ListFieldConfig<$elementType>';
+    } else if (annotationType == 'EnumSelectField' ||
+        annotationType == 'EnumSelectFieldAnnotation') {
+      // Для EnumSelectField используем EnumSelectConfig
+      configType = 'EnumSelectConfig<${field.type}>';
     } else {
       // Для остальных типов используем соответствующий тип конфигурации
       configType = '${fieldType}Config';
@@ -262,6 +357,24 @@ class FormGenerator extends GeneratorForAnnotation<FormGenAnnotation> {
       case 'ScaleFieldAnnotation':
         final uniform = field.annotation.peek('uniform')?.boolValue ?? false;
         if (uniform) configParams.write('uniform: true, ');
+        break;
+      case 'EnumSelectField':
+      case 'EnumSelectFieldAnnotation':
+        // Получаем список значений из аннотации или используем пустой список
+        final values = field.annotation.peek('values');
+        if (values != null) {
+          // Если values указан в аннотации, используем его
+          configParams.write('values: ${field.name}Values, ');
+        } else {
+          // Иначе используем пустой список
+          configParams.write('values: [], ');
+        }
+
+        // Добавляем titleBuilder, если он указан
+        final titleBuilder = field.annotation.peek('titleBuilder');
+        if (titleBuilder != null) {
+          configParams.write('titleBuilder: (value) => value.toString(), ');
+        }
         break;
       case 'ListField':
       case 'ListFieldAnnotation':
@@ -392,6 +505,11 @@ class FormGenerator extends GeneratorForAnnotation<FormGenAnnotation> {
 
   /// Получает метку поля
   String _getLabel(_FormField field) {
+    // Если аннотация null, возвращаем имя поля с большой буквы
+    if (field.annotation.objectValue == null) {
+      return field.name.substring(0, 1).toUpperCase() + field.name.substring(1);
+    }
+
     final label = field.annotation.peek('label')?.stringValue;
     if (label != null) return label;
 
@@ -430,8 +548,16 @@ class FormGenerator extends GeneratorForAnnotation<FormGenAnnotation> {
 
   /// Получает тип поля формы
   String _getFieldType(_FormField field) {
-    final annotationType = field.annotation.objectValue.type!
-        .getDisplayString(withNullability: false);
+    // Для enum возвращаем EnumSelectField
+    if (field.name == 'value') {
+      return 'EnumSelectField<${field.type}>';
+    }
+
+    final annotationType = field.annotation.objectValue?.type
+        ?.getDisplayString(withNullability: false);
+    if (annotationType == null) {
+      return 'EnumSelectField<${field.type}>';
+    }
     switch (annotationType) {
       case 'NumberField':
       case 'NumberFieldAnnotation':
@@ -460,6 +586,9 @@ class FormGenerator extends GeneratorForAnnotation<FormGenAnnotation> {
       case 'LineField':
       case 'LineFieldAnnotation':
         return 'LineField';
+      case 'EnumSelectField':
+      case 'EnumSelectFieldAnnotation':
+        return 'EnumSelectField';
       case 'ListField':
       case 'ListFieldAnnotation':
         // Получаем тип элемента списка
@@ -494,6 +623,9 @@ class FormGenerator extends GeneratorForAnnotation<FormGenAnnotation> {
 
   /// Получает тип поля для перечисления FieldType
   String _getFieldTypeEnum(String annotationType) {
+    if (annotationType.isEmpty) {
+      return 'enumSelect';
+    }
     switch (annotationType) {
       case 'NumberField':
       case 'NumberFieldAnnotation':
@@ -522,6 +654,9 @@ class FormGenerator extends GeneratorForAnnotation<FormGenAnnotation> {
       case 'LineField':
       case 'LineFieldAnnotation':
         return 'line';
+      case 'EnumSelectField':
+      case 'EnumSelectFieldAnnotation':
+        return 'enumSelect';
       case 'ListField':
       case 'ListFieldAnnotation':
         return 'list';

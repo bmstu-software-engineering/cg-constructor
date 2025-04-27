@@ -48,18 +48,17 @@ class _MyHomePageState extends State<MyHomePage> {
 
   final ListField<double, NumberField> _numberListField =
       ListField<double, NumberField>(
-        config: ListFieldConfig<double>(
-          label: 'Список чисел',
-          minItems: 1,
-          maxItems: 5,
-          isRequired: true,
-          createItemField:
-              () => NumberField(
-                config: NumberFieldConfig(label: 'Число', min: 0, max: 100),
-              ),
-        ),
-        initialValue: [10, 20, 30],
-      );
+    config: ListFieldConfig<double>(
+      label: 'Список чисел',
+      minItems: 1,
+      maxItems: 5,
+      isRequired: true,
+      createItemField: () => NumberField(
+        config: NumberFieldConfig(label: 'Число', min: 0, max: 100),
+      ),
+    ),
+    initialValue: [10, 20, 30],
+  );
 
   final PointField _pointField = PointField(
     config: PointFieldConfig(

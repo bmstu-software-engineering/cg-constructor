@@ -93,10 +93,9 @@ class _DynamicFormDemoPageState extends State<DynamicFormDemoPage> {
             label: 'Список чисел',
             minItems: 1,
             maxItems: 5,
-            createItemField:
-                () => NumberField(
-                  config: NumberFieldConfig(label: 'Число', min: 0, max: 100),
-                ),
+            createItemField: () => NumberField(
+              config: NumberFieldConfig(label: 'Число', min: 0, max: 100),
+            ),
           ),
         ),
       ],
@@ -161,16 +160,15 @@ class _DynamicFormDemoPageState extends State<DynamicFormDemoPage> {
                   padding: const EdgeInsets.all(16),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
-                    children:
-                        _formValues!.entries.map((entry) {
-                          return Padding(
-                            padding: const EdgeInsets.only(bottom: 8),
-                            child: Text(
-                              '${entry.key}: ${entry.value}',
-                              style: const TextStyle(fontFamily: 'monospace'),
-                            ),
-                          );
-                        }).toList(),
+                    children: _formValues!.entries.map((entry) {
+                      return Padding(
+                        padding: const EdgeInsets.only(bottom: 8),
+                        child: Text(
+                          '${entry.key}: ${entry.value}',
+                          style: const TextStyle(fontFamily: 'monospace'),
+                        ),
+                      );
+                    }).toList(),
                   ),
                 ),
               ),

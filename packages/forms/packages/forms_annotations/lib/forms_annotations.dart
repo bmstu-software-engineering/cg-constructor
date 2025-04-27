@@ -296,16 +296,41 @@ class ListFieldAnnotation extends FieldGenAnnotation {
   });
 }
 
-// // Алиасы для обратной совместимости
-// typedef FormGen = FormGenAnnotation;
-// typedef FieldGen = FieldGenAnnotation;
-// typedef NumberField = NumberFieldAnnotation;
-// typedef PointField = PointFieldAnnotation;
-// typedef AngleField = AngleFieldAnnotation;
-// typedef VectorField = VectorFieldAnnotation;
-// typedef ScaleField = ScaleFieldAnnotation;
-// typedef PolygonField = PolygonFieldAnnotation;
-// typedef TriangleField = TriangleFieldAnnotation;
-// typedef RectangleField = RectangleFieldAnnotation;
-// typedef LineField = LineFieldAnnotation;
-// typedef ListField = ListFieldAnnotation;
+/// Аннотация для поля выбора из списка значений
+class EnumSelectFieldAnnotation extends FieldGenAnnotation {
+  /// Список возможных значений
+  final List<dynamic>? values;
+
+  /// Функция для получения названия значения
+  final String Function(dynamic)? titleBuilder;
+
+  /// Создает аннотацию для поля выбора из списка значений
+  ///
+  /// [label] - метка поля
+  /// [hint] - подсказка для поля
+  /// [isRequired] - является ли поле обязательным
+  /// [values] - список возможных значений (если не указан, будет использован enum.values)
+  /// [titleBuilder] - функция для получения названия значения
+  const EnumSelectFieldAnnotation({
+    super.label,
+    super.hint,
+    super.isRequired,
+    this.values,
+    this.titleBuilder,
+  });
+}
+
+// Алиасы для обратной совместимости
+typedef FormGen = FormGenAnnotation;
+typedef FieldGen = FieldGenAnnotation;
+typedef NumberFieldGen = NumberFieldAnnotation;
+typedef PointFieldGen = PointFieldAnnotation;
+typedef AngleFieldGen = AngleFieldAnnotation;
+typedef VectorFieldGen = VectorFieldAnnotation;
+typedef ScaleFieldGen = ScaleFieldAnnotation;
+typedef PolygonFieldGen = PolygonFieldAnnotation;
+typedef TriangleFieldGen = TriangleFieldAnnotation;
+typedef RectangleFieldGen = RectangleFieldAnnotation;
+typedef LineFieldGen = LineFieldAnnotation;
+typedef ListFieldGen = ListFieldAnnotation;
+typedef EnumSelectFieldGen = EnumSelectFieldAnnotation;

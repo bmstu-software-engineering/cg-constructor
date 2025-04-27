@@ -29,4 +29,7 @@ enum FieldType {
 
   /// Поле линии
   line,
+
+  /// Поле выбора из enum
+  enumSelect,
 }

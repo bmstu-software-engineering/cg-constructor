@@ -23,10 +23,9 @@ class _DiagnosticsDemoPageState extends State<DiagnosticsDemoPage> {
       label: 'Список чисел',
       minItems: 1,
       maxItems: 5,
-      createItemField:
-          () => NumberField(
-            config: NumberFieldConfig(label: 'Число', min: 0, max: 100),
-          ),
+      createItemField: () => NumberField(
+        config: NumberFieldConfig(label: 'Число', min: 0, max: 100),
+      ),
     ),
   );
 

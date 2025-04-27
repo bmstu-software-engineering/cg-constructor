@@ -23,6 +23,7 @@ export 'src/config/triangle_config.dart';
 export 'src/config/rectangle_config.dart';
 export 'src/config/list_field_config.dart';
 export 'src/config/line_config.dart';
+export 'src/config/enum_select_config.dart';
 
 // Экспортируем модели, которые остались в пакете forms
 export 'src/models/models.dart';
@@ -39,6 +40,7 @@ export 'src/fields/triangle_field.dart';
 export 'src/fields/rectangle_field.dart';
 export 'src/fields/list_field.dart';
 export 'src/fields/line_field.dart';
+export 'src/fields/enum_select_field.dart';
 
 // Экспортируем виджеты
 export 'widgets/widgets.dart';
