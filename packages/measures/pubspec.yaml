@@ -1,8 +1,7 @@
 name: measures
 description: "Flutter package for measuring algorithm execution time and displaying results."
-version: 0.0.1
-homepage:
-
+version: 0.0.2
+publish_to: 'none'
 environment:
   sdk: ^3.7.0
   flutter: ">=1.17.0"
