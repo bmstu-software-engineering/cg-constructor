@@ -1,12 +1,16 @@
-import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
+// Условный импорт для dart:io, который не доступен на веб-платформе
 import '../models/figure_collection.dart';
 import '../services/figure_reader.dart';
+
+// Импортируем dart:io только если не веб-платформа
+// ignore: uri_does_not_exist
+import 'dart:io' if (dart.library.js) 'dart:typed_data' as io;
 
 /// Виджет для чтения фигур из JSON-файла
 class FigureReaderWidget extends StatefulWidget {
@@ -48,20 +52,23 @@ class _FigureReaderWidgetState extends State<FigureReaderWidget> {
   void initState() {
     super.initState();
     // Подписка на Stream
-    _figureReader.figuresStream.listen((figures) {
-      setState(() {
-        _loadedFigures = figures;
-        _isLoading = false;
-        _error = null;
-      });
-      widget.onFiguresLoaded?.call(figures);
-    }, onError: (error) {
-      setState(() {
-        _error = error.toString();
-        _isLoading = false;
-        print(error);
-      });
-    });
+    _figureReader.figuresStream.listen(
+      (figures) {
+        setState(() {
+          _loadedFigures = figures;
+          _isLoading = false;
+          _error = null;
+        });
+        widget.onFiguresLoaded?.call(figures);
+      },
+      onError: (error) {
+        setState(() {
+          _error = error.toString();
+          _isLoading = false;
+          print(error);
+        });
+      },
+    );
   }
 
   @override
@@ -81,6 +88,7 @@ class _FigureReaderWidgetState extends State<FigureReaderWidget> {
     });
 
     try {
+      // Используем FilePicker для выбора файла
       final result = await FilePicker.platform.pickFiles(
         type: FileType.custom,
         allowedExtensions: ['json'],
@@ -88,29 +96,37 @@ class _FigureReaderWidgetState extends State<FigureReaderWidget> {
       );
 
       if (result != null) {
-        final fileBytes = result.files.single.bytes;
-
         if (kIsWeb) {
-          // На веб-платформе используем bytes
+          // На веб-платформе всегда используем bytes
+          final fileBytes = result.files.single.bytes;
           if (fileBytes != null) {
             await _figureReader.readFromBytes(fileBytes);
           } else {
-            throw Exception('Не удалось получить данные файла');
+            throw Exception(
+              'Не удалось получить данные файла на веб-платформе',
+            );
           }
         } else {
+          // На других платформах сначала пробуем использовать bytes, затем path
+          final fileBytes = result.files.single.bytes;
           final filePath = result.files.single.path;
 
-          // На других платформах используем path
-          if (filePath != null) {
-            final file = File(filePath);
-            await _figureReader.readFromFile(file);
-          } else {
-            // Если path равен null, пробуем использовать bytes
-            if (fileBytes != null) {
-              await _figureReader.readFromBytes(fileBytes);
-            } else {
-              throw Exception('Не удалось получить данные файла');
+          if (fileBytes != null) {
+            // Если есть байты, используем их (работает на всех платформах)
+            await _figureReader.readFromBytes(fileBytes);
+          } else if (filePath != null) {
+            // Если нет байтов, но есть путь, используем его
+            try {
+              // Используем dart:io для создания File
+              // ignore: undefined_class
+              final dynamic file = io.File(filePath);
+              await _figureReader.readFromFile(file);
+            } catch (e) {
+              // Если не удалось создать File, выбрасываем исключение
+              throw Exception('Не удалось открыть файл: $e');
             }
+          } else {
+            throw Exception('Не удалось получить данные файла');
           }
         }
       } else {

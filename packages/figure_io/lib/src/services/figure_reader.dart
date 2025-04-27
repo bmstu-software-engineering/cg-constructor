@@ -1,9 +1,14 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:io';
 import 'dart:typed_data';
 
+import 'package:flutter/foundation.dart';
+
 import '../models/figure_collection.dart';
+
+// Условный импорт для dart:io, который не доступен на веб-платформе
+// ignore: uri_does_not_exist
+import 'dart:io' if (dart.library.js) 'dart:typed_data' as io;
 
 /// Сервис для чтения фигур из JSON
 class FigureReader {
@@ -27,9 +32,28 @@ class FigureReader {
   }
 
   /// Чтение из файла
-  Future<FigureCollection> readFromFile(File file) async {
+  ///
+  /// Примечание: этот метод не доступен на веб-платформе
+  /// На веб-платформе используйте [readFromBytes] или [readFromString]
+  Future<FigureCollection> readFromFile(io.File file) async {
+    if (kIsWeb) {
+      throw UnsupportedError(
+        'Метод readFromFile не поддерживается на веб-платформе',
+      );
+    }
+
     try {
-      final jsonString = await file.readAsString();
+      // Используем dynamic, чтобы обойти проблемы с типами при условном импорте
+      final dynamic fileObj = file;
+
+      // Проверяем, существует ли файл
+      if (fileObj is io.File) {
+        if (!await fileObj.exists()) {
+          throw Exception('Файл не существует: ${fileObj.path}');
+        }
+      }
+
+      final jsonString = await fileObj.readAsString();
       return readFromString(jsonString);
     } catch (e) {
       _figuresController.addError(e);
