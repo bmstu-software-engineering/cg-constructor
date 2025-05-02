@@ -1,4 +1,4 @@
-import 'package:alogrithms/src/algorithm_interface.dart';
+import 'package:alogrithms/alogrithms.dart';
 
 import '../flow.dart';
 
@@ -16,19 +16,7 @@ class GenericCalculateStrategy<D extends FlowData, DD extends FlowDrawData>
     }
 
     // Проверяем, что алгоритм может работать с данным типом данных
-    final algorithmType = _algorithm.runtimeType.toString();
     final dataType = data.runtimeType.toString();
-
-    // Получаем ожидаемый тип данных из типа алгоритма
-    // Например, для Algorithm<AlgorithmL01V40FormsDataModelImpl, ViewerResultModel>
-    // ожидаемый тип данных - AlgorithmL01V40FormsDataModelImpl
-    final expectedDataType =
-        algorithmType.contains('<')
-            ? algorithmType.substring(
-              algorithmType.indexOf('<') + 1,
-              algorithmType.indexOf(','),
-            )
-            : 'DataModel';
 
     // Пытаемся привести к FormsDataModel
     if (data is! FormsDataModel) {

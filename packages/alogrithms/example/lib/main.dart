@@ -1,119 +1,158 @@
-import 'package:alogrithms/algorithms/lab_01_40.dart';
 import 'package:alogrithms/alogrithms.dart';
+import 'package:flow/algorithm_flow_builder_factory.dart';
+import 'package:flow/flow.dart';
 import 'package:flutter/material.dart';
-import 'package:forms/forms.dart';
+import 'package:viewer/viewer.dart';
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+void main() {
+  runApp(const FlowExampleApp());
+}
+
+class FlowExampleApp extends StatelessWidget {
+  const FlowExampleApp({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Forms Demo',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
+    return AlgorithmProviderScope(
+      child: MaterialApp(
+        title: 'Flow Example',
+        theme: ThemeData(
+          colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+          useMaterial3: true,
+        ),
+        home: const FlowExamplePage(),
       ),
-      home: const DynamicFormDemoPage(),
     );
   }
 }
 
-void main(List<String> args) {
-  runApp(MyApp());
-}
-
-/// Демонстрация использования динамической формы
-class DynamicFormDemoPage extends StatefulWidget {
-  const DynamicFormDemoPage({super.key});
+class FlowExamplePage extends StatefulWidget {
+  const FlowExamplePage({super.key});
 
   @override
-  State<DynamicFormDemoPage> createState() => _DynamicFormDemoPageState();
+  State<FlowExamplePage> createState() => _FlowExamplePageState();
 }
 
-class _DynamicFormDemoPageState extends State<DynamicFormDemoPage> {
-  late DynamicFormModel _formModel;
-  Map<String, dynamic>? _formValues;
-  late final FormsDataModel _dataModel;
-  late final Algorithm<FormsDataModel, ViewerResultModel> _algorithm;
+class _FlowExamplePageState extends State<FlowExamplePage> {
+  // Выбранный алгоритм
+  String? _selectedAlgorithmId;
+
+  // Текущий FlowBuilder
+  FlowBuilder? _flowBuilder;
 
   @override
   void initState() {
     super.initState();
-    _initForm();
+
+    // Если есть алгоритмы, выбираем первый
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final algorithms = context.algorithms;
+      if (algorithms.isNotEmpty) {
+        _selectAlgorithm(algorithms.first.id);
+      }
+    });
   }
 
-  /// Инициализация формы
-  void _initForm() {
-    // Создаем конфигурацию формы
-    _algorithm = AlgorithmL01V40();
-    _dataModel = _algorithm.getDataModel();
-    _formModel = DynamicFormModel(config: _dataModel.config);
+  // Выбор алгоритма
+  void _selectAlgorithm(String algorithmId) {
+    setState(() {
+      _selectedAlgorithmId = algorithmId;
+
+      // Создаем экземпляр алгоритма из провайдера
+      final algorithm = context.createAlgorithm(algorithmId);
+
+      // Создаем FlowBuilder для выбранного алгоритма
+      _flowBuilder =
+          AlgorithmFlowBuilderFactory(
+            algorithm,
+            viewerFactory: const CanvasViewerFactory(padding: 200.0),
+            submitButtonText: 'Рассчитать',
+            onSubmit: (_) {
+              // После отправки формы выполняем расчеты и отображаем результат
+              _calculateAndDraw();
+            },
+          ).create();
+    });
+  }
+
+  // Расчет и отображение результата
+  Future<void> _calculateAndDraw() async {
+    if (_flowBuilder == null) return;
+
+    try {
+      // Получаем данные из формы
+      await _flowBuilder!.reciveData();
+
+      // Выполняем расчеты
+      await _flowBuilder!.calculate();
+
+      // Отображаем результат
+      await _flowBuilder!.draw();
+
+      // Показываем сообщение об успешном выполнении
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Расчеты выполнены успешно')),
+        );
+      }
+    } catch (e) {
+      // Показываем сообщение об ошибке
+      if (mounted) {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Ошибка: ${e.toString()}')));
+      }
+    }
   }
 
   @override
   Widget build(BuildContext context) {
+    // Получаем список алгоритмов из провайдера
+    final algorithms = context.algorithms;
+
     return Scaffold(
-      appBar: AppBar(title: const Text('Dynamic Form Demo')),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Динамическая форма
-            DynamicFormWidget(
-              model: _formModel,
-              onSubmit: (values) {
-                print(values);
-                _dataModel.rawData = values;
-                setState(() {
-                  _formValues = values;
-                });
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Форма отправлена')),
-                );
-              },
-              submitButtonText: 'Отправить форму',
-            ),
-
-            const SizedBox(height: 32),
-
-            // Отображение значений формы
-            if (_formValues != null) ...[
-              const Text(
-                'Значения формы:',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(height: 8),
-              Card(
-                child: Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children:
-                        _formValues!.entries.map((entry) {
-                          return Padding(
-                            padding: const EdgeInsets.only(bottom: 8),
-                            child: Text(
-                              '${entry.key}: ${entry.value}',
-                              style: const TextStyle(fontFamily: 'monospace'),
-                            ),
-                          );
-                        }).toList(),
-                  ),
-                ),
-              ),
-              Text(
-                _algorithm
-                    .calculate(_dataModel)
-                    .points
-                    .map((e) => e.toString())
-                    .join(', '),
-              ),
-            ],
-          ],
-        ),
+      appBar: AppBar(
+        title: const Text('Flow Example'),
+        actions: [
+          // Выпадающий список алгоритмов
+          DropdownButton<String>(
+            value: _selectedAlgorithmId,
+            onChanged: (value) {
+              if (value != null) {
+                _selectAlgorithm(value);
+              }
+            },
+            items:
+                algorithms.map((algorithm) {
+                  return DropdownMenuItem<String>(
+                    value: algorithm.id,
+                    child: Text(algorithm.name),
+                  );
+                }).toList(),
+          ),
+        ],
       ),
+      body:
+          _flowBuilder == null
+              ? const Center(child: Text('Нет доступных алгоритмов'))
+              : Row(
+                children: [
+                  // Форма для ввода данных
+                  Expanded(
+                    flex: 1,
+                    child: SingleChildScrollView(
+                      padding: const EdgeInsets.all(16),
+                      child: _flowBuilder!.buildDataWidget(),
+                    ),
+                  ),
+
+                  // Разделитель
+                  const VerticalDivider(),
+
+                  // Область для отображения результата
+                  Expanded(flex: 2, child: _flowBuilder!.buildViewerWidget()),
+                ],
+              ),
     );
   }
 }

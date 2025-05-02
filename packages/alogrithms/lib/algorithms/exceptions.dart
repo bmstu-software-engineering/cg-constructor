@@ -24,10 +24,10 @@ class NoObtuseAnglesException extends AlgorithmException {
 
 /// Исключение, выбрасываемое при некорректных данных
 class InvalidDataException extends AlgorithmException {
-  InvalidDataException(String message) : super(message);
+  InvalidDataException(super.message);
 }
 
 /// Исключение, выбрасываемое при ошибке вычислений
 class CalculationException extends AlgorithmException {
-  CalculationException(String message) : super(message);
+  CalculationException(super.message);
 }

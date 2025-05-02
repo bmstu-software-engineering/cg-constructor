@@ -9,7 +9,7 @@ class AlgorithmL01V40Factory implements AlgorithmFactory<AlgorithmL01V40> {
   }
 
   @override
-  String get name => 'Лабораторная работа 01, Вариант 40';
+  String get title => 'Лабораторная работа 01, Вариант 40';
 
   @override
   String get description =>
@@ -17,9 +17,7 @@ class AlgorithmL01V40Factory implements AlgorithmFactory<AlgorithmL01V40> {
       'соединяющей вершины с тупыми углами из двух множеств треугольников. '
       'Первый треугольник отображается зеленым цветом, второй - синим, '
       'а результирующая линия - красным.';
-}
 
-/// Регистрация фабрики алгоритма в реестре
-void registerAlgorithmL01V40() {
-  AlgorithmRegistry.register('lab_01_40', AlgorithmL01V40Factory());
+  @override
+  String get name => 'lab_01_40';
 }

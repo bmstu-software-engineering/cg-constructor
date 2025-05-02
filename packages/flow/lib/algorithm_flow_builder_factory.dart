@@ -1,40 +1,31 @@
-import 'package:alogrithms/algorithms/registry.dart';
-import 'package:alogrithms/src/algorithm_interface.dart';
+import 'package:alogrithms/alogrithms.dart';
+import 'package:flow/flow.dart';
 import 'package:viewer/viewer.dart';
 
-import '../flow.dart';
-import 'calculate_strategies.dart';
-import 'data_model_adapters.dart';
-import 'data_strategies.dart';
-
-/// Универсальная фабрика для создания FlowBuilder на основе алгоритма
-class GenericAlgorithmFlowFactory implements FlowBuilderFactory {
-  final String _algorithmId;
+/// Фабрика для создания FlowBuilder на основе алгоритма
+class AlgorithmFlowBuilderFactory implements FlowBuilderFactory {
+  final Algorithm _algorithm;
   final String _name;
   final ViewerFactory _viewerFactory;
   final String _submitButtonText;
   final void Function(Map<String, dynamic>)? _onSubmit;
 
   /// Создает фабрику для указанного алгоритма
-  GenericAlgorithmFlowFactory(
-    String algorithmId, {
+  AlgorithmFlowBuilderFactory(
+    this._algorithm, {
     String? name,
     ViewerFactory viewerFactory = const CanvasViewerFactory(),
     String submitButtonText = 'Отправить',
     void Function(Map<String, dynamic>)? onSubmit,
-  }) : _algorithmId = algorithmId,
-       _name = name ?? algorithmId,
+  }) : _name = name ?? _algorithm.runtimeType.toString(),
        _viewerFactory = viewerFactory,
        _submitButtonText = submitButtonText,
        _onSubmit = onSubmit;
 
   @override
   FlowBuilder create() {
-    // Создаем экземпляр алгоритма
-    final algorithm = AlgorithmRegistry.createAlgorithm(_algorithmId);
-
     // Получаем модель данных
-    final dataModel = algorithm.getDataModel();
+    final dataModel = _algorithm.getDataModel();
 
     // Создаем адаптер для модели данных
     final dataModelAdapter = DataModelAdapterFactory.createAdapter(dataModel);
@@ -48,7 +39,7 @@ class GenericAlgorithmFlowFactory implements FlowBuilderFactory {
 
     // Создаем стратегию расчетов
     final calculateStrategy = CalculateStrategyFactory.createCalculateStrategy(
-      algorithm,
+      _algorithm,
     );
 
     // Создаем Viewer

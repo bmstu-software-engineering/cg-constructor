@@ -5,23 +5,17 @@ import 'package:alogrithms/algorithms/registry.dart';
 class AlgorithmL01VBasicFactory
     implements AlgorithmFactory<AlgorithmL01VBasic> {
   /// Конструктор фабрики
-  AlgorithmL01VBasicFactory();
+  const AlgorithmL01VBasicFactory();
 
   @override
-  AlgorithmL01VBasic create() {
-    return AlgorithmL01VBasic();
-  }
+  AlgorithmL01VBasic create() => AlgorithmL01VBasic();
 
   @override
-  String get name => 'Лабораторная работа 01, Вариант 41';
+  String get title => 'Ввод точек';
 
   @override
-  String get description =>
-      'Алгоритм для обработки множества точек и их отображения на Viewer-е.';
-}
+  String get name => 'lab_01_basic';
 
-/// Регистрация фабрики алгоритма в реестре
-void registerAlgorithmL01VBasic() {
-  // Регистрация алгоритма с использованием кодогенерации
-  AlgorithmRegistry.register('lab_01_41', AlgorithmL01VBasicFactory());
+  @override
+  String get description => 'Просто для дебага.';
 }

@@ -1,6 +1,4 @@
 import 'package:alogrithms/src/algorithm_interface.dart';
-import 'package:alogrithms/algorithms/lab_01_40_factory.dart';
-import 'package:alogrithms/algorithms/lab_01_basic/lab_01_basic_factory.dart';
 
 /// Фабрика для создания экземпляров алгоритмов
 abstract class AlgorithmFactory<T extends Algorithm> {
@@ -10,59 +8,20 @@ abstract class AlgorithmFactory<T extends Algorithm> {
   /// Возвращает имя алгоритма
   String get name;
 
+  /// Возвращается название в UI-е
+  String get title;
+
   /// Возвращает описание алгоритма
   String get description;
 }
 
-/// Регистрация алгоритмов
-void registerAlgorithms() {
-  registerAlgorithmL01V40();
-  registerAlgorithmL01VBasic();
-}
+abstract interface class AlgorithmsHolder {
+  void registerAll(List<AlgorithmFactory> algorithmsFactories);
+  void unregister(AlgorithmFactory algorithmFactory);
 
-/// Реестр доступных алгоритмов
-class AlgorithmRegistry {
-  AlgorithmRegistry._();
-
-  /// Карта зарегистрированных фабрик алгоритмов
-  static final Map<String, AlgorithmFactory> _factories = {};
-
-  /// Регистрирует новую фабрику алгоритма
-  static void register(String id, AlgorithmFactory factory) {
-    _factories[id] = factory;
-  }
-
-  /// Возвращает список идентификаторов доступных алгоритмов
-  static List<String> getAvailableAlgorithms() {
-    return _factories.keys.toList();
-  }
-
-  /// Возвращает информацию о всех зарегистрированных алгоритмах
-  static List<AlgorithmInfo> getAlgorithmsInfo() {
-    return _factories.entries
-        .map(
-          (entry) => AlgorithmInfo(
-            id: entry.key,
-            name: entry.value.name,
-            description: entry.value.description,
-          ),
-        )
-        .toList();
-  }
-
-  /// Создает экземпляр алгоритма по его идентификатору
-  static Algorithm createAlgorithm(String id) {
-    final factory = _factories[id];
-    if (factory == null) {
-      throw Exception('Алгоритм с идентификатором $id не найден');
-    }
-    return factory.create();
-  }
-
-  /// Проверяет, зарегистрирован ли алгоритм с указанным идентификатором
-  static bool hasAlgorithm(String id) {
-    return _factories.containsKey(id);
-  }
+  List<AlgorithmInfo> get algorithmsInfo;
+  AlgorithmFactory get(String name);
+  bool has(String name);
 }
 
 /// Информация об алгоритме
@@ -81,4 +40,10 @@ class AlgorithmInfo {
     required this.name,
     required this.description,
   });
+
+  static AlgorithmInfo fromFactory(AlgorithmFactory entry) => AlgorithmInfo(
+    id: entry.name,
+    name: entry.title,
+    description: entry.description,
+  );
 }
