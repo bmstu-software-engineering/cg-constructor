@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:forms/forms.dart';
 import 'package:models_ns/models_ns.dart';
 
+import 'color_form_example.dart';
 import 'diagnostics_demo.dart';
 import 'dynamic_form_demo.dart';
 import 'form_example.dart';
@@ -300,6 +301,19 @@ class _MyHomePageState extends State<MyHomePage> {
             },
             tooltip: 'Typed Form Example',
             child: const Icon(Icons.code),
+          ),
+          const SizedBox(width: 16),
+          FloatingActionButton(
+            heroTag: 'color_form_example',
+            onPressed: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => const ColorFormExampleScreen(),
+                ),
+              );
+            },
+            tooltip: 'Color Form Example',
+            child: const Icon(Icons.color_lens),
           ),
         ],
       ),

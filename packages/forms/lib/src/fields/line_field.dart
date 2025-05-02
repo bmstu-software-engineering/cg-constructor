@@ -14,11 +14,17 @@ class LineField extends BaseFormField<Line> {
   /// Поле для ввода конечной точки
   final PointField _endField;
 
+  /// Текущий цвет линии
+  String color;
+
+  /// Текущая толщина линии
+  double thickness;
+
   /// Создает поле для ввода линии
   ///
   /// [config] - конфигурация поля
   /// [initialValue] - начальное значение поля
-  LineField({required this.config, Line? initialValue})
+  LineField({required this.config, super.initialValue})
       : _startField = PointField(
           config: config.startConfig,
           initialValue: initialValue?.a,
@@ -27,8 +33,9 @@ class LineField extends BaseFormField<Line> {
           config: config.endConfig,
           initialValue: initialValue?.b,
         ),
+        color = config.defaultColor,
+        thickness = config.defaultThickness,
         super(
-          initialValue: initialValue,
           validator: _createValidator(config),
           isRequired: config.isRequired,
         );
@@ -142,6 +149,8 @@ class LineField extends BaseFormField<Line> {
   void reset() {
     _startField.reset();
     _endField.reset();
+    color = config.defaultColor;
+    thickness = config.defaultThickness;
     super.reset();
   }
 }

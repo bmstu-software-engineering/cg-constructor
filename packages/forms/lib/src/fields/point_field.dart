@@ -15,6 +15,9 @@ class PointField extends BaseFormField<Point> {
   /// Поле для ввода y
   final NumberField _yField;
 
+  /// Текущий цвет точки
+  String _color;
+
   /// Создает поле для ввода точки
   ///
   /// [config] - конфигурация поля
@@ -28,6 +31,7 @@ class PointField extends BaseFormField<Point> {
           config: config.yConfig,
           initialValue: initialValue?.y,
         ),
+        _color = config.defaultColor,
         super(
           validator: _createValidator(config),
           isRequired: config.isRequired,
@@ -51,6 +55,14 @@ class PointField extends BaseFormField<Point> {
 
   /// Получает поле для ввода y
   NumberField get yField => _yField;
+
+  /// Получает текущий цвет точки
+  String get color => _color;
+
+  /// Устанавливает цвет точки
+  set color(String newColor) {
+    _color = newColor;
+  }
 
   @override
   Point? get value {
@@ -103,6 +115,7 @@ class PointField extends BaseFormField<Point> {
   void reset() {
     _xField.reset();
     _yField.reset();
+    _color = config.defaultColor;
     super.reset();
   }
 }

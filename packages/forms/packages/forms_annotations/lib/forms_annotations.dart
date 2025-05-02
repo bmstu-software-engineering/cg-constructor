@@ -63,6 +63,12 @@ class PointFieldAnnotation extends FieldGenAnnotation {
   /// Конфигурация для поля Y
   final NumberFieldAnnotation? yConfig;
 
+  /// Можно ли задать цвет для точки
+  final bool canSetColor;
+
+  /// Цвет точки по умолчанию
+  final String defaultColor;
+
   /// Создает аннотацию для поля точки
   ///
   /// [label] - метка поля
@@ -70,12 +76,16 @@ class PointFieldAnnotation extends FieldGenAnnotation {
   /// [isRequired] - является ли поле обязательным
   /// [xConfig] - конфигурация для поля X
   /// [yConfig] - конфигурация для поля Y
+  /// [canSetColor] - можно ли задать цвет для точки
+  /// [defaultColor] - цвет точки по умолчанию
   const PointFieldAnnotation({
     super.label,
     super.hint,
     super.isRequired,
     this.xConfig,
     this.yConfig,
+    this.canSetColor = false,
+    this.defaultColor = '#000000',
   });
 }
 
@@ -251,6 +261,18 @@ class LineFieldAnnotation extends FieldGenAnnotation {
   /// Конфигурация для точки B
   final PointFieldAnnotation? bConfig;
 
+  /// Можно ли задать цвет для линии
+  final bool canSetColor;
+
+  /// Цвет линии по умолчанию
+  final String defaultColor;
+
+  /// Можно ли задать толщину линии
+  final bool canSetThickness;
+
+  /// Толщина линии по умолчанию
+  final double defaultThickness;
+
   /// Создает аннотацию для поля линии
   ///
   /// [label] - метка поля
@@ -258,12 +280,20 @@ class LineFieldAnnotation extends FieldGenAnnotation {
   /// [isRequired] - является ли поле обязательным
   /// [aConfig] - конфигурация для точки A
   /// [bConfig] - конфигурация для точки B
+  /// [canSetColor] - можно ли задать цвет для линии
+  /// [defaultColor] - цвет линии по умолчанию
+  /// [canSetThickness] - можно ли задать толщину линии
+  /// [defaultThickness] - толщина линии по умолчанию
   const LineFieldAnnotation({
     super.label,
     super.hint,
     super.isRequired,
     this.aConfig,
     this.bConfig,
+    this.canSetColor = false,
+    this.defaultColor = '#000000',
+    this.canSetThickness = false,
+    this.defaultThickness = 1.0,
   });
 }
 

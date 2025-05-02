@@ -12,6 +12,12 @@ class PointFieldConfig extends FieldConfig<Point> {
   /// Конфигурация для поля Y
   final NumberFieldConfig yConfig;
 
+  /// Можно ли задать цвет для точки
+  final bool canSetColor;
+
+  /// Цвет точки по умолчанию
+  final String defaultColor;
+
   const PointFieldConfig({
     super.hint,
     super.isRequired = false,
@@ -19,6 +25,8 @@ class PointFieldConfig extends FieldConfig<Point> {
     super.label,
     NumberFieldConfig? xConfig,
     NumberFieldConfig? yConfig,
+    this.canSetColor = false,
+    this.defaultColor = '#000000',
   })  : xConfig = xConfig ?? const NumberFieldConfig(label: 'X'),
         yConfig = yConfig ?? const NumberFieldConfig(label: 'Y');
 
