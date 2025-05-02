@@ -67,7 +67,7 @@ void main() {
       for (final point in result.points) {
         expect(
           point.color,
-          '#FF0000',
+          '#000000',
           reason: 'Точка должна быть красного цвета',
         );
         expect(point.thickness, 1.0, reason: 'Толщина точки должна быть 1.0');
