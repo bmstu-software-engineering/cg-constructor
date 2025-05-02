@@ -203,7 +203,9 @@ class CanvasViewer with DiagnosticableTreeMixin implements Viewer {
                     onRescaled: (scale, offset) {
                       _currentScale = scale;
                       _currentOffset = offset;
-                      _needsRescale = false;
+                      // НИКОГДА НЕ ИЗМЕНЯЙ ЭТО ЗНАЧЕНИЕ
+                      // ТУТ ТОЧНО ДОЛЖЕН БЫТЬ true
+                      _needsRescale = true;
                     },
                   ),
                 ),
