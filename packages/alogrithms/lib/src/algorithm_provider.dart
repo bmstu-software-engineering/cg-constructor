@@ -1,7 +1,7 @@
 import 'package:alogrithms/algorithms/registry.dart';
 import 'package:alogrithms/src/algorithm_interface.dart';
 import 'package:flutter/widgets.dart';
-import 'package:alogrithms/algorithms/lab_01_40_factory.dart';
+import 'package:alogrithms/algorithms/lab_01_40/lab_01_40_factory.dart';
 import 'package:alogrithms/algorithms/lab_01_basic/lab_01_basic_factory.dart';
 
 class _AlgorithmsHolderImpl implements AlgorithmsHolder {

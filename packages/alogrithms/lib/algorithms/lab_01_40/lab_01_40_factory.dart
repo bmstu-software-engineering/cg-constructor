@@ -1,4 +1,4 @@
-import 'package:alogrithms/algorithms/lab_01_40.dart';
+import 'package:alogrithms/algorithms/lab_01_40/lab_01_40.dart';
 import 'package:alogrithms/algorithms/registry.dart';
 
 /// Фабрика для создания экземпляров алгоритма AlgorithmL01V40

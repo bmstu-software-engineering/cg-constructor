@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:alogrithms/algorithms/exceptions.dart';
-import 'package:alogrithms/algorithms/lab_01_40.dart';
+import 'package:alogrithms/algorithms/lab_01_40/lab_01_40.dart';
 import 'package:models_ns/models_ns.dart';
 
 void main() {
