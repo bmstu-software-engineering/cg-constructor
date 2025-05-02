@@ -172,6 +172,63 @@ class UserFormWidget extends StatelessWidget {
 - `RectangleField` - поле для ввода прямоугольников
 - `LineField` - поле для ввода линий
 - `ListField` - поле для ввода списков
+- `EnumSelectField` - поле для выбора из списка значений
+
+### Поле выбора из списка значений
+
+Для работы с полями выбора из списка значений используется интерфейс `SelectOption<T>`, который обеспечивает типобезопасность и гибкость при работе с различными типами данных:
+
+```dart
+// Создание конфигурации поля выбора
+final config = EnumSelectConfig<String>(
+  label: 'Выбор',
+  values: ['Один', 'Два', 'Три'],
+  titleBuilder: (value) => 'Вариант: $value',
+);
+
+// Создание поля
+final field = EnumSelectField<String>(config: config);
+
+// Получение списка опций
+final options = field.options; // List<SelectOption<String>>
+
+// Получение названия значения
+final title = field.getTitle('Один'); // "Вариант: Один"
+```
+
+Для перечислений (enum) можно реализовать интерфейс `EnumSelectEnum`:
+
+```dart
+enum Gender implements EnumSelectEnum {
+  male,
+  female,
+  other;
+
+  @override
+  String get title {
+    switch (this) {
+      case Gender.male:
+        return 'Мужской';
+      case Gender.female:
+        return 'Женский';
+      case Gender.other:
+        return 'Другой';
+    }
+  }
+}
+
+// Создание конфигурации поля выбора для enum
+final config = EnumSelectConfig<Gender>(
+  label: 'Пол',
+  values: Gender.values,
+);
+
+// Создание поля
+final field = EnumSelectField<Gender>(config: config);
+
+// Получение названия значения
+final title = field.getTitle(Gender.male); // "Мужской"
+```
 
 ## Валидация
 

@@ -44,10 +44,10 @@ class _EnumSelectFieldWidgetState<T> extends FormFieldWidgetState<T,
                 hintText: widget.field.config.hint,
                 errorText: widget.field.error,
               ),
-          items: widget.field.values.map((value) {
+          items: widget.field.options.map((option) {
             return DropdownMenuItem<T>(
-              value: value,
-              child: Text(widget.field.getTitle(value)),
+              value: option.value,
+              child: Text(option.title),
             );
           }).toList(),
           onChanged: (value) {

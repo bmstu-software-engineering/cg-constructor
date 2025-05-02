@@ -84,6 +84,44 @@ class UserForm {
 
 Для каждого типа поля существует своя аннотация:
 
+#### EnumSelectField
+
+```dart
+@EnumSelectFieldGen(
+  label: 'Пол',
+  titleBuilder: (value) => value.toString(),
+)
+final Gender gender;
+```
+
+Параметры:
+- `label` (String): Метка поля
+- `titleBuilder` (Function): Функция для получения названия значения
+- `isRequired` (bool): Обязательное ли поле (по умолчанию true)
+- `validator` (Function): Функция валидации
+
+Для перечислений (enum) можно реализовать интерфейс `EnumSelectEnum`:
+
+```dart
+enum Gender implements EnumSelectEnum {
+  male,
+  female,
+  other;
+
+  @override
+  String get title {
+    switch (this) {
+      case Gender.male:
+        return 'Мужской';
+      case Gender.female:
+        return 'Женский';
+      case Gender.other:
+        return 'Другой';
+    }
+  }
+}
+```
+
 #### NumberField
 
 ```dart

@@ -1,6 +1,7 @@
 import '../core/form_field.dart';
 import '../fields/enum_select_field.dart';
 import 'field_config.dart';
+import 'select_option.dart';
 
 abstract class EnumSelectEnum implements Enum {
   String get title;
@@ -9,7 +10,10 @@ abstract class EnumSelectEnum implements Enum {
 /// Конфигурация для поля выбора из списка значений
 class EnumSelectConfig<T> extends FieldConfig<T> {
   /// Список возможных значений
-  List<T> values;
+  List<T> _values;
+
+  /// Список опций выбора
+  List<SelectOption<T>> _options = [];
 
   /// Функция для получения названия значения
   final String Function(T)? titleBuilder;
@@ -26,10 +30,29 @@ class EnumSelectConfig<T> extends FieldConfig<T> {
     super.label,
     super.hint,
     super.isRequired = true,
-    required this.values,
+    required List<T> values,
     this.titleBuilder,
     super.validator,
-  });
+  }) : _values = values {
+    _updateOptions();
+  }
+
+  /// Возвращает список возможных значений
+  List<T> get values => _values;
+
+  /// Устанавливает список возможных значений
+  set values(List<T> newValues) {
+    _values = newValues;
+    _updateOptions();
+  }
+
+  /// Возвращает список опций выбора
+  List<SelectOption<T>> get options => _options;
+
+  /// Обновляет список опций на основе списка значений
+  void _updateOptions() {
+    _options = SelectOption.fromValues(_values, titleBuilder: titleBuilder);
+  }
 
   @override
   FormField<T> createField() {

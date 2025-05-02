@@ -1,4 +1,5 @@
 import '../config/enum_select_config.dart';
+import '../config/select_option.dart';
 import 'base_form_field.dart';
 
 /// Поле формы для выбора из enum
@@ -12,9 +13,8 @@ class EnumSelectField<T> extends BaseFormField<T> {
   /// [initialValue] - начальное значение поля
   EnumSelectField({
     required this.config,
-    T? initialValue,
+    super.initialValue,
   }) : super(
-          initialValue: initialValue,
           validator: config.validator,
           isRequired: config.isRequired,
         );
@@ -22,11 +22,20 @@ class EnumSelectField<T> extends BaseFormField<T> {
   /// Получает список возможных значений
   List<T> get values => config.values;
 
+  /// Получает список опций выбора
+  List<SelectOption<T>> get options => config.options;
+
+  /// Находит опцию по значению
+  SelectOption<T>? findOptionByValue(T value) {
+    return options.firstWhere(
+      (option) => option.value == value,
+      orElse: () =>
+          SelectOption.fromValue(value, titleBuilder: config.titleBuilder),
+    );
+  }
+
   /// Получает название значения
   String getTitle(T value) {
-    if (config.titleBuilder != null) {
-      return config.titleBuilder!(value);
-    }
-    return value.toString();
+    return findOptionByValue(value)?.title ?? value.toString();
   }
 }
