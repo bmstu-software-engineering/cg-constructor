@@ -7,8 +7,6 @@ class AlgorithmFlowBuilderFactory implements FlowBuilderFactory {
   final Algorithm _algorithm;
   final String _name;
   final ViewerFactory _viewerFactory;
-  final String _submitButtonText;
-  final void Function(Map<String, dynamic>)? _onSubmit;
 
   /// Создает фабрику для указанного алгоритма
   AlgorithmFlowBuilderFactory(
@@ -18,9 +16,7 @@ class AlgorithmFlowBuilderFactory implements FlowBuilderFactory {
     String submitButtonText = 'Отправить',
     void Function(Map<String, dynamic>)? onSubmit,
   }) : _name = name ?? _algorithm.runtimeType.toString(),
-       _viewerFactory = viewerFactory,
-       _submitButtonText = submitButtonText,
-       _onSubmit = onSubmit;
+       _viewerFactory = viewerFactory;
 
   @override
   FlowBuilder create() {
@@ -33,8 +29,6 @@ class AlgorithmFlowBuilderFactory implements FlowBuilderFactory {
     // Создаем стратегию данных
     final dataStrategy = DataStrategyFactory.createDataStrategy(
       dataModelAdapter,
-      submitButtonText: _submitButtonText,
-      onSubmit: _onSubmit,
     );
 
     // Создаем стратегию расчетов

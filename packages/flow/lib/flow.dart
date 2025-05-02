@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:models_ns/models_ns.dart';
 import 'package:viewer/viewer.dart';
@@ -39,7 +38,26 @@ final class FlowBuilder<D extends FlowData, DD extends FlowDrawData> {
     _drawData ?? (throw Exception('Данные для рисования отсутствуют')),
   );
 
-  Widget buildDataWidget() => _dataStrategy.buildWidget();
+  Widget buildDataWidget() {
+    final dataWidget = _dataStrategy.buildWidget();
+
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        dataWidget,
+        const SizedBox(height: 16),
+        ElevatedButton(
+          onPressed: () async {
+            await reciveData();
+            await calculate();
+            await draw();
+          },
+          child: Text('Расчитать'),
+        ),
+      ],
+    );
+  }
+
   Widget buildViewerWidget() => _drawStrategy.buildWidget();
 }
 
