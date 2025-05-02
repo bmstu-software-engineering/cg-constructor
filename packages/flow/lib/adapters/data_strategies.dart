@@ -2,7 +2,6 @@ import 'package:flutter/widgets.dart';
 import 'package:forms/forms.dart';
 
 import '../flow.dart';
-import 'data_model_adapters.dart';
 
 /// Стратегия данных для моделей, основанных на формах
 class FormsDataStrategy<T extends FormsDataModelAdapter>

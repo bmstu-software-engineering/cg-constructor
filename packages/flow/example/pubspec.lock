@@ -4,7 +4,7 @@ packages:
   alogrithms:
     dependency: "direct main"
     description:
-      path: ".."
+      path: "../../alogrithms"
       relative: true
     source: path
     version: "0.0.1"
@@ -67,7 +67,7 @@ packages:
   flow:
     dependency: "direct main"
     description:
-      path: "../../flow"
+      path: ".."
       relative: true
     source: path
     version: "0.0.1"

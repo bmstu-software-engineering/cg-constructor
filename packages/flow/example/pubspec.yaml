@@ -35,7 +35,7 @@ dependencies:
     path: ../../forms
   
   alogrithms:
-    path: ../
+    path: ../../alogrithms
     
   flow:
     path: ../../flow
