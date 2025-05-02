@@ -2,11 +2,11 @@ import 'package:forms/forms.dart';
 import 'package:models_ns/models_ns.dart';
 
 abstract interface class Algorithm<
-  DM extends DataModel,
-  RM extends ResultModel
+  DataModelType extends DataModel,
+  ResultModelType extends ResultModel
 > {
-  DM getDataModel();
-  RM calculate(DM data);
+  DataModelType getDataModel();
+  ResultModelType calculate();
 }
 
 abstract interface class DataModel {}
@@ -17,7 +17,6 @@ abstract interface class FormsDataModel implements DataModel {
   FormConfig get config;
 
   AlgorithmData get data;
-  set rawData(Map<String, dynamic>? rawData);
 }
 
 abstract interface class ResultModel {}

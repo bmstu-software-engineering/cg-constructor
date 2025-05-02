@@ -1,21 +1,45 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:alogrithms/algorithms/exceptions.dart';
 import 'package:alogrithms/algorithms/lab_01_basic/lab_01_basic.dart';
+import 'package:alogrithms/algorithms/lab_01_basic/lab_01_basic_data_model.dart';
 import 'package:alogrithms/src/algorithm_interface.dart';
 import 'package:forms/forms.dart';
+import 'package:mocktail/mocktail.dart';
 import 'package:models_ns/models_ns.dart';
+
+class AlgorithmL01VBasicDataModelImplMock extends Mock
+    implements AlgorithmL01VBasicDataModelImpl {}
 
 void main() {
   late AlgorithmL01VBasic algorithm;
+  late AlgorithmL01VBasicDataModelImplMock model;
 
   setUp(() {
-    algorithm = AlgorithmL01VBasic();
+    model = AlgorithmL01VBasicDataModelImplMock();
+    algorithm = AlgorithmL01VBasic.fromModel(model);
   });
 
   group('AlgorithmL01VBasic - Тестирование', () {
     test('создание модели данных', () {
+      when(() => model.config).thenReturn(
+        FormConfig(
+          name: '',
+          fields: [
+            FieldConfigEntry(
+              id: 'points',
+              type: FieldType.list,
+              config: ListFieldConfig<Point>(
+                label: 'Список точек',
+                createItemField:
+                    () => PointField(config: PointFieldConfig(label: 'Точка')),
+              ),
+            ),
+          ],
+        ),
+      );
+
       final dataModel = algorithm.getDataModel();
-      expect(dataModel, isA<AlgorithmL01VBasicCodegenDataModelImpl>());
+      expect(dataModel, isA<AlgorithmL01VBasicDataModelImplMock>());
 
       final formsDataModel = dataModel;
       expect(formsDataModel.config.name, '');
@@ -25,16 +49,15 @@ void main() {
     });
 
     test('базовая функциональность calculate с корректными данными', () {
-      // Создаем модель данных
-      final dataModel = algorithm.getDataModel();
-
       // Устанавливаем тестовые данные
-      dataModel.rawData = {
-        'points': [Point(x: 0, y: 0), Point(x: 10, y: 0), Point(x: 5, y: 5)],
-      };
+      when(() => model.data).thenReturn(
+        AlgorithmLab01BasicDataModel(
+          points: [Point(x: 0, y: 0), Point(x: 10, y: 0), Point(x: 5, y: 5)],
+        ),
+      );
 
       // Вызываем метод calculate
-      final result = algorithm.calculate(dataModel);
+      final result = algorithm.calculate();
 
       // Проверяем, что результат содержит точки и линии
       expect(result.points.length, 3, reason: 'Должно быть 3 точки');
@@ -59,50 +82,13 @@ void main() {
       expect(result.points[2].y, 5);
     });
 
-    test('исключение InvalidDataException при неверном типе модели данных', () {
-      // Создаем фиктивную модель данных неверного типа
-      final invalidDataModel = _MockFormsDataModel();
-
-      // Проверяем, что при вызове calculate с неверным типом модели данных
-      // выбрасывается исключение InvalidDataException
-      expect(
-        () => algorithm.calculate(invalidDataModel),
-        throwsA(
-          isA<InvalidDataException>().having(
-            (e) => e.message,
-            'message',
-            'Неверный тип модели данных',
-          ),
-        ),
-      );
-    });
-
-    test('исключение InvalidDataException при отсутствии данных', () {
-      // Создаем модель данных
-      final dataModel = algorithm.getDataModel();
-
-      // Проверяем, что при установке null в качестве данных
-      // выбрасывается исключение InvalidDataException
-      expect(
-        () => dataModel.rawData = null,
-        throwsA(
-          isA<InvalidDataException>().having(
-            (e) => e.message,
-            'message',
-            'Данные не предоставлены',
-          ),
-        ),
-      );
-    });
-
     test('исключение при доступе к данным до их установки', () {
-      // Создаем модель данных
-      final dataModel = algorithm.getDataModel();
-
       // Проверяем, что при попытке доступа к данным до их установки
       // выбрасывается исключение
+      when(() => model.data).thenThrow(Exception('Данные не установлены'));
+
       expect(
-        () => dataModel.data,
+        () => algorithm.calculate(),
         throwsA(
           isA<Exception>().having(
             (e) => e.toString(),
@@ -114,12 +100,13 @@ void main() {
     });
 
     test('обработка некорректных данных в поле points', () {
-      // Создаем модель данных
-      final dataModel = algorithm.getDataModel();
-
       // Устанавливаем некорректные данные в поле points
+      when(
+        () => model.data,
+      ).thenThrow(InvalidDataException('Ошибка при обработке данных'));
+
       expect(
-        () => dataModel.rawData = {'points': 'не список'},
+        () => algorithm.calculate(),
         throwsA(
           isA<InvalidDataException>().having(
             (e) => e.message,
@@ -130,16 +117,4 @@ void main() {
       );
     });
   });
-}
-
-// Мок-класс для тестирования неверного типа модели данных
-class _MockFormsDataModel implements FormsDataModel {
-  @override
-  FormConfig get config => throw UnimplementedError();
-
-  @override
-  AlgorithmData get data => throw UnimplementedError();
-
-  @override
-  set rawData(Map<String, dynamic>? rawData) => throw UnimplementedError();
 }

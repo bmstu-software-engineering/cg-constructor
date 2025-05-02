@@ -1,40 +1,46 @@
+import 'package:alogrithms/algorithms/lab_01_40/data.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:alogrithms/algorithms/exceptions.dart';
 import 'package:alogrithms/algorithms/lab_01_40/lab_01_40.dart';
+import 'package:mocktail/mocktail.dart';
 import 'package:models_ns/models_ns.dart';
+
+class AlgorithmL01VBasicDataModelImplMock extends Mock
+    implements AlgorithmL01VBasicDataModelImpl {}
 
 void main() {
   late AlgorithmL01V40 algorithm;
+  late AlgorithmL01VBasicDataModelImplMock model;
 
   setUp(() {
-    algorithm = AlgorithmL01V40();
+    model = AlgorithmL01VBasicDataModelImplMock();
+    algorithm = AlgorithmL01V40.fromModel(model);
   });
 
   group('AlgorithmL01V40 - Тестирование', () {
     test(
       'базовый тест с двумя множествами точек, содержащими треугольники с тупыми углами',
       () {
-        // Создаем модель данных
-        final dataModel = algorithm.getDataModel();
-
         // Устанавливаем тестовые данные
         // Первое множество содержит треугольник с тупым углом при вершине (5, -1)
         // Второе множество содержит треугольник с тупым углом при вершине (5, 6)
-        dataModel.rawData = {
-          'points_first': [
-            Point(x: 0, y: 0),
-            Point(x: 10, y: 0),
-            Point(x: 5, y: -1), // Вершина с тупым углом
-          ],
-          'points_second': [
-            Point(x: 0, y: 5),
-            Point(x: 10, y: 5),
-            Point(x: 5, y: 6), // Вершина с тупым углом
-          ],
-        };
+        when(() => model.data).thenReturn(
+          AlgorithmLab01V40DataModel(
+            pointsFirst: [
+              Point(x: 0, y: 0),
+              Point(x: 10, y: 0),
+              Point(x: 5, y: -1), // Вершина с тупым углом
+            ],
+            pointsSecond: [
+              Point(x: 0, y: 5),
+              Point(x: 10, y: 5),
+              Point(x: 5, y: 6), // Вершина с тупым углом
+            ],
+          ),
+        );
 
         // Вызываем метод calculate
-        final result = algorithm.calculate(dataModel);
+        final result = algorithm.calculate();
 
         // Проверяем, что результат содержит точки и линии
         expect(
@@ -110,27 +116,29 @@ void main() {
     );
 
     test('тест на исключение NoObtuseAnglesException в первом множестве', () {
-      // Создаем модель данных
-      final dataModel = algorithm.getDataModel();
-
       // Устанавливаем тестовые данные с остроугольными треугольниками в первом множестве
       // и треугольниками с тупыми углами во втором множестве
-      dataModel.rawData = {
-        'points_first': [
-          Point(x: 0, y: 0),
-          Point(x: 1, y: 0),
-          Point(x: 0.5, y: 0.866), // Равносторонний треугольник (все углы 60°)
-        ],
-        'points_second': [
-          Point(x: 0, y: 5),
-          Point(x: 10, y: 5),
-          Point(x: 5, y: 6), // Треугольник с тупым углом
-        ],
-      };
+      when(() => model.data).thenReturn(
+        AlgorithmLab01V40DataModel(
+          pointsFirst: [
+            Point(x: 0, y: 0),
+            Point(x: 1, y: 0),
+            Point(
+              x: 0.5,
+              y: 0.866,
+            ), // Равносторонний треугольник (все углы 60°)
+          ],
+          pointsSecond: [
+            Point(x: 0, y: 5),
+            Point(x: 10, y: 5),
+            Point(x: 5, y: 6), // Треугольник с тупым углом
+          ],
+        ),
+      );
 
       // Проверяем, что при вызове calculate выбрасывается исключение NoObtuseAnglesException
       expect(
-        () => algorithm.calculate(dataModel),
+        () => algorithm.calculate(),
         throwsA(
           isA<NoObtuseAnglesException>().having(
             (e) => e.message,
@@ -142,27 +150,29 @@ void main() {
     });
 
     test('тест на исключение NoObtuseAnglesException во втором множестве', () {
-      // Создаем модель данных
-      final dataModel = algorithm.getDataModel();
-
       // Устанавливаем тестовые данные с треугольниками с тупыми углами в первом множестве
       // и остроугольными треугольниками во втором множестве
-      dataModel.rawData = {
-        'points_first': [
-          Point(x: 0, y: 0),
-          Point(x: 10, y: 0),
-          Point(x: 5, y: -1), // Треугольник с тупым углом
-        ],
-        'points_second': [
-          Point(x: 3, y: 0),
-          Point(x: 4, y: 0),
-          Point(x: 3.5, y: 0.866), // Равносторонний треугольник (все углы 60°)
-        ],
-      };
+      when(() => model.data).thenReturn(
+        AlgorithmLab01V40DataModel(
+          pointsFirst: [
+            Point(x: 0, y: 0),
+            Point(x: 10, y: 0),
+            Point(x: 5, y: -1), // Треугольник с тупым углом
+          ],
+          pointsSecond: [
+            Point(x: 3, y: 0),
+            Point(x: 4, y: 0),
+            Point(
+              x: 3.5,
+              y: 0.866,
+            ), // Равносторонний треугольник (все углы 60°)
+          ],
+        ),
+      );
 
       // Проверяем, что при вызове calculate выбрасывается исключение NoObtuseAnglesException
       expect(
-        () => algorithm.calculate(dataModel),
+        () => algorithm.calculate(),
         throwsA(
           isA<NoObtuseAnglesException>().having(
             (e) => e.message,
@@ -174,33 +184,32 @@ void main() {
     });
 
     test('тест с несколькими треугольниками с тупыми углами', () {
-      // Создаем модель данных
-      final dataModel = algorithm.getDataModel();
-
       // Устанавливаем тестовые данные с несколькими треугольниками с тупыми углами
-      dataModel.rawData = {
-        'points_first': [
-          Point(x: 0, y: 0),
-          Point(x: 10, y: 0),
-          Point(x: 5, y: -1), // Треугольник с тупым углом при вершине (5, -1)
-          Point(
-            x: 5,
-            y: 10,
-          ), // Добавляем еще одну точку для образования новых треугольников
-        ],
-        'points_second': [
-          Point(x: 0, y: 5),
-          Point(x: 10, y: 5),
-          Point(x: 5, y: 6), // Треугольник с тупым углом при вершине (5, 6)
-          Point(
-            x: 5,
-            y: 15,
-          ), // Добавляем еще одну точку для образования новых треугольников
-        ],
-      };
+      when(() => model.data).thenReturn(
+        AlgorithmLab01V40DataModel(
+          pointsFirst: [
+            Point(x: 0, y: 0),
+            Point(x: 10, y: 0),
+            Point(x: 5, y: -1), // Треугольник с тупым углом при вершине (5, -1)
+            Point(
+              x: 5,
+              y: 10,
+            ), // Добавляем еще одну точку для образования новых треугольников
+          ],
+          pointsSecond: [
+            Point(x: 0, y: 5),
+            Point(x: 10, y: 5),
+            Point(x: 5, y: 6), // Треугольник с тупым углом при вершине (5, 6)
+            Point(
+              x: 5,
+              y: 15,
+            ), // Добавляем еще одну точку для образования новых треугольников
+          ],
+        ),
+      );
 
       // Вызываем метод calculate
-      final result = algorithm.calculate(dataModel);
+      final result = algorithm.calculate();
 
       // Проверяем, что результат содержит точки и линии
       expect(
@@ -242,25 +251,24 @@ void main() {
     });
 
     test('тест на исключение InsufficientPointsException в первом множестве', () {
-      // Создаем модель данных
-      final dataModel = algorithm.getDataModel();
-
       // Устанавливаем недостаточное количество точек в первом множестве
-      dataModel.rawData = {
-        'points_first': [
-          Point(x: 0, y: 0),
-          Point(x: 1, y: 0), // Только 2 точки, недостаточно для треугольника
-        ],
-        'points_second': [
-          Point(x: 0, y: 5),
-          Point(x: 10, y: 5),
-          Point(x: 5, y: 6),
-        ],
-      };
+      when(() => model.data).thenReturn(
+        AlgorithmLab01V40DataModel(
+          pointsFirst: [
+            Point(x: 0, y: 0),
+            Point(x: 1, y: 0), // Только 2 точки, недостаточно для треугольника
+          ],
+          pointsSecond: [
+            Point(x: 0, y: 5),
+            Point(x: 10, y: 5),
+            Point(x: 5, y: 6),
+          ],
+        ),
+      );
 
       // Проверяем, что при вызове calculate выбрасывается исключение InsufficientPointsException
       expect(
-        () => algorithm.calculate(dataModel),
+        () => algorithm.calculate(),
         throwsA(
           isA<InsufficientPointsException>().having(
             (e) => e.message,
@@ -274,24 +282,26 @@ void main() {
     test(
       'тест на исключение InsufficientPointsException во втором множестве',
       () {
-        // Создаем модель данных
-        final dataModel = algorithm.getDataModel();
-
         // Устанавливаем недостаточное количество точек во втором множестве
-        dataModel.rawData = {
-          'points_first': [
-            Point(x: 0, y: 0),
-            Point(x: 10, y: 0),
-            Point(x: 5, y: -1),
-          ],
-          'points_second': [
-            Point(x: 3, y: 0), // Только 1 точка, недостаточно для треугольника
-          ],
-        };
+        when(() => model.data).thenReturn(
+          AlgorithmLab01V40DataModel(
+            pointsFirst: [
+              Point(x: 0, y: 0),
+              Point(x: 10, y: 0),
+              Point(x: 5, y: -1),
+            ],
+            pointsSecond: [
+              Point(
+                x: 3,
+                y: 0,
+              ), // Только 1 точка, недостаточно для треугольника
+            ],
+          ),
+        );
 
         // Проверяем, что при вызове calculate выбрасывается исключение InsufficientPointsException
         expect(
-          () => algorithm.calculate(dataModel),
+          () => algorithm.calculate(),
           throwsA(
             isA<InsufficientPointsException>().having(
               (e) => e.message,
@@ -303,49 +313,9 @@ void main() {
       },
     );
 
-    test('тест на исключение InvalidDataException при отсутствии данных', () {
-      // Создаем модель данных
-      final dataModel = algorithm.getDataModel();
-
-      // Проверяем, что при установке null в качестве данных выбрасывается исключение InvalidDataException
-      expect(
-        () => dataModel.rawData = null,
-        throwsA(
-          isA<InvalidDataException>().having(
-            (e) => e.message,
-            'message',
-            contains('Данные не предоставлены'),
-          ),
-        ),
-      );
-    });
-
-    test(
-      'тест на исключение InvalidDataException при отсутствии обязательных полей',
-      () {
-        // Создаем модель данных
-        final dataModel = algorithm.getDataModel();
-
-        // Устанавливаем данные без обязательных полей
-        expect(
-          () => dataModel.rawData = {'some_field': 'some_value'},
-          throwsA(
-            isA<InvalidDataException>().having(
-              (e) => e.message,
-              'message',
-              contains('Отсутствуют обязательные поля данных'),
-            ),
-          ),
-        );
-      },
-    );
-
     test(
       'тест на исключение CalculationException при одинаковых множествах точек',
       () {
-        // Создаем модель данных
-        final dataModel = algorithm.getDataModel();
-
         // Устанавливаем одинаковые множества точек
         final points = [
           Point(x: 0, y: 0),
@@ -353,11 +323,13 @@ void main() {
           Point(x: 5, y: -1), // Треугольник с тупым углом при вершине (5, -1)
         ];
 
-        dataModel.rawData = {'points_first': points, 'points_second': points};
+        when(() => model.data).thenReturn(
+          AlgorithmLab01V40DataModel(pointsFirst: points, pointsSecond: points),
+        );
 
         // Проверяем, что при вызове calculate выбрасывается исключение CalculationException
         expect(
-          () => algorithm.calculate(dataModel),
+          () => algorithm.calculate(),
           throwsA(
             isA<CalculationException>().having(
               (e) => e.message,

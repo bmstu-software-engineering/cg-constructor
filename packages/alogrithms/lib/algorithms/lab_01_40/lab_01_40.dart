@@ -2,8 +2,10 @@ import 'dart:math';
 
 import 'package:alogrithms/src/algorithm_interface.dart';
 import 'package:alogrithms/algorithms/exceptions.dart';
-import 'package:forms/forms.dart';
+import 'package:flutter/foundation.dart';
 import 'package:models_ns/models_ns.dart';
+
+import 'data.dart';
 
 // Вспомогательный класс для представления треугольника
 class _Triangle {
@@ -14,11 +16,17 @@ class _Triangle {
   _Triangle({required this.a, required this.b, required this.c});
 }
 
-class AlgorithmL01V40
-    implements Algorithm<AlgorithmL01V40FormsDataModelImpl, ViewerResultModel> {
+class AlgorithmL01V40 implements Algorithm<FormsDataModel, ViewerResultModel> {
+  @visibleForTesting
+  const AlgorithmL01V40.fromModel(this._model);
+
+  factory AlgorithmL01V40() =>
+      AlgorithmL01V40.fromModel(AlgorithmL01VBasicDataModelImpl());
+
+  final AlgorithmL01VBasicDataModelImpl _model;
+
   @override
-  AlgorithmL01V40FormsDataModelImpl getDataModel() =>
-      AlgorithmL01V40FormsDataModelImpl();
+  FormsDataModel getDataModel() => _model;
 
   // Вычисление расстояния между двумя точками
   double _distance(Point p1, Point p2) {
@@ -83,14 +91,9 @@ class AlgorithmL01V40
   static const String _resultLineColor = '#FF0000'; // Красный
 
   @override
-  ViewerResultModel calculate(DataModel dataModel) {
-    if (dataModel is! AlgorithmL01V40FormsDataModelImpl) {
-      throw InvalidDataException('Неверный тип модели данных');
-    }
-
-    final formsDataModel = dataModel;
-    final pointsFirst = formsDataModel.data.pointsFirst;
-    final pointsSecond = formsDataModel.data.pointsSecond;
+  ViewerResultModel calculate() {
+    final pointsFirst = _model.data.pointsFirst;
+    final pointsSecond = _model.data.pointsSecond;
 
     // Проверка на достаточное количество точек
     if (pointsFirst.length < _minPointsRequired) {
@@ -288,71 +291,6 @@ class AlgorithmL01V40
         rethrow;
       }
       throw CalculationException('Ошибка при вычислении: ${e.toString()}');
-    }
-  }
-}
-
-class _Data implements AlgorithmData {
-  final List<Point> pointsFirst;
-  final List<Point> pointsSecond;
-
-  const _Data(this.pointsFirst, this.pointsSecond);
-}
-
-class AlgorithmL01V40FormsDataModelImpl implements FormsDataModel {
-  _Data? _data;
-
-  @override
-  FormConfig get config => FormConfig(
-    name: 'Lab 01, Variant 40',
-    fields: [
-      FieldConfigEntry(
-        id: 'points_first',
-        type: FieldType.list,
-        config: ListFieldConfig<Point>(
-          label: 'Первое множество точек',
-          minItems: 3,
-          maxItems: 999,
-          createItemField: () => PointField(config: PointFieldConfig()),
-        ),
-      ),
-
-      FieldConfigEntry(
-        id: 'points_second',
-        type: FieldType.list,
-        config: ListFieldConfig<Point>(
-          label: 'Второе множество точек',
-          minItems: 3,
-          maxItems: 999,
-          createItemField: () => PointField(config: PointFieldConfig()),
-        ),
-      ),
-    ],
-  );
-
-  @override
-  _Data get data => _data ?? (throw Exception('Данные не установлены'));
-
-  @override
-  set rawData(Map<String, dynamic>? rawData) {
-    if (rawData == null) {
-      throw InvalidDataException('Данные не предоставлены');
-    }
-
-    if (!rawData.containsKey('points_first') ||
-        !rawData.containsKey('points_second')) {
-      throw InvalidDataException('Отсутствуют обязательные поля данных');
-    }
-
-    try {
-      _data = _Data(
-        (rawData['points_first'] as List).whereType<Point>().toList(),
-        (rawData['points_second'] as List).whereType<Point>().toList(),
-      );
-    } catch (e) {
-      throw InvalidDataException(
-        'Ошибка при обработке данных: ${e.toString()}',
-      );
     }
   }
 }
