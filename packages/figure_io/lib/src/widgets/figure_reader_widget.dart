@@ -65,7 +65,6 @@ class _FigureReaderWidgetState extends State<FigureReaderWidget> {
         setState(() {
           _error = error.toString();
           _isLoading = false;
-          print(error);
         });
       },
     );
@@ -139,7 +138,6 @@ class _FigureReaderWidgetState extends State<FigureReaderWidget> {
       setState(() {
         _error = e.toString();
         _isLoading = false;
-        print(e);
       });
     }
   }
