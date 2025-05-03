@@ -1,3 +1,4 @@
+import 'package:alogrithms/algorithms/exceptions.dart';
 import 'package:flutter/material.dart';
 import 'package:models_ns/models_ns.dart';
 import 'package:rxdart/rxdart.dart';
@@ -44,8 +45,8 @@ final class FlowBuilder<DD extends FlowDrawData> {
       } else {
         _addInfoMessage('Расчеты выполнены успешно');
       }
-    } catch (e) {
-      _addInfoMessage('Ошибка при расчетах: ${e.toString()}');
+    } on AlgorithmException catch (e) {
+      _addInfoMessage('# Ошибка при расчетах\n${e.toString()}');
       rethrow;
     }
   }
@@ -75,9 +76,13 @@ final class FlowBuilder<DD extends FlowDrawData> {
         ElevatedButton(
           onPressed: () async {
             try {
-              await calculate();
-              await draw();
-            } catch (e) {
+              if (_dataStrategy.isValid) {
+                await calculate();
+                await draw();
+              } else {
+                _addInfoMessage('# Валидация не пройдена');
+              }
+            } on AlgorithmException catch (_) {
               // Ошибки уже обрабатываются в методах calculate и draw
             }
           },
@@ -101,6 +106,8 @@ abstract interface class FlowBuilderFactory {
 
 abstract interface class FlowDataStrategy {
   Widget buildWidget();
+
+  bool get isValid;
 }
 
 final class FlowDrawData {

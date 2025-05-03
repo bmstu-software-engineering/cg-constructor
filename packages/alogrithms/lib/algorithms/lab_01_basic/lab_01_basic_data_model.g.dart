@@ -14,17 +14,16 @@ class AlgorithmLab01BasicDataModelFormConfig
 
   @override
   List<FieldConfigEntry> get fields => [
-        FieldConfigEntry(
-            id: 'points',
-            type: FieldType.list,
-            config: ListFieldConfig<Point>(
-              label: 'Список точек',
-              createItemField: () => PointField(
-                  config: PointFieldConfig(
-                label: 'Точка',
-              )),
-            )),
-      ];
+    FieldConfigEntry(
+      id: 'points',
+      type: FieldType.list,
+      config: ListFieldConfig<Point>(
+        label: 'Список точек',
+        createItemField:
+            () => PointField(config: PointFieldConfig(label: 'Точка')),
+      ),
+    ),
+  ];
 
   @override
   AlgorithmLab01BasicDataModelFormModel createModel() =>
@@ -41,9 +40,8 @@ class AlgorithmLab01BasicDataModelFormModel
       getField<ListField<Point, FormField<Point>>>('points')!;
 
   @override
-  AlgorithmLab01BasicDataModel get values => AlgorithmLab01BasicDataModel(
-        points: pointsField.value!,
-      );
+  AlgorithmLab01BasicDataModel get values =>
+      AlgorithmLab01BasicDataModel(points: pointsField.value!);
 
   @override
   set values(AlgorithmLab01BasicDataModel newValues) {
@@ -51,9 +49,7 @@ class AlgorithmLab01BasicDataModelFormModel
   }
 
   @override
-  Map<String, dynamic> toMap() => {
-        'points': pointsField.value,
-      };
+  Map<String, dynamic> toMap() => {'points': pointsField.value};
 
   @override
   void fromMap(Map<String, dynamic> map) {

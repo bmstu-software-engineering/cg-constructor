@@ -11,7 +11,10 @@ class FormsDataStrategy<T extends FormsDataModelAdapter>
   FormsDataStrategy(T dataModel) : _formModel = dataModel.config;
 
   @override
-  Widget buildWidget() => DynamicFormWidget(model: _formModel, onSubmit: print);
+  Widget buildWidget() => DynamicFormWidget(model: _formModel, onSubmit: null);
+
+  @override
+  bool get isValid => _formModel.isValid();
 }
 
 /// Фабрика для создания стратегий данных

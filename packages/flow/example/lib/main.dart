@@ -82,12 +82,83 @@ class _FlowExamplePageState extends State<FlowExamplePage> {
     });
   }
 
+  // Отображение информации о задании
+  void _showTaskInfo(BuildContext context) {
+    // Получаем список алгоритмов
+    final algorithms = context.algorithms;
+
+    // Находим текущий алгоритм
+    final currentAlgorithm =
+        _selectedAlgorithmId != null
+            ? algorithms.firstWhere(
+              (algo) => algo.id == _selectedAlgorithmId,
+              orElse: () => algorithms.first,
+            )
+            : algorithms.isNotEmpty
+            ? algorithms.first
+            : null;
+
+    // Если алгоритм не найден, показываем сообщение об ошибке
+    if (currentAlgorithm == null) {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Нет доступных алгоритмов')));
+      return;
+    }
+
+    showDialog(
+      context: context,
+      builder:
+          (context) => AlertDialog(
+            title: Text('Информация о задании: ${currentAlgorithm.name}'),
+            content: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Text(
+                    'Задание:',
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(height: 8),
+                  Text(currentAlgorithm.description),
+                  const SizedBox(height: 16),
+                  const Text(
+                    'Инструкция:',
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(height: 8),
+                  const Text(
+                    '1. Выберите алгоритм из выпадающего списка в верхнем правом углу.\n'
+                    '2. Заполните параметры в форме слева.\n'
+                    '3. Нажмите кнопку "Расчитать".\n'
+                    '4. Результаты расчетов будут отображены на графике справа.\n'
+                    '5. Информационные сообщения о ходе выполнения будут показаны внизу экрана.',
+                  ),
+                ],
+              ),
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(),
+                child: const Text('Закрыть'),
+              ),
+            ],
+          ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     // Получаем список алгоритмов из провайдера
     final algorithms = context.algorithms;
 
     return Scaffold(
+      floatingActionButton: FloatingActionButton(
+        onPressed: () => _showTaskInfo(context),
+        tooltip: 'Информация о задании',
+        child: const Icon(Icons.info_outline),
+      ),
       appBar: AppBar(
         title: const Text('Flow Example'),
         actions: [
@@ -109,57 +180,62 @@ class _FlowExamplePageState extends State<FlowExamplePage> {
           ),
         ],
       ),
-      body:
-          _flowBuilder == null
-              ? const Center(child: Text('Нет доступных алгоритмов'))
-              : Column(
-                children: [
-                  Expanded(
-                    child: Row(
-                      children: [
-                        // Форма для ввода данных
-                        Expanded(
-                          flex: 1,
-                          child: SingleChildScrollView(
-                            padding: const EdgeInsets.all(16),
-                            child: _flowBuilder!.buildDataWidget(),
+      body: KeyedSubtree(
+        key: ValueKey(_flowBuilder?.name),
+        child:
+            _flowBuilder == null
+                ? const Center(child: Text('Нет доступных алгоритмов'))
+                : Column(
+                  children: [
+                    Expanded(
+                      child: Row(
+                        children: [
+                          // Форма для ввода данных
+                          Expanded(
+                            flex: 1,
+                            child: SingleChildScrollView(
+                              padding: const EdgeInsets.all(16),
+                              child: _flowBuilder!.buildDataWidget(),
+                            ),
                           ),
-                        ),
 
-                        // Разделитель
-                        const VerticalDivider(),
+                          // Разделитель
+                          const VerticalDivider(),
 
-                        // Область для отображения результата
-                        Expanded(
-                          flex: 2,
-                          child: _flowBuilder!.buildViewerWidget(),
-                        ),
-                      ],
+                          // Область для отображения результата
+                          Expanded(
+                            flex: 2,
+                            child: _flowBuilder!.buildViewerWidget(),
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
 
-                  // Область для отображения информационных сообщений
-                  Container(
-                    height: 250,
-                    padding: const EdgeInsets.all(8),
-                    decoration: BoxDecoration(
-                      color: Colors.grey[200],
-                      border: Border(top: BorderSide(color: Colors.grey[400]!)),
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        Text(
-                          'Информационные сообщения:',
-                          style: TextStyle(fontWeight: FontWeight.bold),
+                    // Область для отображения информационных сообщений
+                    Container(
+                      height: 250,
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        color: Colors.grey[200],
+                        border: Border(
+                          top: BorderSide(color: Colors.grey[400]!),
                         ),
-                        const SizedBox(height: 8),
-                        _Messages(_flowBuilder?.infoStream),
-                      ],
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          Text(
+                            'Информационные сообщения:',
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                          const SizedBox(height: 8),
+                          _Messages(_flowBuilder?.infoStream),
+                        ],
+                      ),
                     ),
-                  ),
-                ],
-              ),
+                  ],
+                ),
+      ),
     );
   }
 }
@@ -188,7 +264,7 @@ class _Messages extends StatelessWidget {
                   // Получаем список сообщений
                   final messages = snapshot.requireData;
 
-                  return ListView.builder(
+                  return ListView.separated(
                     controller: _scrollController,
                     itemCount: messages.length,
                     itemBuilder: (context, index) {
@@ -197,6 +273,7 @@ class _Messages extends StatelessWidget {
                         child: MarkdownBody(data: messages[index]),
                       );
                     },
+                    separatorBuilder: (_, __) => Divider(),
                   );
                 },
               ),
