@@ -18,22 +18,12 @@ class ColorFormFormConfig extends TypedFormConfig<ColorForm> {
             type: FieldType.point,
             config: PointFieldConfig(
               label: 'Точка с цветом',
-              xConfig: NumberFieldConfig(label: 'X', min: 0, max: 100),
-              yConfig: NumberFieldConfig(label: 'Y', min: 0, max: 100),
-              canSetColor: true,
-              defaultColor: '#FF0000',
             )),
         FieldConfigEntry(
             id: 'coloredLine',
             type: FieldType.line,
             config: LineFieldConfig(
               label: 'Линия с цветом',
-              startConfig: PointFieldConfig(label: 'Начало'),
-              endConfig: PointFieldConfig(label: 'Конец'),
-              canSetColor: true,
-              defaultColor: '#0000FF',
-              canSetThickness: true,
-              defaultThickness: 2.0,
             )),
       ];
 
@@ -72,11 +62,9 @@ class ColorFormFormModel extends TypedFormModel<ColorForm> {
 
   @override
   void fromMap(Map<String, dynamic> map) {
-    if (map.containsKey('coloredPoint')) {
+    if (map.containsKey('coloredPoint'))
       coloredPointField.value = map['coloredPoint'] as Point;
-    }
-    if (map.containsKey('coloredLine')) {
+    if (map.containsKey('coloredLine'))
       coloredLineField.value = map['coloredLine'] as Line;
-    }
   }
 }

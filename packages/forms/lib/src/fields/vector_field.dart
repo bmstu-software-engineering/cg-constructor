@@ -74,7 +74,8 @@ class VectorField extends BaseFormField<Vector> {
       _dyField.value = newValue.dy;
     }
 
-    validate();
+    // Обновляем значение в родительском классе
+    super.value = newValue;
   }
 
   @override

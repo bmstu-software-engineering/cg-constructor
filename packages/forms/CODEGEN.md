@@ -178,6 +178,33 @@ final double angle;
 - `isRequired` (bool): Обязательное ли поле (по умолчанию true)
 - `validator` (Function): Функция валидации
 
+#### VectorField
+
+```dart
+@VectorField(
+  label: 'Вектор',
+  dxConfig: NumberField(
+    label: 'Смещение по X',
+    min: -100,
+    max: 100,
+  ),
+  dyConfig: NumberField(
+    label: 'Смещение по Y',
+    min: -100,
+    max: 100,
+  ),
+  isRequired: true,
+)
+final Vector vector;
+```
+
+Параметры:
+- `label` (String): Метка поля
+- `dxConfig` (NumberFieldAnnotation): Конфигурация для компонента X вектора
+- `dyConfig` (NumberFieldAnnotation): Конфигурация для компонента Y вектора
+- `isRequired` (bool): Обязательное ли поле (по умолчанию true)
+- `validator` (Function): Функция валидации
+
 #### ListField
 
 ```dart
