@@ -3,7 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 // Условный импорт для dart:io, который не доступен на веб-платформе
-import '../models/figure_collection.dart';
+import 'package:models_ns/models_ns.dart';
 import '../services/figure_reader.dart';
 
 // Импортируем dart:io только если не веб-платформа

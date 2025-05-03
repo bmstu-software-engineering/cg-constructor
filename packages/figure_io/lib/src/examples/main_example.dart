@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:figure_io/figure_io.dart';
+import 'package:models_ns/models_ns.dart';
 
 /// Пример использования пакета figure_io в реальном приложении
 void main() {

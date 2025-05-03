@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:figure_io/figure_io.dart';
+import 'package:models_ns/models_ns.dart';
 
 /// Пример использования виджета для чтения фигур
 class FigureReaderExample extends StatefulWidget {
@@ -17,9 +18,7 @@ class _FigureReaderExampleState extends State<FigureReaderExample> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Пример чтения фигур'),
-      ),
+      appBar: AppBar(title: const Text('Пример чтения фигур')),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -42,10 +41,7 @@ class _FigureReaderExampleState extends State<FigureReaderExample> {
             const SizedBox(height: 20),
             // Отображение информации о загруженных фигурах
             if (_figureCollection != null) ...[
-              Text(
-                'Загружено:',
-                style: Theme.of(context).textTheme.titleLarge,
-              ),
+              Text('Загружено:', style: Theme.of(context).textTheme.titleLarge),
               const SizedBox(height: 10),
               Text('Точек: ${_figureCollection!.points.length}'),
               Text('Линий: ${_figureCollection!.lines.length}'),
@@ -53,9 +49,10 @@ class _FigureReaderExampleState extends State<FigureReaderExample> {
               const SizedBox(height: 20),
               // Пример подписки на Stream
               StreamBuilder<FigureCollection>(
-                stream: _figureCollection!.points.isEmpty
-                    ? null
-                    : Stream.value(_figureCollection!),
+                stream:
+                    _figureCollection!.points.isEmpty
+                        ? null
+                        : Stream.value(_figureCollection!),
                 builder: (context, snapshot) {
                   if (snapshot.hasData) {
                     return Text(

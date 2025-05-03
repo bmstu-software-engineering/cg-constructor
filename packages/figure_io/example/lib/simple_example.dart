@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:figure_io/figure_io.dart';
+import 'package:models_ns/models_ns.dart';
 
 /// Простой пример использования виджета для чтения фигур
 void main() {
@@ -66,24 +67,22 @@ class _SimpleExampleScreenState extends State<SimpleExampleScreen> {
               },
             ),
             const SizedBox(height: 20),
-            
+
             // Отображение информации о загруженных фигурах
             if (_figureCollection != null) ...[
-              Text(
-                'Загружено:',
-                style: Theme.of(context).textTheme.titleLarge,
-              ),
+              Text('Загружено:', style: Theme.of(context).textTheme.titleLarge),
               const SizedBox(height: 10),
               Text('Точек: ${_figureCollection!.points.length}'),
               Text('Линий: ${_figureCollection!.lines.length}'),
               Text('Треугольников: ${_figureCollection!.triangles.length}'),
               const SizedBox(height: 20),
-              
+
               // Пример подписки на Stream
               StreamBuilder<FigureCollection>(
-                stream: _figureCollection!.points.isEmpty
-                    ? null
-                    : Stream.value(_figureCollection!),
+                stream:
+                    _figureCollection!.points.isEmpty
+                        ? null
+                        : Stream.value(_figureCollection!),
                 builder: (context, snapshot) {
                   if (snapshot.hasData) {
                     return Text(

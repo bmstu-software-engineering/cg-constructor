@@ -1,10 +1,8 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:typed_data';
 
 import 'package:flutter/foundation.dart';
-
-import '../models/figure_collection.dart';
+import 'package:models_ns/models_ns.dart';
 
 // Условный импорт для dart:io, который не доступен на веб-платформе
 // ignore: uri_does_not_exist

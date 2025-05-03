@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:figure_io/figure_io.dart';
+import 'package:models_ns/models_ns.dart';
 
 /// Пример загрузки фигур из ассетов
 void main() {
