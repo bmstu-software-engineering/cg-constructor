@@ -1,7 +1,6 @@
 library figure_io;
 
 // Экспорт моделей
-export 'src/models/figure.dart';
 export 'src/models/figure_collection.dart';
 
 // Экспорт сервисов

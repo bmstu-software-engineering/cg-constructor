@@ -73,13 +73,13 @@ class _FigureIOExampleScreenState extends State<FigureIOExampleScreen> {
                 setState(() {
                   _figureCollection = figures;
                 });
-                
+
                 // Также отправляем фигуры в наш Stream для демонстрации
                 _figureReader.readFromString(figures.toJsonString());
               },
             ),
             const SizedBox(height: 24),
-            
+
             // Отображение информации о загруженных фигурах
             if (_figureCollection != null) ...[
               Text(
@@ -87,7 +87,7 @@ class _FigureIOExampleScreenState extends State<FigureIOExampleScreen> {
                 style: Theme.of(context).textTheme.titleLarge,
               ),
               const SizedBox(height: 16),
-              
+
               // Информация о точках
               _buildFigureInfo(
                 context,
@@ -97,7 +97,7 @@ class _FigureIOExampleScreenState extends State<FigureIOExampleScreen> {
                 Colors.blue,
               ),
               const SizedBox(height: 8),
-              
+
               // Информация о линиях
               _buildFigureInfo(
                 context,
@@ -107,7 +107,7 @@ class _FigureIOExampleScreenState extends State<FigureIOExampleScreen> {
                 Colors.green,
               ),
               const SizedBox(height: 8),
-              
+
               // Информация о треугольниках
               _buildFigureInfo(
                 context,
@@ -117,14 +117,14 @@ class _FigureIOExampleScreenState extends State<FigureIOExampleScreen> {
                 Colors.orange,
               ),
               const SizedBox(height: 24),
-              
+
               // Пример использования Stream
               Text(
                 'Пример использования Stream:',
                 style: Theme.of(context).textTheme.titleMedium,
               ),
               const SizedBox(height: 8),
-              
+
               // StreamBuilder для отображения данных из Stream
               StreamBuilder<FigureCollection>(
                 stream: _figureReader.figuresStream,
@@ -147,7 +147,7 @@ class _FigureIOExampleScreenState extends State<FigureIOExampleScreen> {
                             ),
                             const SizedBox(height: 8),
                             Text(
-                              'Всего фигур: ${figures.allFigures.length}',
+                              'Всего фигур: $figures',
                               style: TextStyle(color: Colors.green[700]),
                             ),
                           ],
@@ -183,10 +183,7 @@ class _FigureIOExampleScreenState extends State<FigureIOExampleScreen> {
       children: [
         Icon(icon, color: color),
         const SizedBox(width: 8),
-        Text(
-          '$title: $count',
-          style: Theme.of(context).textTheme.bodyLarge,
-        ),
+        Text('$title: $count', style: Theme.of(context).textTheme.bodyLarge),
       ],
     );
   }

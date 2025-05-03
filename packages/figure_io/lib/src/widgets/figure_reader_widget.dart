@@ -1,5 +1,3 @@
-import 'dart:typed_data';
-
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -169,7 +167,7 @@ class _FigureReaderWidgetState extends State<FigureReaderWidget> {
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Text(
-              'Загружено: ${_loadedFigures!.allFigures.length} фигур',
+              'Загружено: ${_loadedFigures!}',
               style: const TextStyle(fontWeight: FontWeight.bold),
             ),
           ),

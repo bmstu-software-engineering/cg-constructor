@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:figure_io/figure_io.dart';
@@ -60,11 +58,13 @@ class _AssetExampleScreenState extends State<AssetExampleScreen> {
 
     try {
       // Загружаем JSON из ассета
-      final jsonString = await rootBundle.loadString('assets/example_figures.json');
-      
+      final jsonString = await rootBundle.loadString(
+        'assets/example_figures.json',
+      );
+
       // Читаем фигуры из JSON
       final collection = await _figureReader.readFromString(jsonString);
-      
+
       setState(() {
         _figureCollection = collection;
         _isLoading = false;
@@ -73,7 +73,7 @@ class _AssetExampleScreenState extends State<AssetExampleScreen> {
       setState(() {
         _isLoading = false;
       });
-      
+
       // Показываем ошибку
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -108,19 +108,20 @@ class _AssetExampleScreenState extends State<AssetExampleScreen> {
                   vertical: 12,
                 ),
               ),
-              child: _isLoading
-                  ? const SizedBox(
-                      width: 20,
-                      height: 20,
-                      child: CircularProgressIndicator(
-                        strokeWidth: 2,
-                        color: Colors.white,
-                      ),
-                    )
-                  : const Text('Загрузить из ассета'),
+              child:
+                  _isLoading
+                      ? const SizedBox(
+                        width: 20,
+                        height: 20,
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2,
+                          color: Colors.white,
+                        ),
+                      )
+                      : const Text('Загрузить из ассета'),
             ),
             const SizedBox(height: 20),
-            
+
             // Отображение информации о загруженных фигурах
             if (_figureCollection != null) ...[
               Text(
@@ -128,7 +129,7 @@ class _AssetExampleScreenState extends State<AssetExampleScreen> {
                 style: Theme.of(context).textTheme.titleLarge,
               ),
               const SizedBox(height: 10),
-              
+
               // Информация о точках
               _buildFigureInfo(
                 context,
@@ -138,7 +139,7 @@ class _AssetExampleScreenState extends State<AssetExampleScreen> {
                 Colors.blue,
               ),
               const SizedBox(height: 8),
-              
+
               // Информация о линиях
               _buildFigureInfo(
                 context,
@@ -148,7 +149,7 @@ class _AssetExampleScreenState extends State<AssetExampleScreen> {
                 Colors.green,
               ),
               const SizedBox(height: 8),
-              
+
               // Информация о треугольниках
               _buildFigureInfo(
                 context,
@@ -158,7 +159,7 @@ class _AssetExampleScreenState extends State<AssetExampleScreen> {
                 Colors.orange,
               ),
               const SizedBox(height: 20),
-              
+
               // Пример использования Stream
               StreamBuilder<FigureCollection>(
                 stream: _figureReader.figuresStream,
@@ -181,7 +182,7 @@ class _AssetExampleScreenState extends State<AssetExampleScreen> {
                             ),
                             const SizedBox(height: 8),
                             Text(
-                              'Всего фигур: ${figures.allFigures.length}',
+                              'Всего фигур: $figures',
                               style: TextStyle(color: Colors.green[700]),
                             ),
                           ],
@@ -212,10 +213,7 @@ class _AssetExampleScreenState extends State<AssetExampleScreen> {
       children: [
         Icon(icon, color: color),
         const SizedBox(width: 8),
-        Text(
-          '$title: $count',
-          style: Theme.of(context).textTheme.bodyLarge,
-        ),
+        Text('$title: $count', style: Theme.of(context).textTheme.bodyLarge),
       ],
     );
   }
