@@ -79,9 +79,6 @@ void main() {
       final validationResult = vectorField.validate();
 
       // Выводим отладочную информацию
-      print('Валидация вектора (30, 40): $validationResult');
-      print('Длина вектора (30, 40): ${math.sqrt(30 * 30 + 40 * 40)}');
-      print('Ошибка поля: ${vectorField.error}');
 
       // Проверяем, что валидация прошла успешно
       expect(validationResult, isNull);

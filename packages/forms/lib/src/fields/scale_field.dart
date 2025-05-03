@@ -40,10 +40,13 @@ class ScaleField extends BaseFormField<Scale> {
     return (Scale? scale) {
       if (scale == null) return null;
 
+      // Сначала вызываем пользовательский валидатор, если он есть
       if (config.validator != null) {
-        return config.validator!(scale);
+        final result = config.validator!(scale);
+        if (result != null) return result;
       }
 
+      // Затем вызываем встроенный валидатор
       return scale.validate();
     };
   }
@@ -56,6 +59,9 @@ class ScaleField extends BaseFormField<Scale> {
 
   /// Указывает, используется ли равномерное масштабирование
   bool get isUniform => config.uniform;
+
+  /// Указывает, является ли поле обязательным
+  bool get isRequired => config.isRequired;
 
   @override
   Scale? get value {
@@ -104,6 +110,17 @@ class ScaleField extends BaseFormField<Scale> {
 
   @override
   String? validate() {
+    // Проверяем, есть ли значения в полях x и y
+    final xValue = _xField.value;
+    final yValue = _yField.value;
+
+    // Если поле обязательное и одно из значений не установлено, возвращаем ошибку
+    if (isRequired && (xValue == null || yValue == null)) {
+      final error = 'Это поле обязательно';
+      setError(error);
+      return error;
+    }
+
     // Сначала валидируем поля x и y
     final xError = _xField.validate();
     if (xError != null) {
@@ -117,8 +134,22 @@ class ScaleField extends BaseFormField<Scale> {
       return yError;
     }
 
-    // Затем валидируем масштабирование
-    return super.validate();
+    // Если оба значения установлены, создаем объект Scale
+    if (xValue != null && yValue != null) {
+      // Затем валидируем масштабирование с помощью пользовательского валидатора
+      if (config.validator != null) {
+        final scale = Scale(x: xValue, y: yValue);
+        final error = config.validator!(scale);
+        if (error != null) {
+          setError(error);
+          return error;
+        }
+      }
+    }
+
+    // Если все проверки прошли успешно, сбрасываем ошибку
+    setError(null);
+    return null;
   }
 
   @override

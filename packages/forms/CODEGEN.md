@@ -205,6 +205,37 @@ final Vector vector;
 - `isRequired` (bool): Обязательное ли поле (по умолчанию true)
 - `validator` (Function): Функция валидации
 
+#### ScaleField
+
+```dart
+@ScaleField(
+  label: 'Масштаб',
+  xConfig: NumberField(
+    label: 'Масштаб по X',
+    min: 0.1,
+    max: 10,
+  ),
+  yConfig: NumberField(
+    label: 'Масштаб по Y',
+    min: 0.1,
+    max: 10,
+  ),
+  uniform: false,
+  isRequired: true,
+)
+final Scale scale;
+```
+
+Параметры:
+- `label` (String): Метка поля
+- `xConfig` (NumberFieldAnnotation): Конфигурация для компонента X масштаба
+- `yConfig` (NumberFieldAnnotation): Конфигурация для компонента Y масштаба
+- `uniform` (bool): Использовать ли равномерное масштабирование (по умолчанию false)
+- `isRequired` (bool): Обязательное ли поле (по умолчанию true)
+- `validator` (Function): Функция валидации
+
+При `uniform: true` значения X и Y будут синхронизироваться, обеспечивая равномерное масштабирование по обеим осям. В пользовательском интерфейсе будет отображаться только одно поле ввода.
+
 #### ListField
 
 ```dart
