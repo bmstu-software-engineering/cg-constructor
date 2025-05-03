@@ -1,0 +1,325 @@
+\documentclass[a4paper,12pt]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T2A]{fontenc}
+\usepackage[russian]{babel}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage{geometry}
+\usepackage{hyperref}
+\usepackage{tikz}
+
+\geometry{left=2cm, right=2cm, top=2cm, bottom=2cm}
+
+\title{Документация алгоритма поиска треугольника с максимальной разностью точек в подтреугольниках}
+\author{Вариант 27}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\tableofcontents
+
+\newpage
+
+\section{Введение}
+
+Данный документ содержит описание алгоритма поиска треугольника, максимизирующего разность между количеством точек в подтреугольниках, образованных медианами. Алгоритм реализован в классе \texttt{AlgorithmL01V27} и является частью лабораторной работы 01, вариант 27.
+
+\section{Постановка задачи}
+
+\subsection{Входные данные}
+На вход алгоритму подается множество точек на плоскости $P = \{p_1, p_2, \ldots, p_n\}$, где $p_i = (x_i, y_i)$ и $n \geq 3$.
+
+\subsection{Выходные данные}
+Результатом работы алгоритма является треугольник $T = \{A, B, C\}$, где $A, B, C \in P$, такой, что разность между максимальным и минимальным количеством точек из $P$ в подтреугольниках, образованных медианами $T$, максимальна.
+
+\subsection{Формальная постановка}
+Пусть $T = \{A, B, C\}$ — треугольник с вершинами из множества $P$. Медианы треугольника $T$ разбивают его на 6 подтреугольников: $T_1, T_2, \ldots, T_6$. Для каждого подтреугольника $T_i$ определим $count(T_i)$ — количество точек из $P$, лежащих внутри $T_i$.
+
+Требуется найти такой треугольник $T$, для которого величина
+\begin{equation}
+\max_{i} count(T_i) - \min_{i} count(T_i)
+\end{equation}
+максимальна среди всех возможных треугольников с вершинами из $P$.
+
+\section{Описание алгоритма}
+
+\subsection{Общая схема алгоритма}
+
+Алгоритм состоит из следующих основных шагов:
+\begin{enumerate}
+    \item Проверка на достаточное количество точек (не менее 3).
+    \item Генерация всех возможных треугольников из множества точек.
+    \item Для каждого треугольника:
+    \begin{enumerate}
+        \item Проверка, не лежат ли его вершины на одной прямой.
+        \item Разбиение треугольника на 6 подтреугольников с помощью медиан.
+        \item Подсчет количества точек в каждом подтреугольнике.
+        \item Нахождение максимального и минимального количества точек.
+        \item Вычисление разности между максимальным и минимальным количеством.
+    \end{enumerate}
+    \item Выбор треугольника с максимальной разностью.
+    \item Формирование результата для визуализации.
+\end{enumerate}
+
+\newpage
+\subsection{Псевдокод}
+
+\begin{algorithm}
+
+\caption{Поиск треугольника с максимальной разностью точек в подтреугольниках}
+\begin{algorithmic}[1]
+\Procedure{FindMaxDifferenceTriangle}{$points$}
+    \If{$|points| < 3$}
+        \State \textbf{throw} InsufficientPointsException
+    \EndIf
+    
+    \State $triangles \gets$ GenerateTriangles($points$)
+    \State $maxDifference \gets -1$
+    \State $bestTriangle \gets null$
+    \State $bestCounts \gets null$
+    \State $maxIndex \gets null$
+    \State $minIndex \gets null$
+    
+    \For{each $triangle$ in $triangles$}
+        \If{IsTriangleDegenerate($triangle$)}
+            \State \textbf{continue}
+        \EndIf
+        
+        \State $subtriangles \gets$ DivideTriangleByMedians($triangle$)
+        \State $counts \gets$ CountPointsInsideSubtriangles($points$, $subtriangles$)
+        
+        \State $maxCount \gets counts[0]$
+        \State $minCount \gets counts[0]$
+        \State $maxIdx \gets 0$
+        \State $minIdx \gets 0$
+        
+        \For{$i \gets 1$ to $|counts| - 1$}
+            \If{$counts[i] > maxCount$}
+                \State $maxCount \gets counts[i]$
+                \State $maxIdx \gets i$
+            \EndIf
+            \If{$counts[i] < minCount$}
+                \State $minCount \gets counts[i]$
+                \State $minIdx \gets i$
+            \EndIf
+        \EndFor
+        
+        \State $difference \gets maxCount - minCount$
+        
+        \If{$difference > maxDifference$}
+            \State $maxDifference \gets difference$
+            \State $bestTriangle \gets triangle$
+            \State $bestCounts \gets counts$
+            \State $maxIndex \gets maxIdx$
+            \State $minIndex \gets minIdx$
+        \EndIf
+    \EndFor
+    
+    \If{$bestTriangle = null$}
+        \State \textbf{throw} CalculationException
+    \EndIf
+    
+    \State \textbf{return} BuildResult($bestTriangle$, $bestCounts$, $maxIndex$, $minIndex$)
+\EndProcedure
+\end{algorithmic}
+\end{algorithm}
+
+\newpage
+\subsection{Вспомогательные алгоритмы}
+
+\subsubsection{Генерация треугольников}
+
+Для генерации всех возможных треугольников из множества точек используется класс \texttt{TriangleGenerator}. Алгоритм перебирает все возможные тройки точек и создает из них треугольники.
+
+\begin{algorithm}
+\caption{Генерация треугольников}
+\begin{algorithmic}[1]
+\Procedure{GenerateTriangles}{$points$}
+    \State $triangles \gets$ пустой список
+    \For{$i \gets 0$ to $|points| - 3$}
+        \For{$j \gets i + 1$ to $|points| - 2$}
+            \For{$k \gets j + 1$ to $|points| - 1$}
+                \State $triangle \gets$ Triangle($points[i]$, $points[j]$, $points[k]$)
+                \State Добавить $triangle$ в $triangles$
+            \EndFor
+        \EndFor
+    \EndFor
+    \State \textbf{return} $triangles$
+\EndProcedure
+\end{algorithmic}
+\end{algorithm}
+
+\subsubsection{Проверка вырожденности треугольника}
+
+Для проверки, не лежат ли вершины треугольника на одной прямой, используется класс \texttt{PointsOnLineChecker}. Алгоритм проверяет, равна ли площадь треугольника нулю.
+
+\begin{algorithm}
+\caption{Проверка вырожденности треугольника}
+\begin{algorithmic}[1]
+\Procedure{IsTriangleDegenerate}{$triangle$}
+    \State $a \gets triangle.a$
+    \State $b \gets triangle.b$
+    \State $c \gets triangle.c$
+    \State $area \gets 0.5 \cdot |(b_x - a_x)(c_y - a_y) - (c_x - a_x)(b_y - a_y)|$
+    \State \textbf{return} $area = 0$
+\EndProcedure
+\end{algorithmic}
+\end{algorithm}
+
+\subsubsection{Разбиение треугольника медианами}
+
+Для разбиения треугольника на 6 подтреугольников с помощью медиан используется класс \texttt{TriangleMedianCalculator}. Алгоритм вычисляет медианы треугольника и центроид (точку пересечения медиан), а затем формирует 6 подтреугольников.
+
+\begin{algorithm}
+\caption{Разбиение треугольника медианами}
+\begin{algorithmic}[1]
+\Procedure{DivideTriangleByMedians}{$triangle$}
+    \State $a \gets triangle.a$
+    \State $b \gets triangle.b$
+    \State $c \gets triangle.c$
+    
+    \State $midAB \gets$ Point($(a_x + b_x) / 2$, $(a_y + b_y) / 2$)
+    \State $midBC \gets$ Point($(b_x + c_x) / 2$, $(b_y + c_y) / 2$)
+    \State $midCA \gets$ Point($(c_x + a_x) / 2$, $(c_y + a_y) / 2$)
+    
+    \State $centroid \gets$ Point($(a_x + b_x + c_x) / 3$, $(a_y + b_y + c_y) / 3$)
+    
+    \State $subtriangles \gets$ пустой список
+    
+    \State Добавить Triangle($a$, $midAB$, $centroid$) в $subtriangles$
+    \State Добавить Triangle($a$, $midCA$, $centroid$) в $subtriangles$
+    \State Добавить Triangle($b$, $midAB$, $centroid$) в $subtriangles$
+    \State Добавить Triangle($b$, $midBC$, $centroid$) в $subtriangles$
+    \State Добавить Triangle($c$, $midBC$, $centroid$) в $subtriangles$
+    \State Добавить Triangle($c$, $midCA$, $centroid$) в $subtriangles$
+    
+    \State \textbf{return} $subtriangles$
+\EndProcedure
+\end{algorithmic}
+\end{algorithm}
+
+\subsubsection{Подсчет точек внутри подтреугольников}
+
+Для подсчета количества точек внутри каждого подтреугольника используется класс \texttt{PointInTriangleChecker}. Алгоритм проверяет для каждой точки из множества, лежит ли она внутри каждого подтреугольника.
+
+Алгоритм основан на проверке, с какой стороны от каждого ребра треугольника лежит проверяемая точка. 
+
+1. Функция Sign(point, A, B) (чаще всего) вычисляет «знак» векторного произведения, т. е. фактически то, какой ориентации (левее/правее) находится вектор (A→B) относительно вектора (A→point).  
+   • Если это «векторное произведение» положительно, то point лежит по одну сторону от отрезка AB.  
+   • Если отрицательно, то по другую сторону.  
+   • Если равно нулю, то point лежит прямо на отрезке AB.
+
+2. В алгоритме последовательно вычисляются d1, d2, d3 для трёх рёбер треугольника:
+   • d1 = Sign(point, a, b)  
+   • d2 = Sign(point, b, c)  
+   • d3 = Sign(point, c, a)
+
+3. Затем смотрится, есть ли среди полученных знаков отрицательные (hasNeg) и положительные (hasPos).  
+   • hasNeg = true, если среди d1, d2, d3 есть < 0  
+   • hasPos = true, если среди d1, d2, d3 есть > 0
+
+4. Если одновременно есть и отрицательные, и положительные значения (hasNeg && hasPos), значит точка «перекрывает» разные ориентации относительно рёбер, то есть она лежит вне треугольника.
+
+5. Если же все знаки одинаковые (все ≥ 0 или все ≤ 0) или какие-то из них равны нулю, но не появляется перемешивания «+» и «−», точка находится внутри треугольника или на его границе.
+
+\begin{algorithm}
+\caption{Подсчет точек внутри подтреугольников}
+\begin{algorithmic}[1]
+\Procedure{CountPointsInsideSubtriangles}{$points$, $subtriangles$}
+    \State $counts \gets$ массив из $|subtriangles|$ элементов, инициализированных нулями
+    
+    \For{each $point$ in $points$}
+        \For{$i \gets 0$ to $|subtriangles| - 1$}
+            \If{IsPointInTriangle($point$, $subtriangles[i]$)}
+                \State $counts[i] \gets counts[i] + 1$
+            \EndIf
+        \EndFor
+    \EndFor
+    
+    \State \textbf{return} $counts$
+\EndProcedure
+\end{algorithmic}
+\end{algorithm}
+
+\begin{algorithm}
+\caption{Проверка, лежит ли точка внутри треугольника}
+\begin{algorithmic}[1]
+\Procedure{IsPointInTriangle}{$point$, $triangle$}
+    \State $a \gets triangle.a$
+    \State $b \gets triangle.b$
+    \State $c \gets triangle.c$
+    
+    \State $d1 \gets Sign(point, a, b)$
+    \State $d2 \gets Sign(point, b, c)$
+    \State $d3 \gets Sign(point, c, a)$
+    
+    \State $hasNeg \gets (d1 < 0) \lor (d2 < 0) \lor (d3 < 0)$
+    \State $hasPos \gets (d1 > 0) \lor (d2 > 0) \lor (d3 > 0)$
+    
+    \State \textbf{return} $\lnot(hasNeg \land hasPos)$
+\EndProcedure
+
+\Procedure{Sign}{$p1$, $p2$, $p3$}
+    \State \textbf{return} $(p1_x - p3_x) \cdot (p2_y - p3_y) - (p2_x - p3_x) \cdot (p1_y - p3_y)$
+\EndProcedure
+\end{algorithmic}
+\end{algorithm}
+
+\newpage
+\newpage
+
+\section{Примеры}
+
+\subsection{Пример 1}
+
+\textbf{Входные данные:}
+\begin{itemize}
+    \item Множество точек: $\{(0, 0), (10, 0), (5, 10), (2, 2), (8, 2), (5, 5), (3, 1), (7, 1), (5, 2)\}$
+\end{itemize}
+
+\textbf{Результат:}
+\begin{itemize}
+    \item Треугольник: $\{(0, 0), (10, 0), (5, 10)\}$
+    \item Подтреугольник с максимальным количеством точек: содержит 3 точки
+    \item Подтреугольник с минимальным количеством точек: содержит 0 точек
+    \item Разность: 3
+\end{itemize}
+
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[scale=0.5]
+    % Основной треугольник (зеленый)
+    \draw[green, thick] (0,0) -- (10,0) -- (5,10) -- cycle;
+    
+    % Медианы (синие)
+    \draw[blue] (0,0) -- (7.5,5);
+    \draw[blue] (10,0) -- (2.5,5);
+    \draw[blue] (5,10) -- (5,0);
+    
+    % Центроид
+    \fill[black] (5,3.33) circle (0.2);
+    
+    % Точки внутри треугольника
+    \fill[black] (2,2) circle (0.1);
+    \fill[black] (8,2) circle (0.1);
+    \fill[black] (5,5) circle (0.1);
+    \fill[black] (3,1) circle (0.1);
+    \fill[black] (7,1) circle (0.1);
+    \fill[black] (5,2) circle (0.1);
+    
+    % Подтреугольник с максимальным количеством точек (красный)
+    \draw[red, thick] (5,0) -- (5,3.33) -- (10,0) -- cycle;
+    
+    % Подтреугольник с минимальным количеством точек (пурпурный)
+    \draw[purple, thick] (5,10) -- (5,3.33) -- (7.5,5) -- cycle;
+\end{tikzpicture}
+\caption{Пример результата работы алгоритма}
+\end{figure}
+
+\end{document}

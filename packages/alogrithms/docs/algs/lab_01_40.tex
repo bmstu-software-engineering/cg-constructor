@@ -1,0 +1,269 @@
+\documentclass[a4paper,12pt]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T2A]{fontenc}
+\usepackage[russian]{babel}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage{geometry}
+\usepackage{hyperref}
+\usepackage{tikz}
+
+\geometry{left=2cm, right=2cm, top=2cm, bottom=2cm}
+
+\title{Документация алгоритма поиска линии с максимальным углом между треугольниками с тупыми углами}
+\author{Вариант 40}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\tableofcontents
+
+\newpage
+
+\section{Введение}
+
+Данный документ содержит описание алгоритма поиска линии с максимальным углом между вершинами с тупыми углами в двух множествах треугольников. Алгоритм реализован в классе \texttt{AlgorithmL01V40} и является частью лабораторной работы 01, вариант 40.
+
+\section{Постановка задачи}
+
+\subsection{Входные данные}
+На вход алгоритму подаются два множества точек на плоскости:
+\begin{itemize}
+    \item Первое множество: $P_1 = \{p_{1,1}, p_{1,2}, \ldots, p_{1,n}\}$, где $p_{1,i} = (x_{1,i}, y_{1,i})$ и $n \geq 3$.
+    \item Второе множество: $P_2 = \{p_{2,1}, p_{2,2}, \ldots, p_{2,m}\}$, где $p_{2,j} = (x_{2,j}, y_{2,j})$ и $m \geq 3$.
+\end{itemize}
+
+\subsection{Выходные данные}
+Результатом работы алгоритма является:
+\begin{itemize}
+    \item Треугольник $T_1 = \{A_1, B_1, C_1\}$ из первого множества, имеющий тупой угол при одной из вершин (обозначим её $V_1$).
+    \item Треугольник $T_2 = \{A_2, B_2, C_2\}$ из второго множества, имеющий тупой угол при одной из вершин (обозначим её $V_2$).
+    \item Линия $L = (V_1, V_2)$, соединяющая вершины с тупыми углами.
+\end{itemize}
+
+Линия $L$ должна образовывать максимальный угол с осью абсцисс среди всех возможных пар треугольников с тупыми углами из первого и второго множеств.
+
+\subsection{Формальная постановка}
+Пусть $T_1 = \{A_1, B_1, C_1\}$ — треугольник с вершинами из множества $P_1$, имеющий тупой угол при вершине $V_1 \in \{A_1, B_1, C_1\}$.
+
+Пусть $T_2 = \{A_2, B_2, C_2\}$ — треугольник с вершинами из множества $P_2$, имеющий тупой угол при вершине $V_2 \in \{A_2, B_2, C_2\}$.
+
+Пусть $\alpha(V_1, V_2)$ — угол между линией $(V_1, V_2)$ и осью абсцисс.
+
+Требуется найти такие треугольники $T_1$ и $T_2$ с тупыми углами при вершинах $V_1$ и $V_2$ соответственно, для которых величина $\alpha(V_1, V_2)$ максимальна.
+
+\section{Описание алгоритма}
+
+\subsection{Общая схема алгоритма}
+
+Алгоритм состоит из следующих основных шагов:
+\begin{enumerate}
+    \item Проверка на достаточное количество точек в обоих множествах (не менее 3).
+    \item Генерация всех возможных треугольников из первого множества точек.
+    \item Генерация всех возможных треугольников из второго множества точек.
+    \item Нахождение треугольников с тупыми углами в первом множестве.
+    \item Нахождение треугольников с тупыми углами во втором множестве.
+    \item Для каждой пары треугольников с тупыми углами:
+    \begin{enumerate}
+        \item Вычисление угла между линией, соединяющей вершины с тупыми углами, и осью абсцисс.
+        \item Обновление максимального угла и соответствующих треугольников.
+    \end{enumerate}
+    \item Формирование результата для визуализации.
+\end{enumerate}
+
+\subsection{Псевдокод}
+
+\begin{algorithm}
+\caption{Поиск линии с максимальным углом между треугольниками с тупыми углами}
+\begin{algorithmic}[1]
+\Procedure{FindMaxAngleLine}{$pointsFirst, pointsSecond$}
+    \If{$|pointsFirst| < 3$ \textbf{or} $|pointsSecond| < 3$}
+        \State \textbf{throw} InsufficientPointsException
+    \EndIf
+    
+    \State $trianglesFirst \gets$ GenerateTriangles($pointsFirst$)
+    \State $trianglesSecond \gets$ GenerateTriangles($pointsSecond$)
+    
+    \State $obtuseFirst \gets$ FindObtuseTriangles($trianglesFirst$)
+    \If{$obtuseFirst$ is empty}
+        \State \textbf{throw} NoObtuseAnglesException("Первое множество")
+    \EndIf
+    
+    \State $obtuseSecond \gets$ FindObtuseTriangles($trianglesSecond$)
+    \If{$obtuseSecond$ is empty}
+        \State \textbf{throw} NoObtuseAnglesException("Второе множество")
+    \EndIf
+    
+    \State $maxAngle \gets 0$
+    \State $resultLine \gets null$
+    \State $firstTriangle \gets null$
+    \State $secondTriangle \gets null$
+    \State $firstObtuseVertex \gets null$
+    \State $secondObtuseVertex \gets null$
+    
+    \For{each $(triangle1, vertex1)$ in $obtuseFirst$}
+        \For{each $(triangle2, vertex2)$ in $obtuseSecond$}
+            \State $angle \gets$ CalculateAngle($vertex1, vertex2$)
+            \If{$angle > maxAngle$}
+                \State $maxAngle \gets angle$
+                \State $resultLine \gets$ Line($vertex1, vertex2$)
+                \State $firstTriangle \gets triangle1$
+                \State $secondTriangle \gets triangle2$
+                \State $firstObtuseVertex \gets vertex1$
+                \State $secondObtuseVertex \gets vertex2$
+            \EndIf
+        \EndFor
+    \EndFor
+    
+    \If{$resultLine = null$}
+        \State \textbf{throw} CalculationException
+    \EndIf
+    
+    \State \textbf{return} BuildResult($firstTriangle, secondTriangle, firstObtuseVertex, secondObtuseVertex, resultLine$)
+\EndProcedure
+\end{algorithmic}
+\end{algorithm}
+
+\subsection{Вспомогательные алгоритмы}
+
+\subsubsection{Генерация треугольников}
+
+Для генерации всех возможных треугольников из множества точек используется класс \texttt{TriangleGenerator}. Алгоритм перебирает все возможные тройки точек и создает из них треугольники.
+
+\begin{algorithm}
+\caption{Генерация треугольников}
+\begin{algorithmic}[1]
+\Procedure{GenerateTriangles}{$points$}
+    \State $triangles \gets$ пустой список
+    \For{$i \gets 0$ to $|points| - 3$}
+        \For{$j \gets i + 1$ to $|points| - 2$}
+            \For{$k \gets j + 1$ to $|points| - 1$}
+                \State $triangle \gets$ Triangle($points[i]$, $points[j]$, $points[k]$)
+                \State Добавить $triangle$ в $triangles$
+            \EndFor
+        \EndFor
+    \EndFor
+    \State \textbf{return} $triangles$
+\EndProcedure
+\end{algorithmic}
+\end{algorithm}
+
+\subsubsection{Поиск треугольников с тупыми углами}
+
+Для поиска треугольников с тупыми углами используется класс \texttt{TriangleAnalyzer}. Алгоритм проверяет каждый треугольник на наличие тупого угла и возвращает список пар (треугольник, вершина с тупым углом).
+
+\begin{algorithm}
+\caption{Поиск треугольников с тупыми углами}
+\begin{algorithmic}[1]
+\Procedure{FindObtuseTriangles}{$triangles$}
+    \State $obtuseTriangles \gets$ пустой список
+    \For{each $triangle$ in $triangles$}
+        \State $obtuseVertex \gets$ FindObtuseAngleVertex($triangle$)
+        \If{$obtuseVertex \neq null$}
+            \State Добавить $(triangle, obtuseVertex)$ в $obtuseTriangles$
+        \EndIf
+    \EndFor
+    \State \textbf{return} $obtuseTriangles$
+\EndProcedure
+\end{algorithmic}
+\end{algorithm}
+
+\begin{algorithm}
+\caption{Определение вершины с тупым углом}
+\begin{algorithmic}[1]
+\Procedure{FindObtuseAngleVertex}{$triangle$}
+    \State $a \gets triangle.a$
+    \State $b \gets triangle.b$
+    \State $c \gets triangle.c$
+    
+    \State $ab \gets$ CalculateDistance($a, b$)
+    \State $bc \gets$ CalculateDistance($b, c$)
+    \State $ca \gets$ CalculateDistance($c, a$)
+    
+    \State $cosA \gets (ab^2 + ca^2 - bc^2) / (2 \cdot ab \cdot ca)$
+    \If{$cosA < 0$}
+        \State \textbf{return} $a$
+    \EndIf
+    
+    \State $cosB \gets (ab^2 + bc^2 - ca^2) / (2 \cdot ab \cdot bc)$
+    \If{$cosB < 0$}
+        \State \textbf{return} $b$
+    \EndIf
+    
+    \State $cosC \gets (bc^2 + ca^2 - ab^2) / (2 \cdot bc \cdot ca)$
+    \If{$cosC < 0$}
+        \State \textbf{return} $c$
+    \EndIf
+    
+    \State \textbf{return} $null$
+\EndProcedure
+\end{algorithmic}
+\end{algorithm}
+
+\subsubsection{Вычисление угла между линией и осью абсцисс}
+
+Для вычисления угла между линией и осью абсцисс используется класс \texttt{GeometryCalculator}. Алгоритм использует функцию $\arctan2$ для вычисления угла.
+
+\begin{algorithm}
+\caption{Вычисление угла между линией и осью абсцисс}
+\begin{algorithmic}[1]
+\Procedure{CalculateAngle}{$p1, p2$}
+    \State $angle \gets \arctan2(p2_y - p1_y, p2_x - p1_x)$
+    \If{$angle < 0$}
+        \State $angle \gets angle + \pi$
+    \EndIf
+    \State \textbf{return} $angle$
+\EndProcedure
+\end{algorithmic}
+\end{algorithm}
+
+\section{Примеры}
+
+\subsection{Пример 1}
+
+\textbf{Входные данные:}
+\begin{itemize}
+    \item Первое множество точек: $\{(0, 0), (10, 0), (5, -1)\}$
+    \item Второе множество точек: $\{(0, 5), (10, 5), (5, 6)\}$
+\end{itemize}
+
+\textbf{Результат:}
+\begin{itemize}
+    \item Первый треугольник: $\{(0, 0), (10, 0), (5, -1)\}$ с тупым углом при вершине $(5, -1)$
+    \item Второй треугольник: $\{(0, 5), (10, 5), (5, 6)\}$ с тупым углом при вершине $(5, 6)$
+    \item Линия: $((5, -1), (5, 6))$
+    \item Угол с осью абсцисс: $90°$
+\end{itemize}
+
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[scale=0.5]
+    % Первый треугольник (зеленый)
+    \draw[green, thick] (0,0) -- (10,0) -- (5,-1) -- cycle;
+    
+    % Второй треугольник (синий)
+    \draw[blue, thick] (0,5) -- (10,5) -- (5,6) -- cycle;
+    
+    % Вершины с тупыми углами (увеличенные)
+    \fill[green] (5,-1) circle (0.2);
+    \fill[blue] (5,6) circle (0.2);
+    
+    % Результирующая линия (красная)
+    \draw[red, thick] (5,-1) -- (5,6);
+    
+    % Остальные вершины
+    \fill[green] (0,0) circle (0.1);
+    \fill[green] (10,0) circle (0.1);
+    \fill[blue] (0,5) circle (0.1);
+    \fill[blue] (10,5) circle (0.1);
+\end{tikzpicture}
+\caption{Пример результата работы алгоритма}
+\end{figure}
+
+\end{document}

@@ -1,0 +1,161 @@
+\documentclass[a4paper,12pt]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T2A]{fontenc}
+\usepackage[russian]{babel}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage{geometry}
+\usepackage{hyperref}
+\usepackage{tikz}
+
+\geometry{left=2cm, right=2cm, top=2cm, bottom=2cm}
+
+\title{Документация базового алгоритма визуализации точек}
+\author{Базовый вариант}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\tableofcontents
+
+\newpage
+
+\section{Введение}
+
+Данный документ содержит описание базового алгоритма визуализации точек. Алгоритм реализован в классе \texttt{AlgorithmL01VBasic} и является базовым примером для демонстрации работы с точками на плоскости.
+
+\section{Постановка задачи}
+
+\subsection{Входные данные}
+На вход алгоритму подается множество точек на плоскости $P = \{p_1, p_2, \ldots, p_n\}$, где $p_i = (x_i, y_i)$.
+
+\subsection{Выходные данные}
+Результатом работы алгоритма является визуализация входного множества точек без дополнительных преобразований, а также текстовая информация о количестве точек и их координатах.
+
+\subsection{Формальная постановка}
+Пусть $P = \{p_1, p_2, \ldots, p_n\}$ — множество точек на плоскости. Требуется отобразить это множество точек на графике и предоставить текстовую информацию о количестве точек и их координатах.
+
+\section{Описание алгоритма}
+
+\subsection{Общая схема алгоритма}
+
+Алгоритм состоит из следующих основных шагов:
+\begin{enumerate}
+    \item Получение множества точек из модели данных.
+    \item Формирование текстовой информации о количестве точек и их координатах.
+    \item Возвращение результата для визуализации.
+\end{enumerate}
+
+\subsection{Псевдокод}
+
+\begin{algorithm}
+\caption{Базовый алгоритм визуализации точек}
+\begin{algorithmic}[1]
+\Procedure{VisualizePoints}{$points$}
+    \State $markdownInfo \gets$ FormatMarkdownInfo($points$)
+    \State \textbf{return} ViewerResultModel($points$, [], $markdownInfo$)
+\EndProcedure
+\end{algorithmic}
+\end{algorithm}
+
+\begin{algorithm}
+\caption{Форматирование текстовой информации}
+\begin{algorithmic}[1]
+\Procedure{FormatMarkdownInfo}{$points$}
+    \State $info \gets$ "## Результаты базового алгоритма\n\n"
+    \State $info \gets info +$ "### Количество точек\n"
+    \State $info \gets info +$ "Всего точек: **$|points|$**\n\n"
+    \State $info \gets info +$ "### Координаты точек\n"
+    \State $info \gets info +$ FormatPointsList($points$)
+    \State \textbf{return} $info$
+\EndProcedure
+\end{algorithmic}
+\end{algorithm}
+
+\begin{algorithm}
+\caption{Форматирование списка точек}
+\begin{algorithmic}[1]
+\Procedure{FormatPointsList}{$points$}
+    \State $result \gets$ пустая строка
+    \For{$i \gets 0$ to $|points| - 1$}
+        \State $point \gets points[i]$
+        \State $result \gets result +$ "- Точка $(i + 1)$: $(point.x, point.y)$\n"
+    \EndFor
+    \State \textbf{return} $result$
+\EndProcedure
+\end{algorithmic}
+\end{algorithm}
+
+\section{Анализ алгоритма}
+
+\subsection{Временная сложность}
+
+Временная сложность алгоритма определяется следующими факторами:
+\begin{itemize}
+    \item Получение множества точек из модели данных: $O(1)$
+    \item Формирование текстовой информации: $O(n)$, где $n$ — количество точек
+    \item Возвращение результата для визуализации: $O(1)$
+\end{itemize}
+
+Таким образом, общая временная сложность алгоритма составляет $O(n)$.
+
+\subsection{Пространственная сложность}
+
+Пространственная сложность алгоритма определяется следующими факторами:
+\begin{itemize}
+    \item Хранение исходного множества точек: $O(n)$
+    \item Хранение текстовой информации: $O(n)$
+\end{itemize}
+
+Таким образом, общая пространственная сложность алгоритма составляет $O(n)$.
+
+\section{Примеры}
+
+\subsection{Пример 1}
+
+\textbf{Входные данные:}
+\begin{itemize}
+    \item Множество точек: $\{(0, 0), (1, 1), (2, 2), (3, 3)\}$
+\end{itemize}
+
+\textbf{Результат:}
+\begin{itemize}
+    \item Визуализация точек на графике
+    \item Текстовая информация:
+    \begin{verbatim}
+## Результаты базового алгоритма
+
+### Количество точек
+Всего точек: **4**
+
+### Координаты точек
+- Точка 1: (0, 0)
+- Точка 2: (1, 1)
+- Точка 3: (2, 2)
+- Точка 4: (3, 3)
+    \end{verbatim}
+\end{itemize}
+
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[scale=1]
+    % Оси координат
+    \draw[->] (-0.5,0) -- (3.5,0) node[right] {$x$};
+    \draw[->] (0,-0.5) -- (0,3.5) node[above] {$y$};
+    
+    % Точки
+    \fill (0,0) circle (0.1) node[below left] {(0,0)};
+    \fill (1,1) circle (0.1) node[above right] {(1,1)};
+    \fill (2,2) circle (0.1) node[above right] {(2,2)};
+    \fill (3,3) circle (0.1) node[above right] {(3,3)};
+\end{tikzpicture}
+\caption{Пример результата работы алгоритма}
+\end{figure}
+
+\end{document}
