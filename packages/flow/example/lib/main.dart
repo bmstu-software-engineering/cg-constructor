@@ -19,6 +19,9 @@ class FlowExampleApp extends StatelessWidget {
         AlgorithmL01VBasicFactory(),
         AlgorithmL01V27Factory(),
         AlgorithmL01V40Factory(),
+        AlgorithmL01V41Factory(),
+        AlgorithmL01V42Factory(),
+        AlgorithmL01V43Factory(),
       ],
       child: MaterialApp(
         title: 'Flow Example',

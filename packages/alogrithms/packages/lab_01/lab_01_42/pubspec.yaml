@@ -1,5 +1,5 @@
-name: alogrithms
-description: "A new Flutter package project."
+name: lab_01_42
+description: "Алгоритм поиска двух треугольников с минимальным отношением периметров."
 version: 0.0.1
 homepage:
 publish_to: 'none'
@@ -11,40 +11,13 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-
-  models_ns:
-    path: ../models_ns
-  
-  forms:
-    path: ../forms 
-  forms_annotations:
-    path: ../forms/packages/forms_annotations
-  algorithm_interface:
-    path: ./packages/algorithm_interface
-
-  # Перечисление конкретных алгоритмов
   lab_01_common:
-    path: ./packages/lab_01/lab_01_common
-  lab_01_27:
-    path: ./packages/lab_01/lab_01_27
-  lab_01_40:
-    path: ./packages/lab_01/lab_01_40
-  lab_01_41:
-    path: ./packages/lab_01/lab_01_41  
-  lab_01_42:
-    path: ./packages/lab_01/lab_01_42  
-  lab_01_43:
-    path: ./packages/lab_01/lab_01_43  
+    path: ../lab_01_common
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^5.0.0
-  build_runner: ^2.4.8
-  freezed: ^2.4.6
-  json_serializable: ^6.7.1
-  forms_generator:
-    path: ../forms/packages/forms_generator
   mocktail: ^1.0.4
 
 # For information on the generic Dart part of this file, see the

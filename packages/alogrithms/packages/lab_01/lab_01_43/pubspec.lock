@@ -4,25 +4,10 @@ packages:
   algorithm_interface:
     dependency: transitive
     description:
-      path: "../../alogrithms/packages/algorithm_interface"
+      path: "../../algorithm_interface"
       relative: true
     source: path
     version: "0.0.1"
-  alogrithms:
-    dependency: "direct main"
-    description:
-      path: "../../alogrithms"
-      relative: true
-    source: path
-    version: "0.0.1"
-  args:
-    dependency: transitive
-    description:
-      name: args
-      sha256: d0481093c50b1da8910eb0bb301626d4d8eb7284aa739614d2b394ee09e3ea04
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.7.0"
   async:
     dependency: transitive
     description:
@@ -63,14 +48,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.19.1"
-  cupertino_icons:
-    dependency: "direct main"
-    description:
-      name: cupertino_icons
-      sha256: ba631d1c7f7bef6b729a622b7b752645a2d076dba9976925b8f25725a30e1ee6
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.0.8"
   fake_async:
     dependency: transitive
     description:
@@ -79,13 +56,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.3.2"
-  flow:
-    dependency: "direct main"
-    description:
-      path: ".."
-      relative: true
-    source: path
-    version: "0.0.1"
   flutter:
     dependency: "direct main"
     description: flutter
@@ -99,30 +69,22 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "5.0.0"
-  flutter_markdown:
-    dependency: "direct main"
-    description:
-      name: flutter_markdown
-      sha256: "634622a3a826d67cb05c0e3e576d1812c430fa98404e95b60b131775c73d76ec"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.7.7"
   flutter_test:
     dependency: "direct dev"
     description: flutter
     source: sdk
     version: "0.0.0"
   forms:
-    dependency: "direct main"
+    dependency: transitive
     description:
-      path: "../../forms"
+      path: "../../../../forms"
       relative: true
     source: path
     version: "0.1.4"
   forms_annotations:
     dependency: transitive
     description:
-      path: "../../forms/packages/forms_annotations"
+      path: "../../../../forms/packages/forms_annotations"
       relative: true
     source: path
     version: "0.1.0"
@@ -142,45 +104,10 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.9.0"
-  lab_01_27:
-    dependency: transitive
-    description:
-      path: "../../alogrithms/packages/lab_01/lab_01_27"
-      relative: true
-    source: path
-    version: "0.0.1"
-  lab_01_40:
-    dependency: transitive
-    description:
-      path: "../../alogrithms/packages/lab_01/lab_01_40"
-      relative: true
-    source: path
-    version: "0.0.1"
-  lab_01_41:
-    dependency: transitive
-    description:
-      path: "../../alogrithms/packages/lab_01/lab_01_41"
-      relative: true
-    source: path
-    version: "0.0.1"
-  lab_01_42:
-    dependency: transitive
-    description:
-      path: "../../alogrithms/packages/lab_01/lab_01_42"
-      relative: true
-    source: path
-    version: "0.0.1"
-  lab_01_43:
-    dependency: transitive
-    description:
-      path: "../../alogrithms/packages/lab_01/lab_01_43"
-      relative: true
-    source: path
-    version: "0.0.1"
   lab_01_common:
-    dependency: transitive
+    dependency: "direct main"
     description:
-      path: "../../alogrithms/packages/lab_01/lab_01_common"
+      path: "../lab_01_common"
       relative: true
     source: path
     version: "0.0.1"
@@ -216,14 +143,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "5.1.1"
-  markdown:
-    dependency: transitive
-    description:
-      name: markdown
-      sha256: "935e23e1ff3bc02d390bad4d4be001208ee92cc217cb5b5a6c19bc14aaa318c1"
-      url: "https://pub.dev"
-    source: hosted
-    version: "7.3.0"
   matcher:
     dependency: transitive
     description:
@@ -248,10 +167,18 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.16.0"
-  models_ns:
-    dependency: "direct main"
+  mocktail:
+    dependency: "direct dev"
     description:
-      path: "../../models_ns"
+      name: mocktail
+      sha256: "890df3f9688106f25755f26b1c60589a92b3ab91a22b8b224947ad041bf172d8"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.4"
+  models_ns:
+    dependency: transitive
+    description:
+      path: "../../../../models_ns"
       relative: true
     source: path
     version: "1.0.0"
@@ -263,14 +190,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.9.1"
-  rxdart:
-    dependency: "direct main"
-    description:
-      name: rxdart
-      sha256: "5c3004a4a8dbb94bd4bf5412a4def4acdaa12e12f269737a5751369e12d1a962"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.28.0"
   sky_engine:
     dependency: transitive
     description: flutter
@@ -332,13 +251,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.4"
-  viewer:
-    dependency: "direct main"
-    description:
-      path: "../../viewer"
-      relative: true
-    source: path
-    version: "0.0.1"
   vm_service:
     dependency: transitive
     description:
@@ -349,4 +261,4 @@ packages:
     version: "14.3.1"
 sdks:
   dart: ">=3.7.0 <4.0.0"
-  flutter: ">=3.22.0"
+  flutter: ">=3.18.0-18.0.pre.54"

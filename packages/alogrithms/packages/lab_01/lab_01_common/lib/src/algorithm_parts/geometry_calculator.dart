@@ -18,4 +18,40 @@ class GeometryCalculator {
 
     return angle;
   }
+
+  /// Вычисление площади треугольника по формуле Герона
+  static double calculateTriangleArea(Triangle triangle) {
+    final a = calculateDistance(triangle.b, triangle.c);
+    final b = calculateDistance(triangle.a, triangle.c);
+    final c = calculateDistance(triangle.a, triangle.b);
+
+    final s = (a + b + c) / 2; // полупериметр
+    return sqrt(s * (s - a) * (s - b) * (s - c));
+  }
+
+  /// Вычисление периметра треугольника
+  static double calculateTrianglePerimeter(Triangle triangle) {
+    final a = calculateDistance(triangle.b, triangle.c);
+    final b = calculateDistance(triangle.a, triangle.c);
+    final c = calculateDistance(triangle.a, triangle.b);
+
+    return a + b + c;
+  }
+
+  /// Вычисление центра вписанной окружности треугольника
+  static Point calculateIncenter(Triangle triangle) {
+    final a = calculateDistance(triangle.b, triangle.c);
+    final b = calculateDistance(triangle.a, triangle.c);
+    final c = calculateDistance(triangle.a, triangle.b);
+
+    final perimeter = a + b + c;
+
+    // Координаты центра вписанной окружности
+    final x =
+        (a * triangle.a.x + b * triangle.b.x + c * triangle.c.x) / perimeter;
+    final y =
+        (a * triangle.a.y + b * triangle.b.y + c * triangle.c.y) / perimeter;
+
+    return Point(x: x, y: y);
+  }
 }
