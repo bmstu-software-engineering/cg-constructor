@@ -1,9 +1,8 @@
-import 'package:alogrithms/algorithms/exceptions.dart';
+import 'package:alogrithms/alogrithms.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flow/flow.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:models_ns/models_ns.dart';
 
 // Моки для стратегий
 class MockFlowDataStrategy extends Mock implements FlowDataStrategy {}

@@ -2,8 +2,6 @@ import 'dart:math' as math;
 
 import 'package:alogrithms/alogrithms.dart';
 import 'package:flutter/material.dart';
-import 'package:forms/forms.dart';
-import 'package:models_ns/models_ns.dart';
 
 /// Пример алгоритма, поддерживающего различные варианты расчета
 class ExampleAlgorithmWithVariants implements VariatedAlgorithm {

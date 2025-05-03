@@ -14,7 +14,12 @@ class FlowExampleApp extends StatelessWidget {
   const FlowExampleApp({super.key});
   @override
   Widget build(BuildContext context) {
-    return AlgorithmProviderScope(
+    return AlgorithmProvider(
+      algorithmsFactories: [
+        AlgorithmL01VBasicFactory(),
+        AlgorithmL01V27Factory(),
+        AlgorithmL01V40Factory(),
+      ],
       child: MaterialApp(
         title: 'Flow Example',
         theme: ThemeData(

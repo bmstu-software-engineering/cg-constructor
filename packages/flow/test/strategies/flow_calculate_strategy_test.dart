@@ -1,9 +1,7 @@
+import 'package:alogrithms/alogrithms.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flow/flow.dart';
-import 'package:flow/adapters/calculate_strategies.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:models_ns/models_ns.dart';
-import 'package:alogrithms/alogrithms.dart';
 
 // Моки для тестирования
 class MockAlgorithm extends Mock implements Algorithm {}

@@ -1,4 +1,3 @@
-import 'package:alogrithms/algorithms/exceptions.dart';
 import 'package:alogrithms/alogrithms.dart';
 import 'package:flutter/material.dart';
 import 'package:models_ns/models_ns.dart';

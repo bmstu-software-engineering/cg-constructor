@@ -1,5 +1,4 @@
 import 'package:alogrithms/alogrithms.dart';
-import 'package:alogrithms/algorithms/registry.dart';
 
 import 'example_algorithm_with_variants.dart';
 
