@@ -200,7 +200,7 @@ packages:
     source: hosted
     version: "1.16.0"
   models_ns:
-    dependency: transitive
+    dependency: "direct main"
     description:
       path: "../../models_ns"
       relative: true

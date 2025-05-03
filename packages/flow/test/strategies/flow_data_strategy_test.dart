@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flow/flow.dart';
-import 'package:mocktail/mocktail.dart';
 
 // Создаем конкретную реализацию FlowDataStrategy для тестирования
 class TestFlowDataStrategy implements FlowDataStrategy {

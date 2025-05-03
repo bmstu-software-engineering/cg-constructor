@@ -7,14 +7,20 @@ class AlgorithmFlowBuilderFactory implements FlowBuilderFactory {
   final Algorithm _algorithm;
   final String _name;
   final ViewerFactory _viewerFactory;
+  final bool _useAlgorithmActions;
+  final List<FlowAction>? _customActions;
 
   /// Создает фабрику для указанного алгоритма
   AlgorithmFlowBuilderFactory(
     this._algorithm, {
     String? name,
     ViewerFactory viewerFactory = const CanvasViewerFactory(),
+    List<FlowAction>? actions,
+    bool useAlgorithmActions = true,
   }) : _name = name ?? _algorithm.runtimeType.toString(),
-       _viewerFactory = viewerFactory;
+       _viewerFactory = viewerFactory,
+       _customActions = actions,
+       _useAlgorithmActions = useAlgorithmActions;
 
   @override
   FlowBuilder create() {
@@ -40,12 +46,29 @@ class AlgorithmFlowBuilderFactory implements FlowBuilderFactory {
     // Создаем стратегию отрисовки
     final drawStrategy = ViewerFlowDrawStrategy(viewer);
 
-    // Создаем и возвращаем FlowBuilder
-    return FlowBuilder(
+    // Создаем FlowBuilder
+    final flowBuilder = FlowBuilder(
       name: _name,
       dataStrategy: dataStrategy,
       calculateStrategy: calculateStrategy,
       drawStrategy: drawStrategy,
     );
+
+    // Добавляем действия из алгоритма, если это требуется
+    if (_useAlgorithmActions) {
+      final algorithmActions = flowBuilder.getActionsFromAlgorithm();
+      for (final action in algorithmActions) {
+        flowBuilder.addAction(action);
+      }
+    }
+
+    // Добавляем пользовательские действия, если они указаны
+    if (_customActions != null) {
+      for (final action in _customActions) {
+        flowBuilder.addAction(action);
+      }
+    }
+
+    return flowBuilder;
   }
 }

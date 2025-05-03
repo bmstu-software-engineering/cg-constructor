@@ -12,7 +12,6 @@ void main() {
 
 class FlowExampleApp extends StatelessWidget {
   const FlowExampleApp({super.key});
-
   @override
   Widget build(BuildContext context) {
     return AlgorithmProviderScope(

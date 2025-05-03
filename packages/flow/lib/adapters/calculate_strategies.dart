@@ -10,9 +10,13 @@ class GenericCalculateStrategy<DD extends FlowDrawData>
   GenericCalculateStrategy(this._algorithm);
 
   @override
-  Future<DD> calculate() async {
+  Future<DD> calculate({String? variant}) async {
     try {
-      final result = _algorithm.calculate();
+      // Проверяем, поддерживает ли алгоритм вариации
+      final result =
+          _algorithm is VariatedAlgorithm
+              ? _algorithm.calculateWithVariant(variant)
+              : _algorithm.calculate();
 
       if (result is! ViewerResultModel) {
         throw Exception('Результат должен быть типа ViewerResultModel');
@@ -29,6 +33,9 @@ class GenericCalculateStrategy<DD extends FlowDrawData>
       rethrow;
     }
   }
+
+  /// Возвращает алгоритм, используемый этой стратегией
+  Algorithm get algorithm => _algorithm;
 }
 
 /// Фабрика для создания стратегий расчетов

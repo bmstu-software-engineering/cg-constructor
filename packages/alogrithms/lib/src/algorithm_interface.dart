@@ -1,3 +1,4 @@
+import 'package:flutter/widgets.dart';
 import 'package:forms/forms.dart';
 import 'package:models_ns/models_ns.dart';
 
@@ -7,6 +8,37 @@ abstract interface class Algorithm<
 > {
   DataModelType getDataModel();
   ResultModelType calculate();
+}
+
+/// Интерфейс для алгоритмов, поддерживающих различные варианты расчета
+abstract interface class VariatedAlgorithm implements Algorithm {
+  /// Выполняет расчет с указанным вариантом
+  ResultModel calculateWithVariant(String? variant);
+
+  /// Возвращает список доступных вариантов расчета
+  List<AlgorithmVariant> getAvailableVariants();
+}
+
+/// Класс, представляющий вариант расчета алгоритма
+class AlgorithmVariant {
+  /// Идентификатор варианта
+  final String id;
+
+  /// Название варианта (отображается на кнопке)
+  final String name;
+
+  /// Иконка для кнопки (опционально)
+  final IconData? icon;
+
+  /// Цвет кнопки (опционально)
+  final Color? color;
+
+  const AlgorithmVariant({
+    required this.id,
+    required this.name,
+    this.icon,
+    this.color,
+  });
 }
 
 abstract interface class DataModel {}

@@ -33,7 +33,10 @@ dependencies:
 
   forms:
     path: ../../forms
-  
+
+  models_ns:
+    path: ../../models_ns
+
   alogrithms:
     path: ../../alogrithms
     
