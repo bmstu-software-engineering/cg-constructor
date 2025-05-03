@@ -268,7 +268,7 @@ void main() {
 
     test('Проверка кастомного валидатора', () {
       // Создаем валидатор
-      final validator = (Angle? angle) {
+      validator(Angle? angle) {
         if (angle == null) return null;
 
         // Проверяем, что угол кратен 15
@@ -277,14 +277,14 @@ void main() {
         }
 
         return null;
-      };
+      }
 
       // Проверяем, что валидатор возвращает ожидаемую ошибку для некратного значения
-      expect(
-          validator(Angle(value: 42)), 'Угол должен быть кратен 15 градусам');
+      expect(validator(const Angle(value: 42)),
+          'Угол должен быть кратен 15 градусам');
 
       // Проверяем, что валидатор не возвращает ошибку для кратного значения
-      expect(validator(Angle(value: 45)), null);
+      expect(validator(const Angle(value: 45)), null);
 
       // Проверяем, что валидатор не возвращает ошибку для null
       expect(validator(null), null);
@@ -308,8 +308,8 @@ void main() {
             return null;
           },
         ),
-        initialValue:
-            Angle(value: 42), // Устанавливаем начальное значение, не кратное 15
+        initialValue: const Angle(
+            value: 42), // Устанавливаем начальное значение, не кратное 15
       );
 
       // Создаем виджет для тестирования
@@ -444,9 +444,6 @@ void main() {
           ),
         ),
       ));
-
-      // Находим текстовое поле для ввода
-      final textField = find.byType(TextField);
 
       // Проверяем начальное значение
       expect(angleField.value?.value, 45.0);

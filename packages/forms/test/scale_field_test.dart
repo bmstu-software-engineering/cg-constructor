@@ -76,7 +76,7 @@ void main() {
       // Проверяем, что значение действительно установлено
 
       // Явно вызываем пользовательский валидатор для проверки
-      final validatorResult = customValidator(scaleField.value);
+      customValidator(scaleField.value);
 
       // Выводим отладочную информацию
 

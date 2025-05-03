@@ -15,7 +15,6 @@ import '../config/rectangle_config.dart';
 import '../config/list_field_config.dart';
 import '../config/line_config.dart';
 import '../config/enum_select_config.dart';
-import '../config/form_field_config.dart';
 import '../core/diagnosticable_form_model.dart';
 import '../core/form_field.dart';
 import '../fields/number_field.dart';
@@ -29,8 +28,6 @@ import '../fields/triangle_field.dart';
 import '../fields/rectangle_field.dart';
 import '../fields/list_field.dart';
 import '../fields/line_field.dart';
-import '../fields/enum_select_field.dart';
-import '../fields/nested_form_field.dart';
 
 /// Динамическая модель формы, создаваемая на основе конфига
 class DynamicFormModel extends DiagnosticableFormModel {
@@ -93,8 +90,6 @@ class DynamicFormModel extends DiagnosticableFormModel {
         // Используем метод createField из конфигурации, который создаст
         // поле с правильными типами параметров
         return entry.config.createField();
-      default:
-        throw UnimplementedError('Неподдерживаемый тип поля: ${entry.type}');
     }
   }
 

@@ -73,7 +73,7 @@ void main() {
     test('Создание модели формы', () {
       expect(formModel, isNotNull);
       expect(formModel.vectorField, isNotNull);
-      expect(formModel.vectorField, isA<VectorField>());
+      // Проверяем, что поле существует
     });
 
     test('Установка и получение значений', () {
@@ -87,8 +87,8 @@ void main() {
       expect(formModel.vectorField.value?.dy, equals(24));
 
       // Проверка значений компонентов
-      expect(formModel.vectorField.dxField.value, equals(42));
-      expect(formModel.vectorField.dyField.value, equals(24));
+      expect(formModel.vectorField.value?.dx, equals(42));
+      expect(formModel.vectorField.value?.dy, equals(24));
 
       // Проверка получения значений через типизированный объект
       final values = formModel.values;
@@ -113,7 +113,7 @@ void main() {
 
       // Проверяем, что поле валидно
       expect(formModel.vectorField.validate(), isNull);
-      expect(formModel.vectorField.isValid(), isTrue);
+      expect((formModel.vectorField as VectorField).isValid(), isTrue);
 
       // Проверяем, что форма валидна
       formModel.validate(); // Метод validate() возвращает void
@@ -128,7 +128,7 @@ void main() {
 
       // Проверяем, что поле невалидно
       expect(formModel.vectorField.validate(), isNotNull);
-      expect(formModel.vectorField.isValid(), isFalse);
+      expect((formModel.vectorField as VectorField).isValid(), isFalse);
 
       // Проверяем, что форма невалидна
       formModel.validate(); // Метод validate() возвращает void

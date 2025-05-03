@@ -43,7 +43,7 @@ class EnumSelectOptionImpl<T> implements SelectOption<T> {
   @override
   String get title {
     if (_titleBuilder != null) {
-      return _titleBuilder!(_value);
+      return _titleBuilder(_value);
     }
 
     if (_value is EnumSelectEnum) {
@@ -68,7 +68,7 @@ class SimpleSelectOptionImpl<T> implements SelectOption<T> {
   @override
   String get title {
     if (_titleBuilder != null) {
-      return _titleBuilder!(_value);
+      return _titleBuilder(_value);
     }
     return _value.toString();
   }

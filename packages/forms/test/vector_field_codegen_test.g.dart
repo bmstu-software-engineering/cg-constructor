@@ -16,9 +16,7 @@ class VectorTestFormFormConfig extends TypedFormConfig<VectorTestForm> {
         FieldConfigEntry(
             id: 'vector',
             type: FieldType.vector,
-            config: VectorFieldConfig(
-              label: 'Вектор',
-            )),
+            config: VectorFieldConfig(label: 'Вектор', isRequired: true)),
       ];
 
   @override
@@ -31,7 +29,7 @@ class VectorTestFormFormModel extends TypedFormModel<VectorTestForm> {
   VectorTestFormFormModel({required super.config});
 
   /// Поле для vector
-  VectorField get vectorField => getField<VectorField>('vector')!;
+  FormField<Vector> get vectorField => getField<FormField<Vector>>('vector')!;
 
   @override
   VectorTestForm get values => VectorTestForm(
@@ -50,6 +48,8 @@ class VectorTestFormFormModel extends TypedFormModel<VectorTestForm> {
 
   @override
   void fromMap(Map<String, dynamic> map) {
-    if (map.containsKey('vector')) vectorField.value = map['vector'] as Vector;
+    if (map.containsKey('vector')) {
+      vectorField.value = map['vector'] as Vector;
+    }
   }
 }

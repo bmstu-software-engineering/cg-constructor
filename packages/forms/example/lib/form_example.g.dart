@@ -24,9 +24,7 @@ class UserFormFormConfig extends TypedFormConfig<UserForm> {
         FieldConfigEntry(
             id: 'location',
             type: FieldType.point,
-            config: PointFieldConfig(
-              label: 'Координаты',
-            )),
+            config: PointFieldConfig(label: 'Координаты', isRequired: true)),
         FieldConfigEntry(
             id: 'rotation',
             type: FieldType.angle,
@@ -51,7 +49,7 @@ class UserFormFormModel extends TypedFormModel<UserForm> {
   NumberField get ageField => getField<NumberField>('age')!;
 
   /// Поле для location
-  PointField get locationField => getField<PointField>('location')!;
+  FormField<Point> get locationField => getField<FormField<Point>>('location')!;
 
   /// Поле для rotation
   AngleField get rotationField => getField<AngleField>('rotation')!;
@@ -83,8 +81,9 @@ class UserFormFormModel extends TypedFormModel<UserForm> {
       final value = map['age'];
       ageField.value = (value is int) ? value.toDouble() : (value as double);
     }
-    if (map.containsKey('location'))
+    if (map.containsKey('location')) {
       locationField.value = map['location'] as Point;
+    }
     if (map.containsKey('rotation'))
       rotationField.value = map['rotation'] as Angle?;
   }

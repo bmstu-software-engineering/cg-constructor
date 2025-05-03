@@ -1,5 +1,4 @@
 import '../config/form_field_config.dart';
-import '../core/form_model.dart';
 import '../typed_form_base.dart';
 
 import 'base_form_field.dart';
@@ -18,10 +17,9 @@ class NestedFormField<T> extends BaseFormField<T> {
   /// [initialValue] - начальное значение поля
   NestedFormField({
     required this.config,
-    T? initialValue,
+    super.initialValue,
   })  : _formModel = config.createFormModel(),
         super(
-          initialValue: initialValue,
           validator: _createValidator(config),
           isRequired: config.isRequired,
         );

@@ -154,8 +154,6 @@ class _DynamicFormWidgetState extends State<DynamicFormWidget> {
           field: field as NestedFormField,
           onChanged: (_) => setState(() {}),
         );
-      default:
-        return Text('Неподдерживаемый тип поля: ${entry.type}');
     }
   }
 }

@@ -149,11 +149,7 @@ class UserFormFormModel extends TypedFormModel<UserForm> {
         'name': nameField.value,
         'age': ageField.value,
         'address': addressField.value != null
-            ? {
-                'street': addressField.value!.street,
-                'city': addressField.value!.city,
-                'zipCode': addressField.value!.zipCode,
-              }
+            ? (addressField as NestedFormField).toMap()
             : null,
       };
 
@@ -165,12 +161,16 @@ class UserFormFormModel extends TypedFormModel<UserForm> {
       ageField.value = (value is int) ? value.toDouble() : (value as double);
     }
     if (map.containsKey('address')) {
-      final addressMap = map['address'] as Map<String, dynamic>;
-      addressField.value = AddressForm(
-        street: addressMap['street'] as String,
-        city: addressMap['city'] as String,
-        zipCode: addressMap['zipCode'] as String,
-      );
+      final nestedMap = map['address'] as Map<String, dynamic>;
+      if (addressField.value == null) {
+        // Создаем новую вложенную форму
+        final nestedFormModel = AddressFormFormConfig().createModel();
+        nestedFormModel.fromMap(nestedMap);
+        addressField.value = nestedFormModel.values;
+      } else {
+        // Используем существующую вложенную форму
+        (addressField as NestedFormField).fromMap(nestedMap);
+      }
     }
   }
 }

@@ -52,6 +52,20 @@ class FormGenerator extends GeneratorForAnnotation<FormGenAnnotation> {
       return true;
     }
 
+    // Проверяем, является ли тип вложенной моделью данных
+    // Например, AlgorithmLab02DataModelScale для AlgorithmLab02DataModel
+    final lastDotIndex = typeName.lastIndexOf('.');
+    final shortName =
+        lastDotIndex != -1 ? typeName.substring(lastDotIndex + 1) : typeName;
+
+    // Проверяем, является ли тип вложенной моделью для другого класса
+    for (final cachedType in _formGenCache.keys) {
+      if (shortName.startsWith(cachedType) ||
+          cachedType.startsWith(shortName)) {
+        return true;
+      }
+    }
+
     return false;
   }
 
@@ -90,7 +104,6 @@ class FormGenerator extends GeneratorForAnnotation<FormGenAnnotation> {
       try {
         final annotation = ConstantReader(metadata.computeConstantValue());
         final objectValue = annotation.objectValue;
-        if (objectValue == null) continue;
 
         final annotationType = objectValue.type;
         if (annotationType == null) continue;
@@ -264,22 +277,21 @@ class FormGenerator extends GeneratorForAnnotation<FormGenAnnotation> {
       // Для обычных классов возвращаем значения всех полей
       buffer.writeln('  Map<String, dynamic> toMap() => {');
       for (final field in fields) {
-        // Для вложенных форм создаем Map вручную
+        // Для вложенных форм используем метод toMap вложенной формы
         if (_isFormType(field.type.replaceAll('?', ''))) {
-          buffer.writeln(
-              '    \'${field.name}\': ${field.name}Field.value != null');
-          buffer.writeln('        ? {');
+          final formType = field.type.replaceAll('?', '');
 
-          // Для вложенных форм добавляем поля напрямую
-          buffer.writeln(
-              '            \'street\': ${field.name}Field.value!.street,');
-          buffer
-              .writeln('            \'city\': ${field.name}Field.value!.city,');
-          buffer.writeln(
-              '            \'zipCode\': ${field.name}Field.value!.zipCode,');
-
-          buffer.writeln('          }');
-          buffer.writeln('        : null,');
+          // Проверяем, является ли тип базовым типом (Point, Scale, Vector)
+          if (formType == 'Point' ||
+              formType == 'Scale' ||
+              formType == 'Vector') {
+            // Для базовых типов просто получаем значение
+            buffer.writeln('    \'${field.name}\': ${field.name}Field.value,');
+          } else {
+            // Для пользовательских типов используем метод toMap вложенной формы
+            buffer.writeln(
+                '    \'${field.name}\': ${field.name}Field.value != null ? (${field.name}Field as NestedFormField).toMap() : null,');
+          }
         } else {
           // Для обычных полей просто получаем значение
           buffer.writeln('    \'${field.name}\': ${field.name}Field.value,');
@@ -303,7 +315,7 @@ class FormGenerator extends GeneratorForAnnotation<FormGenAnnotation> {
       // Для обычных классов устанавливаем значения всех полей
       buffer.writeln('  void fromMap(Map<String, dynamic> map) {');
       for (final field in fields) {
-        final annotationType = field.annotation.objectValue?.type
+        final annotationType = field.annotation.objectValue.type
             ?.getDisplayString(withNullability: false);
 
         if (annotationType == 'ListField' ||
@@ -334,41 +346,74 @@ class FormGenerator extends GeneratorForAnnotation<FormGenAnnotation> {
                 '    if (map.containsKey(\'${field.name}\')) ${field.name}Field.value = (map[\'${field.name}\'] as List<dynamic>).cast<$elementTypeForField>();');
           }
         } else if (_isFormType(field.type.replaceAll('?', ''))) {
-          // Для вложенных форм создаем новый экземпляр формы напрямую
+          // Для вложенных форм используем метод fromMap вложенной формы
           final formType = field.type.replaceAll('?', '');
-          if (field.type.endsWith('?')) {
-            // Для необязательных вложенных форм
-            buffer.writeln(
-                '    if (map.containsKey(\'${field.name}\') && map[\'${field.name}\'] != null) {');
-            buffer.writeln(
-                '      final addressMap = map[\'${field.name}\'] as Map<String, dynamic>;');
 
-            // Создаем объект AddressForm напрямую
-            buffer.writeln('      ${field.name}Field.value = $formType(');
-            buffer.writeln('        street: addressMap[\'street\'] as String,');
-            buffer.writeln('        city: addressMap[\'city\'] as String,');
-            buffer
-                .writeln('        zipCode: addressMap[\'zipCode\'] as String,');
-            buffer.writeln('      );');
-
-            buffer.writeln('    } else {');
-            buffer.writeln('      ${field.name}Field.value = null;');
-            buffer.writeln('    }');
+          // Проверяем, является ли тип базовым типом (Point, Scale, Vector)
+          if (formType == 'Point' ||
+              formType == 'Scale' ||
+              formType == 'Vector') {
+            // Для базовых типов используем прямое присваивание
+            if (field.type.endsWith('?')) {
+              // Для необязательных полей
+              buffer.writeln(
+                  '    if (map.containsKey(\'${field.name}\') && map[\'${field.name}\'] != null) {');
+              buffer.writeln(
+                  '      ${field.name}Field.value = map[\'${field.name}\'] as ${field.type.substring(0, field.type.length - 1)};');
+              buffer.writeln('    } else {');
+              buffer.writeln('      ${field.name}Field.value = null;');
+              buffer.writeln('    }');
+            } else {
+              // Для обязательных полей
+              buffer.writeln('    if (map.containsKey(\'${field.name}\')) {');
+              buffer.writeln(
+                  '      ${field.name}Field.value = map[\'${field.name}\'] as ${field.type};');
+              buffer.writeln('    }');
+            }
           } else {
-            // Для обязательных вложенных форм
-            buffer.writeln('    if (map.containsKey(\'${field.name}\')) {');
-            buffer.writeln(
-                '      final addressMap = map[\'${field.name}\'] as Map<String, dynamic>;');
-
-            // Создаем объект AddressForm напрямую
-            buffer.writeln('      ${field.name}Field.value = $formType(');
-            buffer.writeln('        street: addressMap[\'street\'] as String,');
-            buffer.writeln('        city: addressMap[\'city\'] as String,');
-            buffer
-                .writeln('        zipCode: addressMap[\'zipCode\'] as String,');
-            buffer.writeln('      );');
-
-            buffer.writeln('    }');
+            // Для пользовательских типов используем вложенные формы
+            if (field.type.endsWith('?')) {
+              // Для необязательных вложенных форм
+              buffer.writeln(
+                  '    if (map.containsKey(\'${field.name}\') && map[\'${field.name}\'] != null) {');
+              buffer.writeln(
+                  '      final nestedMap = map[\'${field.name}\'] as Map<String, dynamic>;');
+              buffer.writeln('      if (${field.name}Field.value == null) {');
+              buffer.writeln('        // Создаем новую вложенную форму');
+              buffer.writeln(
+                  '        final nestedFormModel = ${formType}FormConfig().createModel();');
+              buffer.writeln('        nestedFormModel.fromMap(nestedMap);');
+              buffer.writeln(
+                  '        ${field.name}Field.value = nestedFormModel.values;');
+              buffer.writeln('      } else {');
+              buffer.writeln(
+                  '        // Используем существующую вложенную форму');
+              buffer.writeln(
+                  '        (${field.name}Field as NestedFormField).fromMap(nestedMap);');
+              buffer.writeln('      }');
+              buffer.writeln('    } else {');
+              buffer.writeln('      ${field.name}Field.value = null;');
+              buffer.writeln('    }');
+            } else {
+              // Для обязательных вложенных форм
+              buffer.writeln('    if (map.containsKey(\'${field.name}\')) {');
+              buffer.writeln(
+                  '      final nestedMap = map[\'${field.name}\'] as Map<String, dynamic>;');
+              buffer.writeln('      if (${field.name}Field.value == null) {');
+              buffer.writeln('        // Создаем новую вложенную форму');
+              buffer.writeln(
+                  '        final nestedFormModel = ${formType}FormConfig().createModel();');
+              buffer.writeln('        nestedFormModel.fromMap(nestedMap);');
+              buffer.writeln(
+                  '        ${field.name}Field.value = nestedFormModel.values;');
+              buffer.writeln('      } else {');
+              buffer.writeln(
+                  '        // Используем существующую вложенную форму');
+              buffer.writeln(
+                  '        (${field.name}Field as NestedFormField).fromMap(nestedMap);');
+              buffer.writeln('      }');
+              buffer.writeln('    }');
+            }
           }
         } else if (_getFieldType(field) == 'NumberField') {
           // Для числовых полей обрабатываем возможность получения int
@@ -400,20 +445,24 @@ class FormGenerator extends GeneratorForAnnotation<FormGenAnnotation> {
     // Проверяем, является ли тип поля вложенной формой
     if (_isFormType(field.type.replaceAll('?', ''))) {
       final formType = field.type.replaceAll('?', '');
-      return 'FieldConfigEntry(id: \'${field.name}\', type: FieldType.form, config: FormFieldConfig<${field.type}>(label: \'${_getLabel(field)}\', createFormModel: () => ${formType}FormModel(config: ${formType}FormConfig().toFormConfig()), isRequired: ${field.annotation.peek('isRequired')?.boolValue ?? true}))';
-    }
 
-    // Проверяем, что objectValue не null
-    if (field.annotation.objectValue == null) {
-      return 'FieldConfigEntry(id: \'${field.name}\', type: FieldType.enumSelect, config: EnumSelectConfig<${field.type}>(label: \'${field.name.substring(0, 1).toUpperCase() + field.name.substring(1)}\', values: []))';
+      // Проверяем, является ли тип базовым типом (Point, Scale, Vector)
+      if (formType == 'Point' || formType == 'Scale' || formType == 'Vector') {
+        // Для базовых типов используем соответствующие поля напрямую
+        String fieldType = formType.toLowerCase();
+        return 'FieldConfigEntry(id: \'${field.name}\', type: FieldType.$fieldType, config: ${formType}FieldConfig(label: \'${_getLabel(field)}\', isRequired: ${field.annotation.peek('isRequired')?.boolValue ?? true}))';
+      } else {
+        // Для пользовательских типов используем вложенные формы
+        return 'FieldConfigEntry(id: \'${field.name}\', type: FieldType.form, config: FormFieldConfig<${field.type}>(label: \'${_getLabel(field)}\', createFormModel: () => ${formType}FormModel(config: ${formType}FormConfig().toFormConfig()), isRequired: ${field.annotation.peek('isRequired')?.boolValue ?? true}))';
+      }
     }
 
     // Проверяем, что type не null
-    if (field.annotation.objectValue!.type == null) {
+    if (field.annotation.objectValue.type == null) {
       return 'FieldConfigEntry(id: \'${field.name}\', type: FieldType.enumSelect, config: EnumSelectConfig<${field.type}>(label: \'${_getLabel(field)}\', values: []))';
     }
 
-    final annotationType = field.annotation.objectValue!.type!
+    final annotationType = field.annotation.objectValue.type!
         .getDisplayString(withNullability: false);
     final fieldType = _getFieldType(field);
     final fieldTypeEnum = _getFieldTypeEnum(annotationType);
@@ -615,10 +664,6 @@ class FormGenerator extends GeneratorForAnnotation<FormGenAnnotation> {
   /// Получает метку поля
   String _getLabel(_FormField field) {
     // Если аннотация null, возвращаем имя поля с большой буквы
-    if (field.annotation.objectValue == null) {
-      return field.name.substring(0, 1).toUpperCase() + field.name.substring(1);
-    }
-
     final label = field.annotation.peek('label')?.stringValue;
     if (label != null) return label;
 
@@ -646,15 +691,6 @@ class FormGenerator extends GeneratorForAnnotation<FormGenAnnotation> {
     return 'dynamic';
   }
 
-  /// Получает тип элемента списка для приведения типов в fromMap
-  String _getListElementTypeForCast(String listType) {
-    final elementType = _getListElementType(listType);
-    if (elementType.endsWith('?')) {
-      return elementType;
-    }
-    return elementType;
-  }
-
   /// Получает тип поля формы
   String _getFieldType(_FormField field) {
     // Для enum возвращаем EnumSelectField
@@ -664,11 +700,10 @@ class FormGenerator extends GeneratorForAnnotation<FormGenAnnotation> {
 
     // Проверяем, является ли тип поля вложенной формой
     if (_isFormType(field.type.replaceAll('?', ''))) {
-      final formType = field.type.replaceAll('?', '');
       return 'FormField<${field.type}>';
     }
 
-    final annotationType = field.annotation.objectValue?.type
+    final annotationType = field.annotation.objectValue.type
         ?.getDisplayString(withNullability: false);
     if (annotationType == null) {
       return 'EnumSelectField<${field.type}>';
@@ -721,9 +756,6 @@ class FormGenerator extends GeneratorForAnnotation<FormGenAnnotation> {
         String itemFieldType;
         final itemConfig = field.annotation.peek('itemConfig');
         if (itemConfig != null) {
-          final itemConfigType = itemConfig.objectValue.type!
-              .getDisplayString(withNullability: false);
-
           // Для всех типов используем FormField<T>
           itemFieldType = 'FormField<$elementType>';
         } else {
@@ -789,14 +821,6 @@ class FormGenerator extends GeneratorForAnnotation<FormGenAnnotation> {
           'Неподдерживаемый тип аннотации: $annotationType',
         );
     }
-  }
-
-  /// Находит ClassElement по имени класса
-  ClassElement? _findClassElement(String className) {
-    // Здесь должна быть логика поиска ClassElement по имени
-    // Но так как у нас нет доступа к полному контексту компиляции,
-    // мы просто возвращаем null и обрабатываем этот случай в коде
-    return null;
   }
 }
 
