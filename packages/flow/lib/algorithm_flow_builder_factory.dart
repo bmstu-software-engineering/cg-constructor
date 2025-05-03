@@ -13,8 +13,6 @@ class AlgorithmFlowBuilderFactory implements FlowBuilderFactory {
     this._algorithm, {
     String? name,
     ViewerFactory viewerFactory = const CanvasViewerFactory(),
-    String submitButtonText = 'Отправить',
-    void Function(Map<String, dynamic>)? onSubmit,
   }) : _name = name ?? _algorithm.runtimeType.toString(),
        _viewerFactory = viewerFactory;
 

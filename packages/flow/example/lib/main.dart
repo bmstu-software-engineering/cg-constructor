@@ -2,6 +2,7 @@ import 'package:alogrithms/alogrithms.dart';
 import 'package:flow/algorithm_flow_builder_factory.dart';
 import 'package:flow/flow.dart';
 import 'package:flutter/material.dart';
+import 'package:rxdart/rxdart.dart';
 import 'package:viewer/viewer.dart';
 
 void main() {
@@ -53,8 +54,18 @@ class _FlowExamplePageState extends State<FlowExamplePage> {
     });
   }
 
+  @override
+  void dispose() {
+    // Закрываем поток при уничтожении виджета
+    _flowBuilder?.dispose();
+    super.dispose();
+  }
+
   // Выбор алгоритма
   void _selectAlgorithm(String algorithmId) {
+    // Закрываем предыдущий поток
+    _flowBuilder?.dispose();
+
     setState(() {
       _selectedAlgorithmId = algorithmId;
 
@@ -66,43 +77,8 @@ class _FlowExamplePageState extends State<FlowExamplePage> {
           AlgorithmFlowBuilderFactory(
             algorithm,
             viewerFactory: const CanvasViewerFactory(padding: 200.0),
-            submitButtonText: 'Рассчитать',
-            onSubmit: (_) {
-              // После отправки формы выполняем расчеты и отображаем результат
-              _calculateAndDraw();
-            },
           ).create();
     });
-  }
-
-  // Расчет и отображение результата
-  Future<void> _calculateAndDraw() async {
-    if (_flowBuilder == null) return;
-
-    try {
-      // Получаем данные из формы
-      await _flowBuilder!.reciveData();
-
-      // Выполняем расчеты
-      await _flowBuilder!.calculate();
-
-      // Отображаем результат
-      await _flowBuilder!.draw();
-
-      // Показываем сообщение об успешном выполнении
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Расчеты выполнены успешно')),
-        );
-      }
-    } catch (e) {
-      // Показываем сообщение об ошибке
-      if (mounted) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text('Ошибка: ${e.toString()}')));
-      }
-    }
   }
 
   @override
@@ -135,24 +111,98 @@ class _FlowExamplePageState extends State<FlowExamplePage> {
       body:
           _flowBuilder == null
               ? const Center(child: Text('Нет доступных алгоритмов'))
-              : Row(
+              : Column(
                 children: [
-                  // Форма для ввода данных
                   Expanded(
-                    flex: 1,
-                    child: SingleChildScrollView(
-                      padding: const EdgeInsets.all(16),
-                      child: _flowBuilder!.buildDataWidget(),
+                    child: Row(
+                      children: [
+                        // Форма для ввода данных
+                        Expanded(
+                          flex: 1,
+                          child: SingleChildScrollView(
+                            padding: const EdgeInsets.all(16),
+                            child: _flowBuilder!.buildDataWidget(),
+                          ),
+                        ),
+
+                        // Разделитель
+                        const VerticalDivider(),
+
+                        // Область для отображения результата
+                        Expanded(
+                          flex: 2,
+                          child: _flowBuilder!.buildViewerWidget(),
+                        ),
+                      ],
                     ),
                   ),
 
-                  // Разделитель
-                  const VerticalDivider(),
-
-                  // Область для отображения результата
-                  Expanded(flex: 2, child: _flowBuilder!.buildViewerWidget()),
+                  // Область для отображения информационных сообщений
+                  Container(
+                    height: 150,
+                    padding: const EdgeInsets.all(8),
+                    decoration: BoxDecoration(
+                      color: Colors.grey[200],
+                      border: Border(top: BorderSide(color: Colors.grey[400]!)),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        Text(
+                          'Информационные сообщения:',
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        const SizedBox(height: 8),
+                        _Messages(_flowBuilder?.infoStream),
+                      ],
+                    ),
+                  ),
                 ],
               ),
     );
   }
+}
+
+class _Messages extends StatelessWidget {
+  _Messages(this._infoStream);
+
+  final _scrollController = ScrollController();
+  final BehaviorSubject<List<String>>? _infoStream;
+
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+      child:
+          _infoStream == null
+              ? const Center(child: Text('Нет сообщений'))
+              : StreamBuilder<List<String>>(
+                stream: _infoStream,
+                builder: (context, snapshot) {
+                  if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                    return const Center(child: Text('Нет сообщений'));
+                  }
+
+                  _scrollToBottom();
+
+                  // Получаем список сообщений
+                  final messages = snapshot.requireData;
+
+                  return ListView.builder(
+                    controller: _scrollController,
+                    itemCount: messages.length,
+                    itemBuilder: (context, index) {
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 2),
+                        child: Text(messages[index]),
+                      );
+                    },
+                  );
+                },
+              ),
+    );
+  }
+
+  void _scrollToBottom() => WidgetsBinding.instance.addPostFrameCallback(
+    (_) => _scrollController.jumpTo(_scrollController.position.maxScrollExtent),
+  );
 }

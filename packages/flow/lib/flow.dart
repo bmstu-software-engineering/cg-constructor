@@ -1,42 +1,62 @@
 import 'package:flutter/material.dart';
 import 'package:models_ns/models_ns.dart';
+import 'package:rxdart/rxdart.dart';
 import 'package:viewer/viewer.dart';
 
 export 'adapters/adapters.dart';
 
-final class FlowBuilder<D extends FlowData, DD extends FlowDrawData> {
+final class FlowBuilder<DD extends FlowDrawData> {
   final String name;
-  final FlowDataStrategy<D> _dataStrategy;
-  final FlowCalculateStrategy<D, DD> _calculateStrategy;
+  final FlowDataStrategy _dataStrategy;
+  final FlowCalculateStrategy<DD> _calculateStrategy;
   final FlowDrawStrategy<DD> _drawStrategy;
 
-  D? _data;
+  /// Поток для информационных сообщений
+  final BehaviorSubject<List<String>> infoStream =
+      BehaviorSubject<List<String>>.seeded([]);
+
   DD? _drawData;
 
   FlowBuilder({
     this.name = '<no name>',
-    required FlowDataStrategy<D> dataStrategy,
-    required FlowCalculateStrategy<D, DD> calculateStrategy,
+    required FlowDataStrategy dataStrategy,
+    required FlowCalculateStrategy<DD> calculateStrategy,
     required FlowDrawStrategy<DD> drawStrategy,
   }) : _dataStrategy = dataStrategy,
        _calculateStrategy = calculateStrategy,
        _drawStrategy = drawStrategy;
 
-  /// Получает данные о точках
-  Future<void> reciveData() async => _data = await _dataStrategy.getData();
+  /// Добавляет информационное сообщение в поток
+  void _addInfoMessage(String message) {
+    final currentMessages = infoStream.value;
+    infoStream.add([...currentMessages, message]);
+  }
 
   /// Производит расчёты,
   /// Расчитывает набор точек для рисования
-  Future<void> calculate() async =>
-      _drawData = await _calculateStrategy.calculate(
-        _data ?? (throw Exception('Данные для расчётов отсутствуют')),
-      );
+  Future<void> calculate() async {
+    try {
+      _drawData = await _calculateStrategy.calculate();
+      _addInfoMessage('Расчеты выполнены успешно');
+    } catch (e) {
+      _addInfoMessage('Ошибка при расчетах: ${e.toString()}');
+      rethrow;
+    }
+  }
 
   /// Производит расчёты,
   /// Рисует на точки на Viewer-е
-  Future<void> draw() => _drawStrategy.draw(
-    _drawData ?? (throw Exception('Данные для рисования отсутствуют')),
-  );
+  Future<void> draw() async {
+    try {
+      await _drawStrategy.draw(
+        _drawData ?? (throw Exception('Данные для рисования отсутствуют')),
+      );
+      _addInfoMessage('Отрисовка выполнена успешно');
+    } catch (e) {
+      _addInfoMessage('Ошибка при отрисовке: ${e.toString()}');
+      rethrow;
+    }
+  }
 
   Widget buildDataWidget() {
     final dataWidget = _dataStrategy.buildWidget();
@@ -48,14 +68,22 @@ final class FlowBuilder<D extends FlowData, DD extends FlowDrawData> {
         const SizedBox(height: 16),
         ElevatedButton(
           onPressed: () async {
-            await reciveData();
-            await calculate();
-            await draw();
+            try {
+              await calculate();
+              await draw();
+            } catch (e) {
+              // Ошибки уже обрабатываются в методах calculate и draw
+            }
           },
           child: Text('Расчитать'),
         ),
       ],
     );
+  }
+
+  /// Закрывает поток при уничтожении объекта
+  void dispose() {
+    infoStream.close();
   }
 
   Widget buildViewerWidget() => _drawStrategy.buildWidget();
@@ -65,18 +93,7 @@ abstract interface class FlowBuilderFactory {
   FlowBuilder create();
 }
 
-abstract interface class FlowData {}
-
-class ViewerDataModel implements FlowData {
-  final List<Point> points;
-  final List<Line> lines;
-
-  const ViewerDataModel({this.points = const [], this.lines = const []});
-}
-
-abstract interface class FlowDataStrategy<D extends FlowData> {
-  Future<D> getData();
-
+abstract interface class FlowDataStrategy {
   Widget buildWidget();
 }
 
@@ -87,11 +104,8 @@ final class FlowDrawData {
   const FlowDrawData({this.points = const [], this.lines = const []});
 }
 
-abstract interface class FlowCalculateStrategy<
-  D extends FlowData,
-  DD extends FlowDrawData
-> {
-  Future<DD> calculate(D data);
+abstract interface class FlowCalculateStrategy<DD extends FlowDrawData> {
+  Future<DD> calculate();
 }
 
 abstract interface class FlowDrawStrategy<DD extends FlowDrawData> {

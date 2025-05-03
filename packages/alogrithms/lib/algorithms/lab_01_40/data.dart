@@ -29,5 +29,5 @@ class AlgorithmL01VBasicDataModelImpl implements FormsDataModel {
   AlgorithmLab01V40DataModel get data => _model.values;
 
   @override
-  FormConfig get config => _model.config;
+  DynamicFormModel get config => _model.toDynamicFormModel();
 }

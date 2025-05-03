@@ -2,8 +2,6 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:alogrithms/algorithms/exceptions.dart';
 import 'package:alogrithms/algorithms/lab_01_basic/lab_01_basic.dart';
 import 'package:alogrithms/algorithms/lab_01_basic/lab_01_basic_data_model.dart';
-import 'package:alogrithms/src/algorithm_interface.dart';
-import 'package:forms/forms.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:models_ns/models_ns.dart';
 
@@ -21,31 +19,8 @@ void main() {
 
   group('AlgorithmL01VBasic - Тестирование', () {
     test('создание модели данных', () {
-      when(() => model.config).thenReturn(
-        FormConfig(
-          name: '',
-          fields: [
-            FieldConfigEntry(
-              id: 'points',
-              type: FieldType.list,
-              config: ListFieldConfig<Point>(
-                label: 'Список точек',
-                createItemField:
-                    () => PointField(config: PointFieldConfig(label: 'Точка')),
-              ),
-            ),
-          ],
-        ),
-      );
-
       final dataModel = algorithm.getDataModel();
       expect(dataModel, isA<AlgorithmL01VBasicDataModelImplMock>());
-
-      final formsDataModel = dataModel;
-      expect(formsDataModel.config.name, '');
-      expect(formsDataModel.config.fields.length, 1);
-      expect(formsDataModel.config.fields[0].id, 'points');
-      expect(formsDataModel.config.fields[0].type, FieldType.list);
     });
 
     test('базовая функциональность calculate с корректными данными', () {

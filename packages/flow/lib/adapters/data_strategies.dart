@@ -5,23 +5,13 @@ import '../flow.dart';
 
 /// Стратегия данных для моделей, основанных на формах
 class FormsDataStrategy<T extends FormsDataModelAdapter>
-    implements FlowDataStrategy<T> {
-  final T _dataModel;
+    implements FlowDataStrategy {
   final DynamicFormModel _formModel;
 
-  FormsDataStrategy(this._dataModel)
-    : _formModel = DynamicFormModel(config: _dataModel.config);
+  FormsDataStrategy(T dataModel) : _formModel = dataModel.config;
 
   @override
-  Widget buildWidget() {
-    return DynamicFormWidget(model: _formModel, onSubmit: null);
-  }
-
-  @override
-  Future<T> getData() async {
-    _dataModel.rawData = _formModel.getValues();
-    return _dataModel;
-  }
+  Widget buildWidget() => DynamicFormWidget(model: _formModel, onSubmit: print);
 }
 
 /// Фабрика для создания стратегий данных

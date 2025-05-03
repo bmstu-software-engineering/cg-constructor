@@ -3,36 +3,26 @@ import 'package:alogrithms/alogrithms.dart';
 import '../flow.dart';
 
 /// Универсальная стратегия расчетов для алгоритмов
-class GenericCalculateStrategy<D extends FlowData, DD extends FlowDrawData>
-    implements FlowCalculateStrategy<D, DD> {
+class GenericCalculateStrategy<DD extends FlowDrawData>
+    implements FlowCalculateStrategy<DD> {
   final Algorithm _algorithm;
 
   GenericCalculateStrategy(this._algorithm);
 
   @override
-  Future<DD> calculate(D data) async {
-    if (data is! DataModel) {
-      throw Exception('Данные должны реализовывать интерфейс DataModel');
+  Future<DD> calculate() async {
+    try {
+      final result = _algorithm.calculate();
+
+      if (result is! ViewerResultModel) {
+        throw Exception('Результат должен быть типа ViewerResultModel');
+      }
+
+      return FlowDrawData(points: result.points, lines: result.lines) as DD;
+    } catch (e) {
+      // Ошибка будет обработана в FlowBuilder
+      rethrow;
     }
-
-    // Проверяем, что алгоритм может работать с данным типом данных
-    final dataType = data.runtimeType.toString();
-
-    // Пытаемся привести к FormsDataModel
-    if (data is! FormsDataModel) {
-      throw Exception(
-        'Неверный тип модели данных: ожидается FormsDataModel, получен $dataType',
-      );
-    }
-
-    final adapter = data as FormsDataModelAdapter;
-    final result = _algorithm.calculate(adapter.dataModel);
-
-    if (result is! ViewerResultModel) {
-      throw Exception('Результат должен быть типа ViewerResultModel');
-    }
-
-    return FlowDrawData(points: result.points, lines: result.lines) as DD;
   }
 }
 

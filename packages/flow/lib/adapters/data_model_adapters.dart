@@ -1,11 +1,8 @@
-import 'package:alogrithms/src/algorithm_interface.dart';
+import 'package:alogrithms/alogrithms.dart';
 import 'package:forms/forms.dart';
 
-import '../flow.dart';
-
 /// Базовый интерфейс для адаптеров моделей данных
-abstract class DataModelAdapter<T extends DataModel>
-    implements FlowData, DataModel {
+abstract class DataModelAdapter<T extends DataModel> implements DataModel {
   /// Возвращает оригинальную модель данных
   T get dataModel;
 }
@@ -21,13 +18,10 @@ class FormsDataModelAdapter<T extends FormsDataModel>
   T get dataModel => _dataModel;
 
   @override
-  FormConfig get config => _dataModel.config;
+  DynamicFormModel get config => _dataModel.config;
 
   @override
   AlgorithmData get data => _dataModel.data;
-
-  @override
-  set rawData(Map<String, dynamic>? rawData) => _dataModel.rawData = rawData;
 }
 
 /// Фабрика для создания адаптеров моделей данных

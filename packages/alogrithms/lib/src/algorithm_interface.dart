@@ -14,7 +14,7 @@ abstract interface class DataModel {}
 abstract interface class AlgorithmData {}
 
 abstract interface class FormsDataModel implements DataModel {
-  FormConfig get config;
+  DynamicFormModel get config;
 
   AlgorithmData get data;
 }
