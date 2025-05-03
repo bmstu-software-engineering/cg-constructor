@@ -1,7 +1,9 @@
-import 'dart:math';
-
 import 'package:alogrithms/src/algorithm_interface.dart';
 import 'package:alogrithms/algorithms/exceptions.dart';
+import 'package:alogrithms/algorithm_parts/geometry_calculator.dart';
+import 'package:alogrithms/algorithm_parts/triangle_generator.dart';
+import 'package:alogrithms/algorithm_parts/triangle_analyzer.dart';
+import 'package:alogrithms/algorithm_parts/obtuse_triangle_finder.dart';
 import 'package:flutter/foundation.dart';
 import 'package:models_ns/models_ns.dart';
 
@@ -19,60 +21,6 @@ class AlgorithmL01V40 implements Algorithm<FormsDataModel, ViewerResultModel> {
   @override
   FormsDataModel getDataModel() => _model;
 
-  // Вычисление расстояния между двумя точками
-  double _distance(Point p1, Point p2) {
-    return sqrt(pow(p2.x - p1.x, 2) + pow(p2.y - p1.y, 2));
-  }
-
-  // Генерация всех возможных треугольников из множества точек
-  List<Triangle> _generateTriangles(List<Point> points) {
-    List<Triangle> triangles = [];
-    for (int i = 0; i < points.length - 2; i++) {
-      for (int j = i + 1; j < points.length - 1; j++) {
-        for (int k = j + 1; k < points.length; k++) {
-          triangles.add(Triangle(a: points[i], b: points[j], c: points[k]));
-        }
-      }
-    }
-    return triangles;
-  }
-
-  // Определение вершины с тупым углом в треугольнике (если есть)
-  Point? _findObtuseAngleVertex(Triangle triangle) {
-    Point a = triangle.a, b = triangle.b, c = triangle.c;
-
-    // Вычисляем длины сторон треугольника
-    double ab = _distance(a, b);
-    double bc = _distance(b, c);
-    double ca = _distance(c, a);
-
-    // Проверяем угол при вершине A
-    double cosA = (ab * ab + ca * ca - bc * bc) / (2 * ab * ca);
-    if (cosA < 0) return a;
-
-    // Проверяем угол при вершине B
-    double cosB = (ab * ab + bc * bc - ca * ca) / (2 * ab * bc);
-    if (cosB < 0) return b;
-
-    // Проверяем угол при вершине C
-    double cosC = (bc * bc + ca * ca - ab * ab) / (2 * bc * ca);
-    if (cosC < 0) return c;
-
-    // Нет тупого угла
-    return null;
-  }
-
-  // Вычисление угла между прямой и осью абсцисс
-  double _calculateAngle(Point p1, Point p2) {
-    // Используем atan2 для получения угла в диапазоне [-π, π]
-    double angle = atan2(p2.y - p1.y, p2.x - p1.x);
-
-    // Преобразуем в диапазон [0, π] для нашей задачи
-    if (angle < 0) angle += pi;
-
-    return angle;
-  }
-
   /// Минимальное количество точек, необходимое для формирования треугольника
   static const int _minPointsRequired = 3;
 
@@ -87,46 +35,29 @@ class AlgorithmL01V40 implements Algorithm<FormsDataModel, ViewerResultModel> {
     final pointsSecond = _model.data.pointsSecond;
 
     // Проверка на достаточное количество точек
-    if (pointsFirst.length < _minPointsRequired) {
-      throw InsufficientPointsException(
-        'Первое множество',
-        _minPointsRequired,
-        pointsFirst.length,
-      );
-    }
-    if (pointsSecond.length < _minPointsRequired) {
-      throw InsufficientPointsException(
-        'Второе множество',
-        _minPointsRequired,
-        pointsSecond.length,
-      );
-    }
+    ObtuseTriangleFinder.validatePointsCount(pointsFirst, pointsSecond);
 
     // Генерируем все треугольники
-    List<Triangle> trianglesFirst = _generateTriangles(pointsFirst);
-    List<Triangle> trianglesSecond = _generateTriangles(pointsSecond);
+    List<Triangle> trianglesFirst = TriangleGenerator.generateTriangles(
+      pointsFirst,
+    );
+    List<Triangle> trianglesSecond = TriangleGenerator.generateTriangles(
+      pointsSecond,
+    );
 
     // Находим треугольники с тупыми углами и соответствующие вершины
-    List<(Triangle, Point)> obtuseFirst = [];
-    for (var triangle in trianglesFirst) {
-      Point? obtuseVertex = _findObtuseAngleVertex(triangle);
-      if (obtuseVertex != null) {
-        obtuseFirst.add((triangle, obtuseVertex));
-      }
-    }
+    List<(Triangle, Point)> obtuseFirst = TriangleAnalyzer.findObtuseTriangles(
+      trianglesFirst,
+    );
 
     // Проверка на наличие треугольников с тупыми углами в первом множестве
     if (obtuseFirst.isEmpty) {
       throw NoObtuseAnglesException('Первое множество');
     }
 
-    List<(Triangle, Point)> obtuseSecond = [];
-    for (var triangle in trianglesSecond) {
-      Point? obtuseVertex = _findObtuseAngleVertex(triangle);
-      if (obtuseVertex != null) {
-        obtuseSecond.add((triangle, obtuseVertex));
-      }
-    }
+    List<(Triangle, Point)> obtuseSecond = TriangleAnalyzer.findObtuseTriangles(
+      trianglesSecond,
+    );
 
     // Проверка на наличие треугольников с тупыми углами во втором множестве
     if (obtuseSecond.isEmpty) {
@@ -135,36 +66,17 @@ class AlgorithmL01V40 implements Algorithm<FormsDataModel, ViewerResultModel> {
 
     try {
       // Находим пару с максимальным углом
-      double maxAngle = 0;
-      Line? resultLine;
-      Triangle? firstTriangle;
-      Triangle? secondTriangle;
-      Point? firstObtuseVertex;
-      Point? secondObtuseVertex;
-
-      for (var pair1 in obtuseFirst) {
-        Point point1 = pair1.$2;
-        for (var pair2 in obtuseSecond) {
-          Point point2 = pair2.$2;
-          double angle = _calculateAngle(point1, point2);
-          if (angle > maxAngle) {
-            maxAngle = angle;
-            resultLine = Line(a: point1, b: point2, color: _resultLineColor);
-            firstTriangle = pair1.$1;
-            secondTriangle = pair2.$1;
-            firstObtuseVertex = point1;
-            secondObtuseVertex = point2;
-          }
-        }
-      }
-
-      if (resultLine == null ||
-          firstTriangle == null ||
-          secondTriangle == null) {
-        throw CalculationException(
-          'Не удалось найти линию с максимальным углом',
-        );
-      }
+      final (
+        firstTriangle,
+        secondTriangle,
+        firstObtuseVertex,
+        secondObtuseVertex,
+        resultLine,
+      ) = ObtuseTriangleFinder.findMaxAnglePair(
+        obtuseFirst,
+        obtuseSecond,
+        _resultLineColor,
+      );
 
       // Создаем точки для треугольников с соответствующими цветами
       List<Point> resultPoints = [];
