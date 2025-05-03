@@ -14,24 +14,22 @@ class AlgorithmLab0146DataModelFormConfig
 
   @override
   List<FieldConfigEntry> get fields => [
-        FieldConfigEntry(
-            id: 'points',
-            type: FieldType.list,
-            config: ListFieldConfig<Point>(
-              label: 'Множество точек',
-              minItems: 3,
-              createItemField: () => PointField(
-                  config: PointFieldConfig(
-                label: 'Точка',
-              )),
-            )),
-        FieldConfigEntry(
-            id: 'pointB',
-            type: FieldType.point,
-            config: PointFieldConfig(
-              label: 'Точка pB',
-            )),
-      ];
+    FieldConfigEntry(
+      id: 'points',
+      type: FieldType.list,
+      config: ListFieldConfig<Point>(
+        label: 'Множество точек',
+        minItems: 3,
+        createItemField:
+            () => PointField(config: PointFieldConfig(label: 'Точка')),
+      ),
+    ),
+    FieldConfigEntry(
+      id: 'pointB',
+      type: FieldType.point,
+      config: PointFieldConfig(label: 'Точка pB'),
+    ),
+  ];
 
   @override
   AlgorithmLab0146DataModelFormModel createModel() =>
@@ -52,9 +50,9 @@ class AlgorithmLab0146DataModelFormModel
 
   @override
   AlgorithmLab0146DataModel get values => AlgorithmLab0146DataModel(
-        points: pointsField.value!,
-        pointB: pointBField.value!,
-      );
+    points: pointsField.value!,
+    pointB: pointBField.value!,
+  );
 
   @override
   set values(AlgorithmLab0146DataModel newValues) {
@@ -64,9 +62,9 @@ class AlgorithmLab0146DataModelFormModel
 
   @override
   Map<String, dynamic> toMap() => {
-        'points': pointsField.value,
-        'pointB': pointBField.value,
-      };
+    'points': pointsField.value,
+    'pointB': pointBField.value,
+  };
 
   @override
   void fromMap(Map<String, dynamic> map) {

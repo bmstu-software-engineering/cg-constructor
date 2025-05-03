@@ -14,18 +14,17 @@ class AlgorithmLab0145DataModelFormConfig
 
   @override
   List<FieldConfigEntry> get fields => [
-        FieldConfigEntry(
-            id: 'points',
-            type: FieldType.list,
-            config: ListFieldConfig<Point>(
-              label: 'Множество точек',
-              minItems: 6,
-              createItemField: () => PointField(
-                  config: PointFieldConfig(
-                label: 'Точка',
-              )),
-            )),
-      ];
+    FieldConfigEntry(
+      id: 'points',
+      type: FieldType.list,
+      config: ListFieldConfig<Point>(
+        label: 'Множество точек',
+        minItems: 6,
+        createItemField:
+            () => PointField(config: PointFieldConfig(label: 'Точка')),
+      ),
+    ),
+  ];
 
   @override
   AlgorithmLab0145DataModelFormModel createModel() =>
@@ -42,9 +41,8 @@ class AlgorithmLab0145DataModelFormModel
       getField<ListField<Point, FormField<Point>>>('points')!;
 
   @override
-  AlgorithmLab0145DataModel get values => AlgorithmLab0145DataModel(
-        points: pointsField.value!,
-      );
+  AlgorithmLab0145DataModel get values =>
+      AlgorithmLab0145DataModel(points: pointsField.value!);
 
   @override
   set values(AlgorithmLab0145DataModel newValues) {
@@ -52,9 +50,7 @@ class AlgorithmLab0145DataModelFormModel
   }
 
   @override
-  Map<String, dynamic> toMap() => {
-        'points': pointsField.value,
-      };
+  Map<String, dynamic> toMap() => {'points': pointsField.value};
 
   @override
   void fromMap(Map<String, dynamic> map) {
