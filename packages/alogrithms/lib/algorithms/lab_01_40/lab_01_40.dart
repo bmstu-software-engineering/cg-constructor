@@ -7,15 +7,6 @@ import 'package:models_ns/models_ns.dart';
 
 import 'data.dart';
 
-// Вспомогательный класс для представления треугольника
-class _Triangle {
-  final Point a;
-  final Point b;
-  final Point c;
-
-  _Triangle({required this.a, required this.b, required this.c});
-}
-
 class AlgorithmL01V40 implements Algorithm<FormsDataModel, ViewerResultModel> {
   @visibleForTesting
   const AlgorithmL01V40.fromModel(this._model);
@@ -34,12 +25,12 @@ class AlgorithmL01V40 implements Algorithm<FormsDataModel, ViewerResultModel> {
   }
 
   // Генерация всех возможных треугольников из множества точек
-  List<_Triangle> _generateTriangles(List<Point> points) {
-    List<_Triangle> triangles = [];
+  List<Triangle> _generateTriangles(List<Point> points) {
+    List<Triangle> triangles = [];
     for (int i = 0; i < points.length - 2; i++) {
       for (int j = i + 1; j < points.length - 1; j++) {
         for (int k = j + 1; k < points.length; k++) {
-          triangles.add(_Triangle(a: points[i], b: points[j], c: points[k]));
+          triangles.add(Triangle(a: points[i], b: points[j], c: points[k]));
         }
       }
     }
@@ -47,7 +38,7 @@ class AlgorithmL01V40 implements Algorithm<FormsDataModel, ViewerResultModel> {
   }
 
   // Определение вершины с тупым углом в треугольнике (если есть)
-  Point? _findObtuseAngleVertex(_Triangle triangle) {
+  Point? _findObtuseAngleVertex(Triangle triangle) {
     Point a = triangle.a, b = triangle.b, c = triangle.c;
 
     // Вычисляем длины сторон треугольника
@@ -112,11 +103,11 @@ class AlgorithmL01V40 implements Algorithm<FormsDataModel, ViewerResultModel> {
     }
 
     // Генерируем все треугольники
-    List<_Triangle> trianglesFirst = _generateTriangles(pointsFirst);
-    List<_Triangle> trianglesSecond = _generateTriangles(pointsSecond);
+    List<Triangle> trianglesFirst = _generateTriangles(pointsFirst);
+    List<Triangle> trianglesSecond = _generateTriangles(pointsSecond);
 
     // Находим треугольники с тупыми углами и соответствующие вершины
-    List<(_Triangle, Point)> obtuseFirst = [];
+    List<(Triangle, Point)> obtuseFirst = [];
     for (var triangle in trianglesFirst) {
       Point? obtuseVertex = _findObtuseAngleVertex(triangle);
       if (obtuseVertex != null) {
@@ -129,7 +120,7 @@ class AlgorithmL01V40 implements Algorithm<FormsDataModel, ViewerResultModel> {
       throw NoObtuseAnglesException('Первое множество');
     }
 
-    List<(_Triangle, Point)> obtuseSecond = [];
+    List<(Triangle, Point)> obtuseSecond = [];
     for (var triangle in trianglesSecond) {
       Point? obtuseVertex = _findObtuseAngleVertex(triangle);
       if (obtuseVertex != null) {
@@ -146,8 +137,8 @@ class AlgorithmL01V40 implements Algorithm<FormsDataModel, ViewerResultModel> {
       // Находим пару с максимальным углом
       double maxAngle = 0;
       Line? resultLine;
-      _Triangle? firstTriangle;
-      _Triangle? secondTriangle;
+      Triangle? firstTriangle;
+      Triangle? secondTriangle;
       Point? firstObtuseVertex;
       Point? secondObtuseVertex;
 
