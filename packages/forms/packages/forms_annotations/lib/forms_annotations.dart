@@ -55,6 +55,35 @@ class NumberFieldAnnotation extends FieldGenAnnotation {
   });
 }
 
+/// Аннотация для строкового поля
+class StringFieldAnnotation extends FieldGenAnnotation {
+  /// Минимальная длина строки
+  final int? minLength;
+
+  /// Максимальная длина строки
+  final int? maxLength;
+
+  /// Регулярное выражение для валидации
+  final String? pattern;
+
+  /// Создает аннотацию для строкового поля
+  ///
+  /// [label] - метка поля
+  /// [hint] - подсказка для поля
+  /// [isRequired] - является ли поле обязательным
+  /// [minLength] - минимальная длина строки
+  /// [maxLength] - максимальная длина строки
+  /// [pattern] - регулярное выражение для валидации
+  const StringFieldAnnotation({
+    super.label,
+    super.hint,
+    super.isRequired,
+    this.minLength,
+    this.maxLength,
+    this.pattern,
+  });
+}
+
 /// Аннотация для поля точки
 class PointFieldAnnotation extends FieldGenAnnotation {
   /// Конфигурация для поля X
@@ -354,6 +383,7 @@ class EnumSelectFieldAnnotation extends FieldGenAnnotation {
 typedef FormGen = FormGenAnnotation;
 typedef FieldGen = FieldGenAnnotation;
 typedef NumberFieldGen = NumberFieldAnnotation;
+typedef StringFieldGen = StringFieldAnnotation;
 typedef PointFieldGen = PointFieldAnnotation;
 typedef AngleFieldGen = AngleFieldAnnotation;
 typedef VectorFieldGen = VectorFieldAnnotation;

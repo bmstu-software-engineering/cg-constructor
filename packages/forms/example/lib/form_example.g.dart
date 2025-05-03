@@ -65,7 +65,7 @@ class UserFormFormModel extends TypedFormModel<UserForm> {
 
   @override
   set values(UserForm newValues) {
-    ageField.value = newValues.age;
+    ageField.value = newValues.age.toDouble();
     locationField.value = newValues.location;
     rotationField.value = newValues.rotation;
   }
@@ -79,7 +79,10 @@ class UserFormFormModel extends TypedFormModel<UserForm> {
 
   @override
   void fromMap(Map<String, dynamic> map) {
-    if (map.containsKey('age')) ageField.value = map['age'] as double;
+    if (map.containsKey('age')) {
+      final value = map['age'];
+      ageField.value = (value is int) ? value.toDouble() : (value as double);
+    }
     if (map.containsKey('location'))
       locationField.value = map['location'] as Point;
     if (map.containsKey('rotation'))

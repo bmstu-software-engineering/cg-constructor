@@ -4,6 +4,7 @@ import '../config/field_config_entry.dart';
 import '../config/field_type.dart';
 import '../config/form_config.dart';
 import '../config/number_config.dart';
+import '../config/string_config.dart';
 import '../config/point_config.dart';
 import '../config/angle_config.dart';
 import '../config/vector_config.dart';
@@ -14,9 +15,11 @@ import '../config/rectangle_config.dart';
 import '../config/list_field_config.dart';
 import '../config/line_config.dart';
 import '../config/enum_select_config.dart';
+import '../config/form_field_config.dart';
 import '../core/diagnosticable_form_model.dart';
 import '../core/form_field.dart';
 import '../fields/number_field.dart';
+import '../fields/string_field.dart';
 import '../fields/point_field.dart';
 import '../fields/angle_field.dart';
 import '../fields/vector_field.dart';
@@ -27,6 +30,7 @@ import '../fields/rectangle_field.dart';
 import '../fields/list_field.dart';
 import '../fields/line_field.dart';
 import '../fields/enum_select_field.dart';
+import '../fields/nested_form_field.dart';
 
 /// Динамическая модель формы, создаваемая на основе конфига
 class DynamicFormModel extends DiagnosticableFormModel {
@@ -56,6 +60,8 @@ class DynamicFormModel extends DiagnosticableFormModel {
     switch (entry.type) {
       case FieldType.number:
         return NumberField(config: entry.config as NumberFieldConfig);
+      case FieldType.string:
+        return StringField(config: entry.config as StringFieldConfig);
       case FieldType.point:
         return PointField(config: entry.config as PointFieldConfig);
       case FieldType.angle:
@@ -82,6 +88,13 @@ class DynamicFormModel extends DiagnosticableFormModel {
         final enumConfig = entry.config as EnumSelectConfig;
         // Создаем поле с правильным типом
         return enumConfig.createField();
+      case FieldType.form:
+        // Для поля формы нужно создать поле с правильным типом
+        // Используем метод createField из конфигурации, который создаст
+        // поле с правильными типами параметров
+        return entry.config.createField();
+      default:
+        throw UnimplementedError('Неподдерживаемый тип поля: ${entry.type}');
     }
   }
 

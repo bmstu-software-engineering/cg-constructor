@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart' hide FormField;
 import 'package:forms/forms.dart';
-import 'package:forms/src/models/dynamic_form_model.dart';
 
 /// Виджет для отображения динамической формы
 class DynamicFormWidget extends StatefulWidget {
@@ -90,6 +89,11 @@ class _DynamicFormWidgetState extends State<DynamicFormWidget> {
           field: field as NumberField,
           onChanged: (_) => setState(() {}),
         );
+      case FieldType.string:
+        return StringFieldWidget(
+          field: field as StringField,
+          onChanged: (_) => setState(() {}),
+        );
       case FieldType.point:
         return PointFieldWidget(
           field: field as PointField,
@@ -145,6 +149,13 @@ class _DynamicFormWidgetState extends State<DynamicFormWidget> {
           field: field as EnumSelectField,
           onChanged: (_) => setState(() {}),
         );
+      case FieldType.form:
+        return NestedFormFieldWidget(
+          field: field as NestedFormField,
+          onChanged: (_) => setState(() {}),
+        );
+      default:
+        return Text('Неподдерживаемый тип поля: ${entry.type}');
     }
   }
 }

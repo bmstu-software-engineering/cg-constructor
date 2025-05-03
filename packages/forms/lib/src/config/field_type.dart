@@ -3,6 +3,9 @@ enum FieldType {
   /// Числовое поле
   number,
 
+  /// Строковое поле
+  string,
+
   /// Поле точки (x, y)
   point,
 
@@ -32,4 +35,7 @@ enum FieldType {
 
   /// Поле выбора из enum
   enumSelect,
+
+  /// Вложенная форма
+  form,
 }

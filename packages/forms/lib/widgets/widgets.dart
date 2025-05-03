@@ -3,6 +3,7 @@ library forms_widgets;
 
 export 'form_field_widget.dart';
 export 'number_field_widget.dart';
+export 'string_field_widget.dart';
 export 'point_field_widget.dart';
 export 'angle_field_widget.dart';
 export 'vector_field_widget.dart';
@@ -14,3 +15,4 @@ export 'list_field_widget.dart';
 export 'line_field_widget.dart';
 export 'dynamic_form_widget.dart';
 export 'enum_select_field_widget.dart';
+export 'nested_form_field_widget.dart';

@@ -51,7 +51,7 @@ class TestFormFormModel extends TypedFormModel<TestForm> {
 
   @override
   set values(TestForm newValues) {
-    numberField.value = newValues.number;
+    numberField.value = newValues.number.toDouble();
     pointField.value = newValues.point;
   }
 
@@ -63,7 +63,10 @@ class TestFormFormModel extends TypedFormModel<TestForm> {
 
   @override
   void fromMap(Map<String, dynamic> map) {
-    if (map.containsKey('number')) numberField.value = map['number'] as double;
+    if (map.containsKey('number')) {
+      final value = map['number'];
+      numberField.value = (value is int) ? value.toDouble() : (value as double);
+    }
     if (map.containsKey('point')) pointField.value = map['point'] as Point;
   }
 }

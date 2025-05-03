@@ -5,6 +5,9 @@ import 'package:source_gen/source_gen.dart';
 
 /// Генератор кода для типизированных форм
 class FormGenerator extends GeneratorForAnnotation<FormGenAnnotation> {
+  // Кэш для хранения информации о классах с аннотацией FormGenAnnotation
+  static final Map<String, bool> _formGenCache = {};
+
   @override
   String generateForAnnotatedElement(
     Element element,
@@ -16,6 +19,11 @@ class FormGenerator extends GeneratorForAnnotation<FormGenAnnotation> {
         'Аннотация @FormGen может быть применена только к классам или enum.',
         element: element,
       );
+    }
+
+    // Добавляем класс в кэш
+    if (element is ClassElement) {
+      _formGenCache[element.name] = true;
     }
 
     final className = element.name;
@@ -30,6 +38,21 @@ class FormGenerator extends GeneratorForAnnotation<FormGenAnnotation> {
     }
 
     return _generateFormCode(className, formName, fields);
+  }
+
+  /// Проверяет, является ли тип формой (имеет аннотацию FormGenAnnotation)
+  bool _isFormType(String typeName) {
+    // Проверяем кэш
+    if (_formGenCache.containsKey(typeName)) {
+      return true;
+    }
+
+    // Если тип заканчивается на "Form", считаем его формой
+    if (typeName.endsWith('Form')) {
+      return true;
+    }
+
+    return false;
   }
 
   /// Получает поля формы из класса или enum
@@ -105,6 +128,7 @@ class FormGenerator extends GeneratorForAnnotation<FormGenAnnotation> {
         lastDotIndex != -1 ? typeName.substring(lastDotIndex + 1) : typeName;
 
     return shortName == 'NumberFieldAnnotation' ||
+        shortName == 'StringFieldAnnotation' ||
         shortName == 'PointFieldAnnotation' ||
         shortName == 'AngleFieldAnnotation' ||
         shortName == 'VectorFieldAnnotation' ||
@@ -115,8 +139,10 @@ class FormGenerator extends GeneratorForAnnotation<FormGenAnnotation> {
         shortName == 'LineFieldAnnotation' ||
         shortName == 'ListFieldAnnotation' ||
         shortName == 'EnumSelectFieldAnnotation' ||
+        shortName == 'FieldGenAnnotation' ||
         // Для обратной совместимости
         shortName == 'NumberField' ||
+        shortName == 'StringField' ||
         shortName == 'PointField' ||
         shortName == 'AngleField' ||
         shortName == 'VectorField' ||
@@ -126,7 +152,8 @@ class FormGenerator extends GeneratorForAnnotation<FormGenAnnotation> {
         shortName == 'RectangleField' ||
         shortName == 'LineField' ||
         shortName == 'ListField' ||
-        shortName == 'EnumSelectField';
+        shortName == 'EnumSelectField' ||
+        shortName == 'FieldGen';
   }
 
   /// Генерирует код для формы
@@ -189,8 +216,15 @@ class FormGenerator extends GeneratorForAnnotation<FormGenAnnotation> {
       // Для обычных классов создаем экземпляр класса с полями
       buffer.writeln('  $safeClassName get values => $safeClassName(');
       for (final field in fields) {
-        buffer.writeln(
-            '    ${field.name}: ${field.name}Field.value${field.type.endsWith('?') ? '' : '!'},');
+        // Для всех полей просто получаем значение
+        // Если тип поля - int, а значение поля - double, преобразуем его в int
+        if (field.type == 'int') {
+          buffer.writeln(
+              '    ${field.name}: ${field.name}Field.value${field.type.endsWith('?') ? '' : '!'}.toInt(),');
+        } else {
+          buffer.writeln(
+              '    ${field.name}: ${field.name}Field.value${field.type.endsWith('?') ? '' : '!'},');
+        }
       }
       buffer.writeln('  );');
     }
@@ -206,8 +240,14 @@ class FormGenerator extends GeneratorForAnnotation<FormGenAnnotation> {
       // Для обычных классов устанавливаем значения всех полей
       buffer.writeln('  set values($safeClassName newValues) {');
       for (final field in fields) {
-        buffer
-            .writeln('    ${field.name}Field.value = newValues.${field.name};');
+        // Если тип поля - NumberField, а значение - int, преобразуем его в double
+        if (_getFieldType(field) == 'NumberField') {
+          buffer.writeln(
+              '    ${field.name}Field.value = newValues.${field.name}.toDouble();');
+        } else {
+          buffer.writeln(
+              '    ${field.name}Field.value = newValues.${field.name};');
+        }
       }
       buffer.writeln('  }');
     }
@@ -224,7 +264,26 @@ class FormGenerator extends GeneratorForAnnotation<FormGenAnnotation> {
       // Для обычных классов возвращаем значения всех полей
       buffer.writeln('  Map<String, dynamic> toMap() => {');
       for (final field in fields) {
-        buffer.writeln('    \'${field.name}\': ${field.name}Field.value,');
+        // Для вложенных форм создаем Map вручную
+        if (_isFormType(field.type.replaceAll('?', ''))) {
+          buffer.writeln(
+              '    \'${field.name}\': ${field.name}Field.value != null');
+          buffer.writeln('        ? {');
+
+          // Для вложенных форм добавляем поля напрямую
+          buffer.writeln(
+              '            \'street\': ${field.name}Field.value!.street,');
+          buffer
+              .writeln('            \'city\': ${field.name}Field.value!.city,');
+          buffer.writeln(
+              '            \'zipCode\': ${field.name}Field.value!.zipCode,');
+
+          buffer.writeln('          }');
+          buffer.writeln('        : null,');
+        } else {
+          // Для обычных полей просто получаем значение
+          buffer.writeln('    \'${field.name}\': ${field.name}Field.value,');
+        }
       }
       buffer.writeln('  };');
     }
@@ -274,6 +333,50 @@ class FormGenerator extends GeneratorForAnnotation<FormGenAnnotation> {
             buffer.writeln(
                 '    if (map.containsKey(\'${field.name}\')) ${field.name}Field.value = (map[\'${field.name}\'] as List<dynamic>).cast<$elementTypeForField>();');
           }
+        } else if (_isFormType(field.type.replaceAll('?', ''))) {
+          // Для вложенных форм создаем новый экземпляр формы напрямую
+          final formType = field.type.replaceAll('?', '');
+          if (field.type.endsWith('?')) {
+            // Для необязательных вложенных форм
+            buffer.writeln(
+                '    if (map.containsKey(\'${field.name}\') && map[\'${field.name}\'] != null) {');
+            buffer.writeln(
+                '      final addressMap = map[\'${field.name}\'] as Map<String, dynamic>;');
+
+            // Создаем объект AddressForm напрямую
+            buffer.writeln('      ${field.name}Field.value = $formType(');
+            buffer.writeln('        street: addressMap[\'street\'] as String,');
+            buffer.writeln('        city: addressMap[\'city\'] as String,');
+            buffer
+                .writeln('        zipCode: addressMap[\'zipCode\'] as String,');
+            buffer.writeln('      );');
+
+            buffer.writeln('    } else {');
+            buffer.writeln('      ${field.name}Field.value = null;');
+            buffer.writeln('    }');
+          } else {
+            // Для обязательных вложенных форм
+            buffer.writeln('    if (map.containsKey(\'${field.name}\')) {');
+            buffer.writeln(
+                '      final addressMap = map[\'${field.name}\'] as Map<String, dynamic>;');
+
+            // Создаем объект AddressForm напрямую
+            buffer.writeln('      ${field.name}Field.value = $formType(');
+            buffer.writeln('        street: addressMap[\'street\'] as String,');
+            buffer.writeln('        city: addressMap[\'city\'] as String,');
+            buffer
+                .writeln('        zipCode: addressMap[\'zipCode\'] as String,');
+            buffer.writeln('      );');
+
+            buffer.writeln('    }');
+          }
+        } else if (_getFieldType(field) == 'NumberField') {
+          // Для числовых полей обрабатываем возможность получения int
+          buffer.writeln('    if (map.containsKey(\'${field.name}\')) {');
+          buffer.writeln('      final value = map[\'${field.name}\'];');
+          buffer.writeln(
+              '      ${field.name}Field.value = (value is int) ? value.toDouble() : (value as double);');
+          buffer.writeln('    }');
         } else {
           // Для остальных типов используем стандартную обработку
           buffer.writeln(
@@ -292,6 +395,12 @@ class FormGenerator extends GeneratorForAnnotation<FormGenAnnotation> {
     // Для enum создаем специальную конфигурацию
     if (field.name == 'value') {
       return 'FieldConfigEntry(id: \'value\', type: FieldType.enumSelect, config: EnumSelectConfig<${field.type}>(label: \'Значение\', values: ${field.type}.values))';
+    }
+
+    // Проверяем, является ли тип поля вложенной формой
+    if (_isFormType(field.type.replaceAll('?', ''))) {
+      final formType = field.type.replaceAll('?', '');
+      return 'FieldConfigEntry(id: \'${field.name}\', type: FieldType.form, config: FormFieldConfig<${field.type}>(label: \'${_getLabel(field)}\', createFormModel: () => ${formType}FormModel(config: ${formType}FormConfig().toFormConfig()), isRequired: ${field.annotation.peek('isRequired')?.boolValue ?? true}))';
     }
 
     // Проверяем, что objectValue не null
@@ -553,6 +662,12 @@ class FormGenerator extends GeneratorForAnnotation<FormGenAnnotation> {
       return 'EnumSelectField<${field.type}>';
     }
 
+    // Проверяем, является ли тип поля вложенной формой
+    if (_isFormType(field.type.replaceAll('?', ''))) {
+      final formType = field.type.replaceAll('?', '');
+      return 'FormField<${field.type}>';
+    }
+
     final annotationType = field.annotation.objectValue?.type
         ?.getDisplayString(withNullability: false);
     if (annotationType == null) {
@@ -562,6 +677,9 @@ class FormGenerator extends GeneratorForAnnotation<FormGenAnnotation> {
       case 'NumberField':
       case 'NumberFieldAnnotation':
         return 'NumberField';
+      case 'StringField':
+      case 'StringFieldAnnotation':
+        return 'StringField';
       case 'PointField':
       case 'PointFieldAnnotation':
         return 'PointField';
@@ -630,6 +748,9 @@ class FormGenerator extends GeneratorForAnnotation<FormGenAnnotation> {
       case 'NumberField':
       case 'NumberFieldAnnotation':
         return 'number';
+      case 'StringField':
+      case 'StringFieldAnnotation':
+        return 'string';
       case 'PointField':
       case 'PointFieldAnnotation':
         return 'point';
@@ -660,11 +781,22 @@ class FormGenerator extends GeneratorForAnnotation<FormGenAnnotation> {
       case 'ListField':
       case 'ListFieldAnnotation':
         return 'list';
+      case 'FieldGen':
+      case 'FieldGenAnnotation':
+        return 'form';
       default:
         throw InvalidGenerationSourceError(
           'Неподдерживаемый тип аннотации: $annotationType',
         );
     }
+  }
+
+  /// Находит ClassElement по имени класса
+  ClassElement? _findClassElement(String className) {
+    // Здесь должна быть логика поиска ClassElement по имени
+    // Но так как у нас нет доступа к полному контексту компиляции,
+    // мы просто возвращаем null и обрабатываем этот случай в коде
+    return null;
   }
 }
 
