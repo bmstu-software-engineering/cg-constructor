@@ -1,5 +1,6 @@
-import 'package:alogrithms/algorithms/lab_01_basic/lab_01_basic.dart';
-import 'package:alogrithms/algorithms/registry.dart';
+import 'package:algorithm_interface/algorithm_interface.dart';
+
+import 'lab_01_basic.dart';
 
 /// Фабрика для создания экземпляров алгоритма AlgorithmL01VBasic
 class AlgorithmL01VBasicFactory

@@ -1,9 +1,6 @@
-import 'package:alogrithms/algorithms/registry.dart';
-import 'package:alogrithms/src/algorithm_interface.dart';
+import 'package:algorithm_interface/algorithm_interface.dart';
+import 'package:alogrithms/holder.dart';
 import 'package:flutter/widgets.dart';
-import 'package:alogrithms/algorithms/lab_01_40/lab_01_40_factory.dart';
-import 'package:alogrithms/algorithms/lab_01_basic/lab_01_basic_factory.dart';
-import 'package:alogrithms/algorithms/lab_01_27/lab_01_27_factory.dart';
 
 class _AlgorithmsHolderImpl implements AlgorithmsHolder {
   final Map<String, AlgorithmFactory> _map = {};
@@ -36,7 +33,11 @@ class AlgorithmProvider extends InheritedWidget {
   final AlgorithmsHolder _holder;
 
   /// Конструктор
-  const AlgorithmProvider(this._holder, {super.key, required super.child});
+  AlgorithmProvider({
+    super.key,
+    required super.child,
+    required List<AlgorithmFactory> algorithmsFactories,
+  }) : _holder = _AlgorithmsHolderImpl()..registerAll(algorithmsFactories);
 
   /// Создает экземпляр алгоритма по его идентификатору
   Algorithm createAlgorithm(String name) => _holder.get(name).create();
@@ -68,42 +69,6 @@ class AlgorithmProvider extends InheritedWidget {
   @override
   bool updateShouldNotify(AlgorithmProvider oldWidget) =>
       _holder.algorithmsInfo != oldWidget._holder.algorithmsInfo;
-}
-
-/// Виджет, который инициализирует провайдер алгоритмов
-class AlgorithmProviderScope extends StatefulWidget {
-  /// Дочерний виджет
-  final Widget child;
-
-  /// Конструктор
-  const AlgorithmProviderScope({super.key, required this.child});
-
-  @override
-  State<AlgorithmProviderScope> createState() => _AlgorithmProviderScopeState();
-}
-
-class _AlgorithmProviderScopeState extends State<AlgorithmProviderScope> {
-  /// Карта зарегистрированных фабрик алгоритмов
-  final _AlgorithmsHolderImpl _holder = _AlgorithmsHolderImpl();
-
-  @override
-  void initState() {
-    super.initState();
-
-    // Регистрируем алгоритмы
-    _registerAlgorithms();
-  }
-
-  /// Регистрирует алгоритмы
-  void _registerAlgorithms() => _holder.registerAll([
-    AlgorithmL01VBasicFactory(),
-    AlgorithmL01V40Factory(),
-    AlgorithmL01V27Factory(),
-  ]);
-
-  @override
-  Widget build(BuildContext context) =>
-      AlgorithmProvider(_holder, child: widget.child);
 }
 
 /// Расширение для BuildContext для удобного доступа к провайдеру алгоритмов

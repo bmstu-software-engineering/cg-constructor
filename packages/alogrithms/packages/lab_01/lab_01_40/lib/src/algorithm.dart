@@ -1,11 +1,5 @@
-import 'package:alogrithms/src/algorithm_interface.dart';
-import 'package:alogrithms/algorithms/exceptions.dart';
-import 'package:alogrithms/algorithm_parts/geometry_calculator.dart';
-import 'package:alogrithms/algorithm_parts/triangle_generator.dart';
-import 'package:alogrithms/algorithm_parts/triangle_analyzer.dart';
-import 'package:alogrithms/algorithm_parts/obtuse_triangle_finder.dart';
+import 'package:lab_01_common/lab_01_common.dart';
 import 'package:flutter/foundation.dart';
-import 'package:models_ns/models_ns.dart';
 
 import 'data.dart';
 

@@ -1,11 +1,5 @@
-import 'package:alogrithms/src/algorithm_interface.dart';
-import 'package:alogrithms/algorithm_parts/triangle_median_calculator.dart';
-import 'package:alogrithms/algorithm_parts/point_in_triangle_checker.dart';
-import 'package:alogrithms/algorithm_parts/points_on_line_checker.dart';
-import 'package:alogrithms/algorithm_parts/triangle_generator.dart';
-import 'package:alogrithms/algorithms/exceptions.dart';
+import 'package:lab_01_common/lab_01_common.dart';
 import 'package:flutter/foundation.dart';
-import 'package:models_ns/models_ns.dart';
 
 import 'data.dart';
 

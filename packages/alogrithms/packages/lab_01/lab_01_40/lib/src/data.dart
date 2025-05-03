@@ -1,11 +1,9 @@
-import 'package:alogrithms/alogrithms.dart';
-import 'package:forms/forms.dart';
-import 'package:forms_annotations/forms_annotations.dart';
-import 'package:models_ns/models_ns.dart';
+import 'package:lab_01_common/forms_annotations.dart';
+import 'package:lab_01_common/lab_01_common.dart';
 
 part 'data.g.dart';
 
-/// Модель данных для алгоритма Lab01Basic
+/// Модель данных для алгоритма Lab01V40
 @FormGen()
 class AlgorithmLab01V40DataModel implements AlgorithmData {
   /// Множество точек

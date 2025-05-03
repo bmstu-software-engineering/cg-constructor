@@ -1,19 +1,22 @@
-import 'package:alogrithms/algorithms/registry.dart';
-import 'lab_01_27.dart';
+import 'package:lab_01_common/lab_01_common.dart';
+
+import 'algorithm.dart';
 
 /// Фабрика для создания алгоритма поиска треугольника с максимальной разностью
-class AlgorithmL01V27Factory implements AlgorithmFactory<AlgorithmL01V27> {
+class AlgorithmL01V27Factory implements AlgorithmFactory {
+  /// Создает экземпляр алгоритма
   @override
-  AlgorithmL01V27 create() {
-    return AlgorithmL01V27();
-  }
+  Algorithm create() => AlgorithmL01V27();
 
+  /// Название алгоритма
   @override
   String get name => 'lab_01_27';
 
+  /// Название алгоритма
   @override
   String get title => 'Лабораторная работа 01, Вариант 27';
 
+  /// Описание алгоритма
   @override
   String get description =>
       'Поиск треугольника, максимизирующего разность между количеством точек '

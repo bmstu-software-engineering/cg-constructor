@@ -1,9 +1,8 @@
-import 'package:flutter_test/flutter_test.dart';
-import 'package:alogrithms/algorithms/exceptions.dart';
 import 'package:alogrithms/algorithms/lab_01_basic/lab_01_basic.dart';
 import 'package:alogrithms/algorithms/lab_01_basic/lab_01_basic_data_model.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:lab_01_common/lab_01_common.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:models_ns/models_ns.dart';
 
 class AlgorithmL01VBasicDataModelImplMock extends Mock
     implements AlgorithmL01VBasicDataModelImpl {}

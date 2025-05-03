@@ -1,9 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:alogrithms/algorithms/exceptions.dart';
-import 'package:alogrithms/algorithms/lab_01_27/lab_01_27.dart';
-import 'package:alogrithms/algorithms/lab_01_27/data.dart';
+import 'package:lab_01_27/algorithm.dart';
+import 'package:lab_01_common/lab_01_common.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:models_ns/models_ns.dart';
 
 // Создаем мок для AlgorithmL01V27DataModelImpl
 class AlgorithmL01V27DataModelImplMock extends Mock

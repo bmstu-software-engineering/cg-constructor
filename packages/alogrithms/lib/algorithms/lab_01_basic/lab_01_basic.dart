@@ -1,6 +1,5 @@
-import 'package:alogrithms/src/algorithm_interface.dart';
+import 'package:algorithm_interface/algorithm_interface.dart';
 import 'package:flutter/foundation.dart';
-import 'package:models_ns/models_ns.dart';
 import 'lab_01_basic_data_model.dart';
 
 class AlgorithmL01VBasic

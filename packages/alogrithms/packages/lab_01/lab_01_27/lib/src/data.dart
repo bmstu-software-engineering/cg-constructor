@@ -1,7 +1,5 @@
-import 'package:alogrithms/alogrithms.dart';
-import 'package:forms/forms.dart';
-import 'package:forms_annotations/forms_annotations.dart';
-import 'package:models_ns/models_ns.dart';
+import 'package:lab_01_common/forms_annotations.dart';
+import 'package:lab_01_common/lab_01_common.dart';
 
 part 'data.g.dart';
 

@@ -1,12 +1,4 @@
-/// Базовый класс для всех исключений алгоритмов
-abstract class AlgorithmException implements Exception {
-  final String message;
-
-  AlgorithmException(this.message);
-
-  @override
-  String toString() => message;
-}
+import 'package:algorithm_interface/algorithm_interface.dart';
 
 /// Исключение, выбрасываемое при недостаточном количестве точек
 class InsufficientPointsException extends AlgorithmException {

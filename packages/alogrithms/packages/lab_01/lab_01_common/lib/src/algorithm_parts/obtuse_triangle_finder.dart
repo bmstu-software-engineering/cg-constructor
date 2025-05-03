@@ -1,5 +1,5 @@
 import 'package:models_ns/models_ns.dart';
-import 'package:alogrithms/algorithms/exceptions.dart';
+import '../exceptions.dart';
 import 'geometry_calculator.dart';
 
 /// Класс для поиска треугольников с тупыми углами и максимальным углом между ними
