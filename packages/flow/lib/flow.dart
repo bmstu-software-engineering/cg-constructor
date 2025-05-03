@@ -37,7 +37,13 @@ final class FlowBuilder<DD extends FlowDrawData> {
   Future<void> calculate() async {
     try {
       _drawData = await _calculateStrategy.calculate();
-      _addInfoMessage('Расчеты выполнены успешно');
+
+      final markdownInfo = _drawData?.markdownInfo;
+      if (markdownInfo != null) {
+        _addInfoMessage(markdownInfo);
+      } else {
+        _addInfoMessage('Расчеты выполнены успешно');
+      }
     } catch (e) {
       _addInfoMessage('Ошибка при расчетах: ${e.toString()}');
       rethrow;
@@ -100,8 +106,13 @@ abstract interface class FlowDataStrategy {
 final class FlowDrawData {
   final List<Point> points;
   final List<Line> lines;
+  final String? markdownInfo;
 
-  const FlowDrawData({this.points = const [], this.lines = const []});
+  const FlowDrawData({
+    this.points = const [],
+    this.lines = const [],
+    this.markdownInfo,
+  });
 }
 
 abstract interface class FlowCalculateStrategy<DD extends FlowDrawData> {

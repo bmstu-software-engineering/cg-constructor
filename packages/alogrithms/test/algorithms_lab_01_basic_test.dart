@@ -55,6 +55,50 @@ void main() {
       expect(result.points[1].y, 0);
       expect(result.points[2].x, 5);
       expect(result.points[2].y, 5);
+
+      // Проверяем наличие текстовой информации
+      expect(
+        result.markdownInfo,
+        isNotEmpty,
+        reason: 'Должна быть текстовая информация в формате Markdown',
+      );
+
+      // Проверяем содержимое текстовой информации
+      expect(
+        result.markdownInfo,
+        contains('## Результаты базового алгоритма'),
+        reason: 'Должен быть заголовок с результатами анализа',
+      );
+      expect(
+        result.markdownInfo,
+        contains('### Количество точек'),
+        reason: 'Должна быть информация о количестве точек',
+      );
+      expect(
+        result.markdownInfo,
+        contains('Всего точек: **3**'),
+        reason: 'Должно быть указано количество точек',
+      );
+      expect(
+        result.markdownInfo,
+        contains('### Координаты точек'),
+        reason: 'Должна быть информация о координатах точек',
+      );
+      expect(
+        result.markdownInfo,
+        contains('- Точка 1: (0.0, 0.0)'),
+        reason: 'Должна быть информация о первой точке',
+      );
+      expect(
+        result.markdownInfo,
+        contains('- Точка 2: (10.0, 0.0)'),
+        reason: 'Должна быть информация о второй точке',
+      );
+      expect(
+        result.markdownInfo,
+        contains('- Точка 3: (5.0, 5.0)'),
+        reason: 'Должна быть информация о третьей точке',
+      );
     });
 
     test('исключение при доступе к данным до их установки', () {

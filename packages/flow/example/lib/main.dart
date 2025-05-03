@@ -2,6 +2,7 @@ import 'package:alogrithms/alogrithms.dart';
 import 'package:flow/algorithm_flow_builder_factory.dart';
 import 'package:flow/flow.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:viewer/viewer.dart';
 
@@ -139,7 +140,7 @@ class _FlowExamplePageState extends State<FlowExamplePage> {
 
                   // Область для отображения информационных сообщений
                   Container(
-                    height: 150,
+                    height: 250,
                     padding: const EdgeInsets.all(8),
                     decoration: BoxDecoration(
                       color: Colors.grey[200],
@@ -193,7 +194,7 @@ class _Messages extends StatelessWidget {
                     itemBuilder: (context, index) {
                       return Padding(
                         padding: const EdgeInsets.symmetric(vertical: 2),
-                        child: Text(messages[index]),
+                        child: MarkdownBody(data: messages[index]),
                       );
                     },
                   );

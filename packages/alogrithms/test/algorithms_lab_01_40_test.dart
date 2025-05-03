@@ -50,6 +50,40 @@ void main() {
           reason:
               'Должно быть 6 точек (3 для первого треугольника и 3 для второго)',
         );
+
+        // Проверяем наличие текстовой информации
+        expect(
+          result.markdownInfo,
+          isNotEmpty,
+          reason: 'Должна быть текстовая информация в формате Markdown',
+        );
+
+        // Проверяем содержимое текстовой информации
+        expect(
+          result.markdownInfo,
+          contains('## Результаты анализа треугольников с тупыми углами'),
+          reason: 'Должен быть заголовок с результатами анализа',
+        );
+        expect(
+          result.markdownInfo,
+          contains('### Первый треугольник (зеленый)'),
+          reason: 'Должна быть информация о первом треугольнике',
+        );
+        expect(
+          result.markdownInfo,
+          contains('### Второй треугольник (синий)'),
+          reason: 'Должна быть информация о втором треугольнике',
+        );
+        expect(
+          result.markdownInfo,
+          contains('### Результирующая линия (красная)'),
+          reason: 'Должна быть информация о результирующей линии',
+        );
+        expect(
+          result.markdownInfo,
+          contains('- Угол с осью абсцисс:'),
+          reason: 'Должна быть информация об угле с осью абсцисс',
+        );
         expect(
           result.lines.length,
           7,
@@ -218,6 +252,13 @@ void main() {
         6,
         reason:
             'Должно быть 6 точек (3 для первого треугольника и 3 для второго)',
+      );
+
+      // Проверяем наличие текстовой информации
+      expect(
+        result.markdownInfo,
+        isNotEmpty,
+        reason: 'Должна быть текстовая информация в формате Markdown',
       );
       expect(
         result.lines.length,

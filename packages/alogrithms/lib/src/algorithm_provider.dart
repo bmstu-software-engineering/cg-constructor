@@ -3,6 +3,7 @@ import 'package:alogrithms/src/algorithm_interface.dart';
 import 'package:flutter/widgets.dart';
 import 'package:alogrithms/algorithms/lab_01_40/lab_01_40_factory.dart';
 import 'package:alogrithms/algorithms/lab_01_basic/lab_01_basic_factory.dart';
+import 'package:alogrithms/algorithms/lab_01_27/lab_01_27_factory.dart';
 
 class _AlgorithmsHolderImpl implements AlgorithmsHolder {
   final Map<String, AlgorithmFactory> _map = {};
@@ -97,6 +98,7 @@ class _AlgorithmProviderScopeState extends State<AlgorithmProviderScope> {
   void _registerAlgorithms() => _holder.registerAll([
     AlgorithmL01VBasicFactory(),
     AlgorithmL01V40Factory(),
+    AlgorithmL01V27Factory(),
   ]);
 
   @override

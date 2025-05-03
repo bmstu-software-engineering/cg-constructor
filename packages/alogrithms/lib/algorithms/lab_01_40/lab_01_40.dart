@@ -21,9 +21,6 @@ class AlgorithmL01V40 implements Algorithm<FormsDataModel, ViewerResultModel> {
   @override
   FormsDataModel getDataModel() => _model;
 
-  /// Минимальное количество точек, необходимое для формирования треугольника
-  static const int _minPointsRequired = 3;
-
   // Цвета для визуализации
   static const String _firstTriangleColor = '#00FF00'; // Зеленый
   static const String _secondTriangleColor = '#0000FF'; // Синий
@@ -188,7 +185,48 @@ class AlgorithmL01V40 implements Algorithm<FormsDataModel, ViewerResultModel> {
       // Добавляем результирующую линию (красная)
       resultLines.add(resultLine);
 
-      return ViewerResultModel(points: resultPoints, lines: resultLines);
+      // Формируем текстовую информацию в формате Markdown
+      final angle =
+          GeometryCalculator.calculateAngle(
+            firstObtuseVertex,
+            secondObtuseVertex,
+          ) *
+          180 /
+          3.14159265359; // Преобразуем радианы в градусы
+
+      final markdownInfo = '''
+## Результаты анализа треугольников с тупыми углами
+
+### Первый треугольник (зеленый)
+- Координаты вершин:
+  - A: (${firstTriangle.a.x}, ${firstTriangle.a.y})${firstTriangle.a == firstObtuseVertex ? ' (тупой угол)' : ''}
+  - B: (${firstTriangle.b.x}, ${firstTriangle.b.y})${firstTriangle.b == firstObtuseVertex ? ' (тупой угол)' : ''}
+  - C: (${firstTriangle.c.x}, ${firstTriangle.c.y})${firstTriangle.c == firstObtuseVertex ? ' (тупой угол)' : ''}
+
+### Второй треугольник (синий)
+- Координаты вершин:
+  - A: (${secondTriangle.a.x}, ${secondTriangle.a.y})${secondTriangle.a == secondObtuseVertex ? ' (тупой угол)' : ''}
+  - B: (${secondTriangle.b.x}, ${secondTriangle.b.y})${secondTriangle.b == secondObtuseVertex ? ' (тупой угол)' : ''}
+  - C: (${secondTriangle.c.x}, ${secondTriangle.c.y})${secondTriangle.c == secondObtuseVertex ? ' (тупой угол)' : ''}
+
+### Результирующая линия (красная)
+- Соединяет вершины с тупыми углами:
+  - Из первого треугольника: (${firstObtuseVertex.x}, ${firstObtuseVertex.y})
+  - Из второго треугольника: (${secondObtuseVertex.x}, ${secondObtuseVertex.y})
+- Угол с осью абсцисс: **${angle.toStringAsFixed(2)}°**
+
+### Визуализация
+- Зеленый: первый треугольник
+- Синий: второй треугольник
+- Красный: линия, соединяющая вершины с тупыми углами
+- Вершины с тупыми углами имеют увеличенную толщину (2.0)
+''';
+
+      return ViewerResultModel(
+        points: resultPoints,
+        lines: resultLines,
+        markdownInfo: markdownInfo,
+      );
     } catch (e) {
       if (e is AlgorithmException) {
         rethrow;

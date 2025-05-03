@@ -24,6 +24,11 @@ abstract interface class ResultModel {}
 class ViewerResultModel implements ResultModel {
   final List<Point> points;
   final List<Line> lines;
+  final String? markdownInfo;
 
-  const ViewerResultModel({this.points = const [], this.lines = const []});
+  const ViewerResultModel({
+    this.markdownInfo,
+    this.points = const [],
+    this.lines = const [],
+  });
 }

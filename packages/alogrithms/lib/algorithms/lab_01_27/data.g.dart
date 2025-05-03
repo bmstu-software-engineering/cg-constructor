@@ -1,16 +1,16 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'lab_01_basic_data_model.dart';
+part of 'data.dart';
 
 // **************************************************************************
 // FormGenerator
 // **************************************************************************
 
-/// Типизированная конфигурация формы для AlgorithmLab01BasicDataModel
-class AlgorithmLab01BasicDataModelFormConfig
-    extends TypedFormConfig<AlgorithmLab01BasicDataModel> {
+/// Типизированная конфигурация формы для AlgorithmLab0127DataModel
+class AlgorithmLab0127DataModelFormConfig
+    extends TypedFormConfig<AlgorithmLab0127DataModel> {
   @override
-  String get name => 'AlgorithmLab01BasicDataModel';
+  String get name => 'AlgorithmLab0127DataModel';
 
   @override
   List<FieldConfigEntry> get fields => [
@@ -18,7 +18,8 @@ class AlgorithmLab01BasicDataModelFormConfig
             id: 'points',
             type: FieldType.list,
             config: ListFieldConfig<Point>(
-              label: 'Список точек',
+              label: 'Множество точек',
+              minItems: 3,
               createItemField: () => PointField(
                   config: PointFieldConfig(
                 label: 'Точка',
@@ -27,26 +28,26 @@ class AlgorithmLab01BasicDataModelFormConfig
       ];
 
   @override
-  AlgorithmLab01BasicDataModelFormModel createModel() =>
-      AlgorithmLab01BasicDataModelFormModel(config: toFormConfig());
+  AlgorithmLab0127DataModelFormModel createModel() =>
+      AlgorithmLab0127DataModelFormModel(config: toFormConfig());
 }
 
-/// Типизированная модель формы для AlgorithmLab01BasicDataModel
-class AlgorithmLab01BasicDataModelFormModel
-    extends TypedFormModel<AlgorithmLab01BasicDataModel> {
-  AlgorithmLab01BasicDataModelFormModel({required super.config});
+/// Типизированная модель формы для AlgorithmLab0127DataModel
+class AlgorithmLab0127DataModelFormModel
+    extends TypedFormModel<AlgorithmLab0127DataModel> {
+  AlgorithmLab0127DataModelFormModel({required super.config});
 
   /// Поле для points
   ListField<Point, FormField<Point>> get pointsField =>
       getField<ListField<Point, FormField<Point>>>('points')!;
 
   @override
-  AlgorithmLab01BasicDataModel get values => AlgorithmLab01BasicDataModel(
+  AlgorithmLab0127DataModel get values => AlgorithmLab0127DataModel(
         points: pointsField.value!,
       );
 
   @override
-  set values(AlgorithmLab01BasicDataModel newValues) {
+  set values(AlgorithmLab0127DataModel newValues) {
     pointsField.value = newValues.points;
   }
 

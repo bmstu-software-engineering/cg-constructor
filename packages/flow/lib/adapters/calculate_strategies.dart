@@ -18,7 +18,12 @@ class GenericCalculateStrategy<DD extends FlowDrawData>
         throw Exception('Результат должен быть типа ViewerResultModel');
       }
 
-      return FlowDrawData(points: result.points, lines: result.lines) as DD;
+      return FlowDrawData(
+            points: result.points,
+            lines: result.lines,
+            markdownInfo: result.markdownInfo,
+          )
+          as DD;
     } catch (e) {
       // Ошибка будет обработана в FlowBuilder
       rethrow;

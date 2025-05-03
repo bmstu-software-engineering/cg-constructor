@@ -9,9 +9,17 @@ part 'data.g.dart';
 @FormGen()
 class AlgorithmLab01V40DataModel implements AlgorithmData {
   /// Множество точек
-  @ListFieldGen(label: 'Первое множество точек', itemConfig: PointFieldGen())
+  @ListFieldGen(
+    label: 'Первое множество точек',
+    itemConfig: PointFieldGen(),
+    minItems: 3,
+  )
   final List<Point> pointsFirst;
-  @ListFieldGen(label: 'Второе множество точек', itemConfig: PointFieldGen())
+  @ListFieldGen(
+    label: 'Второе множество точек',
+    itemConfig: PointFieldGen(),
+    minItems: 3,
+  )
   final List<Point> pointsSecond;
 
   /// Конструктор
