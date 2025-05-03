@@ -85,6 +85,18 @@ class AlgorithmLab02DataModelFormConfig
       type: FieldType.angle,
       config: AngleFieldConfig(label: 'Угол поворота'),
     ),
+    FieldConfigEntry(
+      id: 'scale',
+      type: FieldType.form,
+      config: FormFieldConfig<AlgorithmLab02DataModelScale>(
+        label: 'Параметры масштабирования',
+        createFormModel:
+            () => AlgorithmLab02DataModelScaleFormModel(
+              config: AlgorithmLab02DataModelScaleFormConfig().toFormConfig(),
+            ),
+        isRequired: true,
+      ),
+    ),
   ];
 
   @override
@@ -103,27 +115,50 @@ class AlgorithmLab02DataModelFormModel
   /// Поле для rotate
   AngleField get rotateField => getField<AngleField>('rotate')!;
 
+  /// Поле для scale
+  FormField<AlgorithmLab02DataModelScale> get scaleField =>
+      getField<FormField<AlgorithmLab02DataModelScale>>('scale')!;
+
   @override
   AlgorithmLab02DataModel get values => AlgorithmLab02DataModel(
     move: moveField.value!,
     rotate: rotateField.value!,
+    scale: scaleField.value!,
   );
 
   @override
   set values(AlgorithmLab02DataModel newValues) {
     moveField.value = newValues.move;
     rotateField.value = newValues.rotate;
+    scaleField.value = newValues.scale;
   }
 
   @override
   Map<String, dynamic> toMap() => {
     'move': moveField.value,
     'rotate': rotateField.value,
+    'scale':
+        scaleField.value != null
+            ? (scaleField as NestedFormField).toMap()
+            : null,
   };
 
   @override
   void fromMap(Map<String, dynamic> map) {
     if (map.containsKey('move')) moveField.value = map['move'] as Vector;
     if (map.containsKey('rotate')) rotateField.value = map['rotate'] as Angle;
+    if (map.containsKey('scale')) {
+      final nestedMap = map['scale'] as Map<String, dynamic>;
+      if (scaleField.value == null) {
+        // Создаем новую вложенную форму
+        final nestedFormModel =
+            AlgorithmLab02DataModelScaleFormConfig().createModel();
+        nestedFormModel.fromMap(nestedMap);
+        scaleField.value = nestedFormModel.values;
+      } else {
+        // Используем существующую вложенную форму
+        (scaleField as NestedFormField).fromMap(nestedMap);
+      }
+    }
   }
 }

@@ -27,13 +27,13 @@ class AlgorithmLab02DataModel implements AlgorithmData {
   @AngleFieldGen(label: 'Угол поворота')
   final Angle rotate;
 
-  // final AlgorithmLab02DataModelScale scale;
+  @FieldGenAnnotation(label: 'Параметры масштабирования')
+  final AlgorithmLab02DataModelScale scale;
 
-  /// Конструктор
   const AlgorithmLab02DataModel({
     required this.move,
     required this.rotate,
-    // required this.scale,
+    required this.scale,
   });
 }
 

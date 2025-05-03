@@ -19,6 +19,11 @@ dev_dependencies:
     sdk: flutter
   flutter_lints: ^5.0.0
   mocktail: ^1.0.4
+  build_runner: ^2.4.8
+  freezed: ^2.4.6
+  json_serializable: ^6.7.1
+  forms_generator:
+    path: ../../../../forms/packages/forms_generator
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

@@ -1,4 +1,5 @@
 import 'package:alogrithms/alogrithms.dart';
+import 'package:algorithm_interface/algorithm_interface.dart';
 import 'package:flutter/material.dart';
 import 'package:models_ns/models_ns.dart';
 import 'package:rxdart/rxdart.dart';
@@ -81,12 +82,40 @@ final class FlowBuilder<DD extends FlowDrawData> {
     }
   }
 
+  /// Возвращает алгоритм из стратегии расчетов, если она является GenericCalculateStrategy
+  Algorithm? getAlgorithm() {
+    return _calculateStrategy is GenericCalculateStrategy
+        ? ((_calculateStrategy as GenericCalculateStrategy).algorithm)
+        : null;
+  }
+
+  /// Проверяет, реализует ли алгоритм интерфейс AlgorithmWithCustomElement
+  bool hasCustomElement() {
+    final algorithm = getAlgorithm();
+    return algorithm is AlgorithmWithCustomElement;
+  }
+
+  /// Возвращает пользовательский виджет для верхнего меню, если алгоритм реализует AlgorithmWithCustomElement
+  Widget? buildTopMenuWidget() {
+    final algorithm = getAlgorithm();
+    if (algorithm is AlgorithmWithCustomElement) {
+      return algorithm.buildTopMenuWidget();
+    }
+    return null;
+  }
+
+  /// Возвращает пользовательский виджет для нижнего меню, если алгоритм реализует AlgorithmWithCustomElement
+  Widget? buildBottomMenuWidget() {
+    final algorithm = getAlgorithm();
+    if (algorithm is AlgorithmWithCustomElement) {
+      return algorithm.buildBottomMenuWidget();
+    }
+    return null;
+  }
+
   /// Возвращает список действий на основе вариантов алгоритма
   List<FlowAction> getActionsFromAlgorithm() {
-    final algorithm =
-        _calculateStrategy is GenericCalculateStrategy
-            ? ((_calculateStrategy as GenericCalculateStrategy).algorithm)
-            : null;
+    final algorithm = getAlgorithm();
 
     if (algorithm is VariatedAlgorithm) {
       final variants = algorithm.getAvailableVariants();
@@ -149,11 +178,24 @@ final class FlowBuilder<DD extends FlowDrawData> {
       );
     }
 
+    // Получаем пользовательские виджеты из алгоритма, если они доступны
+    final topMenuWidget = buildTopMenuWidget();
+    final bottomMenuWidget = buildBottomMenuWidget();
+
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
+        // Добавляем верхний пользовательский виджет, если он доступен
+        if (topMenuWidget != null) ...[
+          topMenuWidget,
+          const SizedBox(height: 16),
+        ],
+
+        // Основной виджет данных
         dataWidget,
         const SizedBox(height: 16),
+
+        // Кнопки действий
         Wrap(
           spacing: 8,
           runSpacing: 8,
@@ -183,6 +225,12 @@ final class FlowBuilder<DD extends FlowDrawData> {
                   )
                   .toList(),
         ),
+
+        // Добавляем нижний пользовательский виджет, если он доступен
+        if (bottomMenuWidget != null) ...[
+          const SizedBox(height: 16),
+          bottomMenuWidget,
+        ],
       ],
     );
   }

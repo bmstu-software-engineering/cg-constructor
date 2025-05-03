@@ -32,6 +32,7 @@ run_tests_in_package() {
         
         # Запускаем тесты и перенаправляем вывод в лог-файл
         echo "Выполнение тестов в пакете $package..." >> "$log_file"
+        fvm flutter pub run build_runner build --delete-conflicting-outputs >> "$log_file" 2>&1
         fvm flutter test -r failures-only --no-pub >> "$log_file" 2>&1
         
         # Сохраняем код возврата

@@ -19,6 +19,10 @@ dependencies:
     path: ../forms 
   forms_annotations:
     path: ../forms/packages/forms_annotations
+  
+  figure_io:
+    path: ../figure_io
+
   algorithm_interface:
     path: ./packages/algorithm_interface
 
@@ -35,6 +39,17 @@ dependencies:
     path: ./packages/lab_01/lab_01_42  
   lab_01_43:
     path: ./packages/lab_01/lab_01_43  
+  lab_01_44:
+    path: ./packages/lab_01/lab_01_44
+  lab_01_45:
+    path: ./packages/lab_01/lab_01_45  
+  lab_01_46:
+    path: ./packages/lab_01/lab_01_46  
+  lab_01_47:
+    path: ./packages/lab_01/lab_01_47  
+  lab_01_48:
+    path: ./packages/lab_01/lab_01_48  
+  rxdart: ^0.28.0
 
 dev_dependencies:
   flutter_test:

@@ -10,6 +10,18 @@ abstract interface class Algorithm<
   ResultModelType calculate();
 }
 
+abstract interface class AlgorithmWithCustomElement implements Algorithm {
+  Widget buildTopMenuWidget();
+  Widget buildBottomMenuWidget();
+}
+
+mixin BaseAlgorithmWithCustomElement implements AlgorithmWithCustomElement {
+  @override
+  Widget buildTopMenuWidget() => SizedBox.shrink();
+  @override
+  Widget buildBottomMenuWidget() => SizedBox.shrink();
+}
+
 /// Интерфейс для алгоритмов, поддерживающих различные варианты расчета
 abstract interface class VariatedAlgorithm implements Algorithm {
   /// Выполняет расчет с указанным вариантом

@@ -14,27 +14,29 @@ class AlgorithmLab01V40DataModelFormConfig
 
   @override
   List<FieldConfigEntry> get fields => [
-    FieldConfigEntry(
-      id: 'pointsFirst',
-      type: FieldType.list,
-      config: ListFieldConfig<Point>(
-        label: 'Первое множество точек',
-        minItems: 3,
-        createItemField:
-            () => PointField(config: PointFieldConfig(label: 'Точка')),
-      ),
-    ),
-    FieldConfigEntry(
-      id: 'pointsSecond',
-      type: FieldType.list,
-      config: ListFieldConfig<Point>(
-        label: 'Второе множество точек',
-        minItems: 3,
-        createItemField:
-            () => PointField(config: PointFieldConfig(label: 'Точка')),
-      ),
-    ),
-  ];
+        FieldConfigEntry(
+            id: 'pointsFirst',
+            type: FieldType.list,
+            config: ListFieldConfig<Point>(
+              label: 'Первое множество точек',
+              minItems: 3,
+              createItemField: () => PointField(
+                  config: PointFieldConfig(
+                label: 'Точка',
+              )),
+            )),
+        FieldConfigEntry(
+            id: 'pointsSecond',
+            type: FieldType.list,
+            config: ListFieldConfig<Point>(
+              label: 'Второе множество точек',
+              minItems: 3,
+              createItemField: () => PointField(
+                  config: PointFieldConfig(
+                label: 'Точка',
+              )),
+            )),
+      ];
 
   @override
   AlgorithmLab01V40DataModelFormModel createModel() =>
@@ -56,9 +58,9 @@ class AlgorithmLab01V40DataModelFormModel
 
   @override
   AlgorithmLab01V40DataModel get values => AlgorithmLab01V40DataModel(
-    pointsFirst: pointsFirstField.value!,
-    pointsSecond: pointsSecondField.value!,
-  );
+        pointsFirst: pointsFirstField.value!,
+        pointsSecond: pointsSecondField.value!,
+      );
 
   @override
   set values(AlgorithmLab01V40DataModel newValues) {
@@ -68,9 +70,9 @@ class AlgorithmLab01V40DataModelFormModel
 
   @override
   Map<String, dynamic> toMap() => {
-    'pointsFirst': pointsFirstField.value,
-    'pointsSecond': pointsSecondField.value,
-  };
+        'pointsFirst': pointsFirstField.value,
+        'pointsSecond': pointsSecondField.value,
+      };
 
   @override
   void fromMap(Map<String, dynamic> map) {
