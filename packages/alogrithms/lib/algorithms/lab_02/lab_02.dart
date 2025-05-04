@@ -44,6 +44,24 @@ class AlgorithmL02
 
   AlgorithmL02.fromModel(this._model);
 
+  /// Возвращает текущий держатель коллекций фигур
+  /// Используется только для тестирования
+  @visibleForTesting
+  // ignore: library_private_types_in_public_api
+  _FigureCollectionHolder get holder => _holder;
+
+  /// Возвращает размер стека коллекций фигур
+  /// Используется только для тестирования
+  @visibleForTesting
+  int get stackSize => _holder._stack.length;
+
+  /// Устанавливает коллекцию фигур для тестирования
+  /// Используется только для тестирования
+  @visibleForTesting
+  void setFigureCollection(FigureCollection collection) {
+    _holder.add(collection);
+  }
+
   @override
   Widget buildTopMenuWidget() =>
       FigureReaderWidget(onFiguresLoaded: (p) => _holder.add(p));
