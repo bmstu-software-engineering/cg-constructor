@@ -18,8 +18,9 @@ run_tests_in_package() {
     # Проверяем наличие pubspec.yaml для определения типа проекта
     if [ -f "pubspec.yaml" ]; then
       echo "Найден pubspec.yaml, запускаем fvm flutter test..."
-      fvm flutter test
-      
+      fvm flutter pub get > /dev/null
+      fvm flutter test -r failures-only --no-pub      
+
       # Сохраняем статус выполнения команды
       local test_status=$?
       
