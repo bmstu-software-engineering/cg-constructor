@@ -3,30 +3,15 @@ import 'package:algorithm_interface/algorithm_interface.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:models_data_ns/models_data_ns.dart';
-import 'package:figure_io/figure_io.dart';
 
 class GeometricTransformationModelImplMock extends Mock
     implements GeometricTransformationModelImpl {}
 
 class AlgorithmL02TestImpl extends AlgorithmL02 {
-  AlgorithmL02TestImpl(GeometricTransformationModelImpl model)
-    : super.fromModel(model);
+  AlgorithmL02TestImpl(super.model) : super.fromModel();
 
   // Метод для тестирования _FigureCollectionHolder
   void testHolderFunctionality() {
-    // Создаем тестовые данные
-    final testData = GeometricTransformationModel(
-      translation: Vector(dx: 10, dy: 20),
-      rotation: RotateTransformationModel(
-        center: Point(x: 0, y: 0),
-        angle: Angle(value: 45.0),
-      ),
-      scaling: ScaleTransformationModel(
-        center: Point(x: 0, y: 0),
-        scale: Scale(x: 2.0, y: 2.0),
-      ),
-    );
-
     // Проверяем, что holder пуст и выбрасывает исключение
     try {
       holder.last;
