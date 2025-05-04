@@ -151,30 +151,30 @@ class GeometricTransformationModelFormConfig
     FieldConfigEntry(
       id: 'translation',
       type: FieldType.vector,
-      config: VectorFieldConfig(label: 'Вектор перемещения'),
+      config: VectorFieldConfig(label: 'Вектор перемещения', isRequired: false),
     ),
     FieldConfigEntry(
       id: 'rotation',
       type: FieldType.form,
-      config: FormFieldConfig<RotateTransformationModel>(
+      config: FormFieldConfig<RotateTransformationModel?>(
         label: 'Параметры поворота',
         createFormModel:
             () => RotateTransformationModelFormModel(
               config: RotateTransformationModelFormConfig().toFormConfig(),
             ),
-        isRequired: true,
+        isRequired: false,
       ),
     ),
     FieldConfigEntry(
       id: 'scaling',
       type: FieldType.form,
-      config: FormFieldConfig<ScaleTransformationModel>(
+      config: FormFieldConfig<ScaleTransformationModel?>(
         label: 'Параметры масштабирования',
         createFormModel:
             () => ScaleTransformationModelFormModel(
               config: ScaleTransformationModelFormConfig().toFormConfig(),
             ),
-        isRequired: true,
+        isRequired: false,
       ),
     ),
   ];
@@ -193,18 +193,18 @@ class GeometricTransformationModelFormModel
   VectorField get translationField => getField<VectorField>('translation')!;
 
   /// Поле для rotation
-  FormField<RotateTransformationModel> get rotationField =>
-      getField<FormField<RotateTransformationModel>>('rotation')!;
+  FormField<RotateTransformationModel?> get rotationField =>
+      getField<FormField<RotateTransformationModel?>>('rotation')!;
 
   /// Поле для scaling
-  FormField<ScaleTransformationModel> get scalingField =>
-      getField<FormField<ScaleTransformationModel>>('scaling')!;
+  FormField<ScaleTransformationModel?> get scalingField =>
+      getField<FormField<ScaleTransformationModel?>>('scaling')!;
 
   @override
   GeometricTransformationModel get values => GeometricTransformationModel(
-    translation: translationField.value!,
-    rotation: rotationField.value!,
-    scaling: scalingField.value!,
+    translation: translationField.value,
+    rotation: rotationField.value,
+    scaling: scalingField.value,
   );
 
   @override
@@ -230,8 +230,8 @@ class GeometricTransformationModelFormModel
   @override
   void fromMap(Map<String, dynamic> map) {
     if (map.containsKey('translation'))
-      translationField.value = map['translation'] as Vector;
-    if (map.containsKey('rotation')) {
+      translationField.value = map['translation'] as Vector?;
+    if (map.containsKey('rotation') && map['rotation'] != null) {
       final nestedMap = map['rotation'] as Map<String, dynamic>;
       if (rotationField.value == null) {
         // Создаем новую вложенную форму
@@ -243,8 +243,10 @@ class GeometricTransformationModelFormModel
         // Используем существующую вложенную форму
         (rotationField as NestedFormField).fromMap(nestedMap);
       }
+    } else {
+      rotationField.value = null;
     }
-    if (map.containsKey('scaling')) {
+    if (map.containsKey('scaling') && map['scaling'] != null) {
       final nestedMap = map['scaling'] as Map<String, dynamic>;
       if (scalingField.value == null) {
         // Создаем новую вложенную форму
@@ -256,6 +258,8 @@ class GeometricTransformationModelFormModel
         // Используем существующую вложенную форму
         (scalingField as NestedFormField).fromMap(nestedMap);
       }
+    } else {
+      scalingField.value = null;
     }
   }
 }

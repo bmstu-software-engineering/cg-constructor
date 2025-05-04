@@ -24,6 +24,11 @@ class NoDataAlgorithmException implements AlgorithmException {
   String get message => 'Данные не загружены';
 }
 
+class ValidationAlgorithmException implements AlgorithmException {
+  @override
+  String get message => 'Данных для операции недостаточно';
+}
+
 class _FigureCollectionHolder {
   final List<FigureCollection> _stack = [];
 
@@ -71,33 +76,36 @@ class AlgorithmL02
       throw UnimplementedError('Не применимо к данному алгоритму');
 
   @override
-  ResultModel calculateWithVariant(String? variant) =>
-      switch (_AlgorithmVariant.fromString(
-        variant ??
-            (throw UnimplementedError('Не применимо к данному алгоритму')),
-      )) {
-        _AlgorithmVariant.move => ViewerResultModelV2(
-          figureCollection: _holder.last.move(_model.data.translation),
-        ),
-        _AlgorithmVariant.scale => ViewerResultModelV2(
-          figureCollection: _holder.last.scale(
-            _model.data.scaling.center,
-            _model.data.scaling.scale,
-          ),
-        ),
-        _AlgorithmVariant.rotate => ViewerResultModelV2(
-          figureCollection: _holder.last.rotate(
-            _model.data.rotation.center,
-            _model.data.rotation.angle.value,
-          ),
-        ),
-        _AlgorithmVariant.revert => ViewerResultModelV2(
-          figureCollection: _holder.last.let((_) {
-            _holder.revert();
-            return _holder.last;
-          }),
-        ),
-      }..let((result) => _holder.add(result.figureCollection));
+  ResultModel calculateWithVariant(
+    String? variant,
+  ) => switch (_AlgorithmVariant.fromString(
+    variant ?? (throw UnimplementedError('Не применимо к данному алгоритму')),
+  )) {
+    _AlgorithmVariant.move => ViewerResultModelV2(
+      figureCollection: _holder.last.move(
+        _model.data.translation ?? (throw ValidationAlgorithmException()),
+      ),
+    ),
+    _AlgorithmVariant.scale => ViewerResultModelV2(
+      figureCollection: _holder.last.scale(
+        _model.data.scaling?.center ?? (throw ValidationAlgorithmException()),
+        _model.data.scaling?.scale ?? (throw ValidationAlgorithmException()),
+      ),
+    ),
+    _AlgorithmVariant.rotate => ViewerResultModelV2(
+      figureCollection: _holder.last.rotate(
+        _model.data.rotation?.center ?? (throw ValidationAlgorithmException()),
+        _model.data.rotation?.angle.value ??
+            (throw ValidationAlgorithmException()),
+      ),
+    ),
+    _AlgorithmVariant.revert => ViewerResultModelV2(
+      figureCollection: _holder.last.let((_) {
+        _holder.revert();
+        return _holder.last;
+      }),
+    ),
+  }..let((result) => _holder.add(result.figureCollection));
 
   @override
   List<AlgorithmVariant> getAvailableVariants() =>

@@ -37,16 +37,16 @@ class RotateTransformationModel {
 @FormGen()
 class GeometricTransformationModel implements AlgorithmData {
   /// Вектор перемещения
-  @VectorFieldGen(label: 'Вектор перемещения')
-  final Vector translation;
+  @VectorFieldGen(label: 'Вектор перемещения', isRequired: false)
+  final Vector? translation;
 
   /// Угол поворота
-  @FieldGenAnnotation(label: 'Параметры поворота')
-  final RotateTransformationModel rotation;
+  @FieldGenAnnotation(label: 'Параметры поворота', isRequired: false)
+  final RotateTransformationModel? rotation;
 
   /// Параметры масштабирования
-  @FieldGenAnnotation(label: 'Параметры масштабирования')
-  final ScaleTransformationModel scaling;
+  @FieldGenAnnotation(label: 'Параметры масштабирования', isRequired: false)
+  final ScaleTransformationModel? scaling;
 
   /// Конструктор
   const GeometricTransformationModel({

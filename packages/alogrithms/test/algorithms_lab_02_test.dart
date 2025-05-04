@@ -144,15 +144,15 @@ void main() {
 
     test('проверка параметров преобразований', () {
       // Проверяем, что параметры преобразований соответствуют ожидаемым
-      expect(mockData.translation.dx, 10);
-      expect(mockData.translation.dy, 20);
-      expect(mockData.rotation.center.x, 0);
-      expect(mockData.rotation.center.y, 0);
-      expect(mockData.rotation.angle.value, 45.0);
-      expect(mockData.scaling.center.x, 0);
-      expect(mockData.scaling.center.y, 0);
-      expect(mockData.scaling.scale.x, 2.0);
-      expect(mockData.scaling.scale.y, 2.0);
+      expect(mockData.translation?.dx, 10);
+      expect(mockData.translation?.dy, 20);
+      expect(mockData.rotation?.center.x, 0);
+      expect(mockData.rotation?.center.y, 0);
+      expect(mockData.rotation?.angle.value, 45.0);
+      expect(mockData.scaling?.center.x, 0);
+      expect(mockData.scaling?.center.y, 0);
+      expect(mockData.scaling?.scale.x, 2.0);
+      expect(mockData.scaling?.scale.y, 2.0);
     });
 
     test('проверка доступа к модели данных', () {
