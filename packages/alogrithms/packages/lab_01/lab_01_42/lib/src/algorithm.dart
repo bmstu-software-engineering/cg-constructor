@@ -1,17 +1,14 @@
 import 'package:lab_01_common/lab_01_common.dart';
 import 'package:flutter/foundation.dart';
 
-import 'data.dart';
-
 /// Алгоритм поиска двух треугольников с минимальным отношением периметров
 class AlgorithmL01V42 implements Algorithm<FormsDataModel, ViewerResultModel> {
   @visibleForTesting
   const AlgorithmL01V42.fromModel(this._model);
 
-  factory AlgorithmL01V42() =>
-      AlgorithmL01V42.fromModel(AlgorithmL01V42DataModelImpl());
+  factory AlgorithmL01V42() => AlgorithmL01V42.fromModel(PointSetModelImpl());
 
-  final AlgorithmL01V42DataModelImpl _model;
+  final PointSetModelImpl _model;
 
   @override
   FormsDataModel getDataModel() => _model;

@@ -3,16 +3,15 @@ import 'package:lab_01_41/algorithm.dart';
 import 'package:lab_01_common/lab_01_common.dart';
 import 'package:mocktail/mocktail.dart';
 
-// Создаем мок для AlgorithmL01V41DataModelImpl
-class AlgorithmL01V41DataModelImplMock extends Mock
-    implements AlgorithmL01V41DataModelImpl {}
+// Создаем мок для PointSetModelImpl
+class PointSetModelImplMock extends Mock implements PointSetModelImpl {}
 
 void main() {
   late AlgorithmL01V41 algorithm;
-  late AlgorithmL01V41DataModelImplMock model;
+  late PointSetModelImplMock model;
 
   setUp(() {
-    model = AlgorithmL01V41DataModelImplMock();
+    model = PointSetModelImplMock();
     algorithm = AlgorithmL01V41.fromModel(model);
   });
 
@@ -21,7 +20,7 @@ void main() {
       // Устанавливаем тестовые данные
       // Два треугольника с разными площадями
       when(() => model.data).thenReturn(
-        AlgorithmLab0141DataModel(
+        PointSetModel(
           points: [
             // Треугольник A (большой)
             Point(x: 0, y: 0),
@@ -136,7 +135,7 @@ void main() {
       () {
         // Устанавливаем недостаточное количество точек
         when(() => model.data).thenReturn(
-          AlgorithmLab0141DataModel(
+          PointSetModel(
             points: [
               Point(x: 0, y: 0),
               Point(x: 1, y: 0),
@@ -169,7 +168,7 @@ void main() {
       () {
         // Устанавливаем точки, лежащие на одной прямой
         when(() => model.data).thenReturn(
-          AlgorithmLab0141DataModel(
+          PointSetModel(
             points: [
               Point(x: 0, y: 0),
               Point(x: 1, y: 0),
@@ -203,7 +202,7 @@ void main() {
     test('тест с треугольниками, имеющими общие вершины', () {
       // Устанавливаем точки так, чтобы некоторые треугольники имели общие вершины
       when(() => model.data).thenReturn(
-        AlgorithmLab0141DataModel(
+        PointSetModel(
           points: [
             // Общие вершины
             Point(x: 0, y: 0),
@@ -246,7 +245,7 @@ void main() {
     test('тест с треугольниками разной площади', () {
       // Устанавливаем точки для двух треугольников с разной площадью
       when(() => model.data).thenReturn(
-        AlgorithmLab0141DataModel(
+        PointSetModel(
           points: [
             // Треугольник A (большой)
             Point(x: 0, y: 0),

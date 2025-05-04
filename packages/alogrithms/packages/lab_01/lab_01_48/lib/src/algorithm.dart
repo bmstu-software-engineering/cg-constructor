@@ -1,24 +1,22 @@
 import 'package:lab_01_common/lab_01_common.dart';
 import 'package:flutter/foundation.dart';
 
-import 'data.dart';
-
 /// Алгоритм поиска треугольника максимальной площади, внутри описанной окружности которого располагается заданная точка
 class AlgorithmL01V48 implements Algorithm<FormsDataModel, ViewerResultModel> {
   @visibleForTesting
   const AlgorithmL01V48.fromModel(this._model);
 
   factory AlgorithmL01V48() =>
-      AlgorithmL01V48.fromModel(AlgorithmL01V48DataModelImpl());
+      AlgorithmL01V48.fromModel(PointSetWithReferencePointModelImpl());
 
-  final AlgorithmL01V48DataModelImpl _model;
+  final PointSetWithReferencePointModelImpl _model;
 
   @override
   FormsDataModel getDataModel() => _model;
 
   // Цвета для визуализации
   static const String _triangleColor = '#00FF00'; // Зеленый для треугольника
-  static const String _pointBColor = '#FF0000'; // Красный для точки pB
+  static const String _referencePointColor = '#FF0000'; // Красный для точки pB
   static const String _circumcenterColor =
       '#00FFFF'; // Голубой для центра описанной окружности
   static const String _otherPointsColor =
@@ -30,7 +28,7 @@ class AlgorithmL01V48 implements Algorithm<FormsDataModel, ViewerResultModel> {
   @override
   ViewerResultModel calculate() {
     final points = _model.data.points;
-    final pointB = _model.data.pointB;
+    final referencePoint = _model.data.referencePoint;
 
     // Проверка на достаточное количество точек
     if (points.length < _minPointsRequired) {
@@ -75,7 +73,7 @@ class AlgorithmL01V48 implements Algorithm<FormsDataModel, ViewerResultModel> {
         // Вычисляем расстояние от точки pB до центра описанной окружности
         final distanceToPointB = GeometryCalculator.calculateDistance(
           circumcenter,
-          pointB,
+          referencePoint,
         );
 
         // Проверяем, находится ли точка pB внутри описанной окружности
@@ -117,7 +115,7 @@ class AlgorithmL01V48 implements Algorithm<FormsDataModel, ViewerResultModel> {
     // Формируем результат для визуализации
     return _buildResult(
       maxAreaTriangle!,
-      pointB,
+      referencePoint,
       points,
       maxAreaCircumcenter!,
       maxAreaCircumradius!,
@@ -128,7 +126,7 @@ class AlgorithmL01V48 implements Algorithm<FormsDataModel, ViewerResultModel> {
   /// Формирует результат для визуализации
   ViewerResultModel _buildResult(
     Triangle triangle,
-    Point pointB,
+    Point referencePoint,
     List<Point> allPoints,
     Point circumcenter,
     double circumradius,
@@ -186,7 +184,12 @@ class AlgorithmL01V48 implements Algorithm<FormsDataModel, ViewerResultModel> {
 
     // Добавляем точку pB
     resultPoints.add(
-      Point(x: pointB.x, y: pointB.y, color: _pointBColor, thickness: 3.0),
+      Point(
+        x: referencePoint.x,
+        y: referencePoint.y,
+        color: _referencePointColor,
+        thickness: 3.0,
+      ),
     );
 
     // Добавляем остальные точки
@@ -218,7 +221,7 @@ class AlgorithmL01V48 implements Algorithm<FormsDataModel, ViewerResultModel> {
 - Радиус: ${circumradius.toStringAsFixed(4)}
 
 ### Точка pB (красная)
-- Координаты: (${pointB.x}, ${pointB.y})
+- Координаты: (${referencePoint.x}, ${referencePoint.y})
 
 ### Итоговые результаты
 - Площадь треугольника: **${area.toStringAsFixed(4)}**

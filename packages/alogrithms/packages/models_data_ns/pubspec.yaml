@@ -1,5 +1,5 @@
-name: alogrithms
-description: "A new Flutter package project."
+name: models_data_ns
+description: "Common data models for algorithms."
 version: 0.0.1
 homepage:
 publish_to: 'none'
@@ -11,47 +11,15 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-
+  # Добавляем необходимые зависимости
   models_ns:
-    path: ../models_ns
-  
-  forms:
-    path: ../forms 
+    path: ../../../models_ns
+  forms: 
+    path: ../../../forms
   forms_annotations:
-    path: ../forms/packages/forms_annotations
-  
-  figure_io:
-    path: ../figure_io
-
+    path: ../../../forms/packages/forms_annotations
   algorithm_interface:
-    path: ./packages/algorithm_interface
-
-  # Перечисление конкретных алгоритмов
-  lab_01_common:
-    path: ./packages/lab_01/lab_01_common
-  lab_01_27:
-    path: ./packages/lab_01/lab_01_27
-  lab_01_40:
-    path: ./packages/lab_01/lab_01_40
-  lab_01_41:
-    path: ./packages/lab_01/lab_01_41  
-  lab_01_42:
-    path: ./packages/lab_01/lab_01_42  
-  lab_01_43:
-    path: ./packages/lab_01/lab_01_43  
-  lab_01_44:
-    path: ./packages/lab_01/lab_01_44
-  lab_01_45:
-    path: ./packages/lab_01/lab_01_45  
-  lab_01_46:
-    path: ./packages/lab_01/lab_01_46  
-  lab_01_47:
-    path: ./packages/lab_01/lab_01_47  
-  lab_01_48:
-    path: ./packages/lab_01/lab_01_48  
-  rxdart: ^0.28.0
-  models_data_ns: 
-    path: ./packages/models_data_ns
+    path: ../algorithm_interface
 
 dev_dependencies:
   flutter_test:
@@ -61,8 +29,7 @@ dev_dependencies:
   freezed: ^2.4.6
   json_serializable: ^6.7.1
   forms_generator:
-    path: ../forms/packages/forms_generator
-  mocktail: ^1.0.4
+    path: ../../../forms/packages/forms_generator
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

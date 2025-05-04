@@ -22,12 +22,10 @@ find . -name "pubspec.yaml" | while read pubspec; do
     
     # Получаем зависимости с подробным выводом
     echo "Получение зависимостей..."
-    flutter pub get
+    flutter pub get > /dev/null
 
     # Проверяем наличие тестовых файлов
     if [ -d "test" ]; then
-        flutter pub run build_runner build --delete-conflicting-outputs
-
         # Выводим список тестовых файлов
         echo "Найдены тестовые файлы:"
         find test -name "*.dart" -type f

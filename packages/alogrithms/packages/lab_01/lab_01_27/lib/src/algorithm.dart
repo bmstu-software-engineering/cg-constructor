@@ -1,18 +1,15 @@
 import 'package:lab_01_common/lab_01_common.dart';
 import 'package:flutter/foundation.dart';
 
-import 'data.dart';
-
 /// Алгоритм поиска треугольника, максимизирующего разность между количеством точек
 /// в подтреугольниках, образованных медианами
 class AlgorithmL01V27 implements Algorithm<FormsDataModel, ViewerResultModel> {
   @visibleForTesting
   const AlgorithmL01V27.fromModel(this._model);
 
-  factory AlgorithmL01V27() =>
-      AlgorithmL01V27.fromModel(AlgorithmL01V27DataModelImpl());
+  factory AlgorithmL01V27() => AlgorithmL01V27.fromModel(PointSetModelImpl());
 
-  final AlgorithmL01V27DataModelImpl _model;
+  final PointSetModelImpl _model;
 
   @override
   FormsDataModel getDataModel() => _model;

@@ -435,6 +435,13 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.4"
+  models_data_ns:
+    dependency: transitive
+    description:
+      path: "../../models_data_ns"
+      relative: true
+    source: path
+    version: "0.0.1"
   models_ns:
     dependency: transitive
     description:

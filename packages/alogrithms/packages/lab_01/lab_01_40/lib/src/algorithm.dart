@@ -1,16 +1,14 @@
 import 'package:lab_01_common/lab_01_common.dart';
 import 'package:flutter/foundation.dart';
 
-import 'data.dart';
-
 class AlgorithmL01V40 implements Algorithm<FormsDataModel, ViewerResultModel> {
   @visibleForTesting
   const AlgorithmL01V40.fromModel(this._model);
 
   factory AlgorithmL01V40() =>
-      AlgorithmL01V40.fromModel(AlgorithmL01VBasicDataModelImpl());
+      AlgorithmL01V40.fromModel(DualPointSetModelImpl());
 
-  final AlgorithmL01VBasicDataModelImpl _model;
+  final DualPointSetModelImpl _model;
 
   @override
   FormsDataModel getDataModel() => _model;
@@ -22,8 +20,8 @@ class AlgorithmL01V40 implements Algorithm<FormsDataModel, ViewerResultModel> {
 
   @override
   ViewerResultModel calculate() {
-    final pointsFirst = _model.data.pointsFirst;
-    final pointsSecond = _model.data.pointsSecond;
+    final pointsFirst = _model.data.firstPoints;
+    final pointsSecond = _model.data.secondPoints;
 
     // Проверка на достаточное количество точек
     ObtuseTriangleFinder.validatePointsCount(pointsFirst, pointsSecond);

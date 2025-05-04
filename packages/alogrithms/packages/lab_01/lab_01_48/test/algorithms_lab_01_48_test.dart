@@ -3,16 +3,16 @@ import 'package:lab_01_48/algorithm.dart';
 import 'package:lab_01_common/lab_01_common.dart';
 import 'package:mocktail/mocktail.dart';
 
-// Создаем мок для AlgorithmL01V48DataModelImpl
-class AlgorithmL01V48DataModelImplMock extends Mock
-    implements AlgorithmL01V48DataModelImpl {}
+// Создаем мок для PointSetWithReferencePointModelImpl
+class PointSetWithReferencePointModelImplMock extends Mock
+    implements PointSetWithReferencePointModelImpl {}
 
 void main() {
   late AlgorithmL01V48 algorithm;
-  late AlgorithmL01V48DataModelImplMock model;
+  late PointSetWithReferencePointModelImplMock model;
 
   setUp(() {
-    model = AlgorithmL01V48DataModelImplMock();
+    model = PointSetWithReferencePointModelImplMock();
     algorithm = AlgorithmL01V48.fromModel(model);
   });
 
@@ -22,7 +22,7 @@ void main() {
       () {
         // Устанавливаем тестовые данные
         when(() => model.data).thenReturn(
-          AlgorithmLab0148DataModel(
+          PointSetWithReferencePointModel(
             points: [
               // Точки для формирования треугольников
               Point(x: 0, y: 0),
@@ -32,7 +32,7 @@ void main() {
               Point(x: 25, y: 10),
               Point(x: 30, y: 0),
             ],
-            pointB: Point(
+            referencePoint: Point(
               x: 5,
               y: 5,
             ), // Точка внутри описанной окружности первого треугольника
@@ -100,7 +100,7 @@ void main() {
         // Проверяем цвета точек и линий
         final trianglePoints =
             result.points.where((p) => p.color == '#00FF00').toList();
-        final pointBPoint =
+        final referencePointPoint =
             result.points.where((p) => p.color == '#FF0000').toList();
         final circumcenterPoint =
             result.points.where((p) => p.color == '#00FFFF').toList();
@@ -113,7 +113,7 @@ void main() {
           reason: 'Должно быть 3 точки для вершин треугольника',
         );
         expect(
-          pointBPoint.length,
+          referencePointPoint.length,
           1,
           reason: 'Должна быть 1 точка для точки pB',
         );
@@ -135,7 +135,7 @@ void main() {
       () {
         // Устанавливаем недостаточное количество точек
         when(() => model.data).thenReturn(
-          AlgorithmLab0148DataModel(
+          PointSetWithReferencePointModel(
             points: [
               Point(x: 0, y: 0),
               Point(
@@ -143,7 +143,7 @@ void main() {
                 y: 0,
               ), // Только 2 точки, недостаточно для треугольника
             ],
-            pointB: Point(x: 0.5, y: 0.5),
+            referencePoint: Point(x: 0.5, y: 0.5),
           ),
         );
 
@@ -166,9 +166,12 @@ void main() {
       () {
         // Устанавливаем точки так, чтобы точка pB не находилась внутри описанной окружности ни одного треугольника
         when(() => model.data).thenReturn(
-          AlgorithmLab0148DataModel(
+          PointSetWithReferencePointModel(
             points: [Point(x: 0, y: 0), Point(x: 10, y: 0), Point(x: 5, y: 10)],
-            pointB: Point(x: 100, y: 100), // Точка далеко от треугольника
+            referencePoint: Point(
+              x: 100,
+              y: 100,
+            ), // Точка далеко от треугольника
           ),
         );
 
@@ -193,13 +196,13 @@ void main() {
       () {
         // Устанавливаем точки, лежащие на одной прямой
         when(() => model.data).thenReturn(
-          AlgorithmLab0148DataModel(
+          PointSetWithReferencePointModel(
             points: [
               Point(x: 0, y: 0),
               Point(x: 1, y: 0),
               Point(x: 2, y: 0), // Точки лежат на одной прямой
             ],
-            pointB: Point(x: 1, y: 0), // Точка на прямой
+            referencePoint: Point(x: 1, y: 0), // Точка на прямой
           ),
         );
 
@@ -224,7 +227,7 @@ void main() {
       () {
         // Устанавливаем точки так, чтобы точка pB находилась внутри описанных окружностей нескольких треугольников
         when(() => model.data).thenReturn(
-          AlgorithmLab0148DataModel(
+          PointSetWithReferencePointModel(
             points: [
               // Точки для формирования треугольников
               Point(x: 0, y: 0),
@@ -234,7 +237,7 @@ void main() {
               Point(x: 10, y: 0),
               Point(x: 5, y: 5), // Треугольник 2 (меньшей площади)
             ],
-            pointB: Point(
+            referencePoint: Point(
               x: 5,
               y: 2,
             ), // Точка внутри описанных окружностей обоих треугольников

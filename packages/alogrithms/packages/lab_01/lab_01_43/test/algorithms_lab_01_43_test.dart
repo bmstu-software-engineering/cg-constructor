@@ -3,16 +3,15 @@ import 'package:lab_01_43/algorithm.dart';
 import 'package:lab_01_common/lab_01_common.dart';
 import 'package:mocktail/mocktail.dart';
 
-// Создаем мок для AlgorithmL01V43DataModelImpl
-class AlgorithmL01V43DataModelImplMock extends Mock
-    implements AlgorithmL01V43DataModelImpl {}
+// Создаем мок для PointSetModelImpl
+class PointSetModelImplMock extends Mock implements PointSetModelImpl {}
 
 void main() {
   late AlgorithmL01V43 algorithm;
-  late AlgorithmL01V43DataModelImplMock model;
+  late PointSetModelImplMock model;
 
   setUp(() {
-    model = AlgorithmL01V43DataModelImplMock();
+    model = PointSetModelImplMock();
     algorithm = AlgorithmL01V43.fromModel(model);
   });
 
@@ -23,7 +22,7 @@ void main() {
         // Устанавливаем тестовые данные
         // Два треугольника с разным расположением
         when(() => model.data).thenReturn(
-          AlgorithmLab0143DataModel(
+          PointSetModel(
             points: [
               // Треугольник A
               Point(x: 0, y: 0),
@@ -162,7 +161,7 @@ void main() {
       () {
         // Устанавливаем недостаточное количество точек
         when(() => model.data).thenReturn(
-          AlgorithmLab0143DataModel(
+          PointSetModel(
             points: [
               Point(x: 0, y: 0),
               Point(x: 1, y: 0),
@@ -195,7 +194,7 @@ void main() {
       () {
         // Устанавливаем точки, лежащие на одной прямой
         when(() => model.data).thenReturn(
-          AlgorithmLab0143DataModel(
+          PointSetModel(
             points: [
               Point(x: 0, y: 0),
               Point(x: 1, y: 0),
@@ -229,7 +228,7 @@ void main() {
     test('тест с треугольниками, имеющими общие вершины', () {
       // Устанавливаем точки так, чтобы некоторые треугольники имели общие вершины
       when(() => model.data).thenReturn(
-        AlgorithmLab0143DataModel(
+        PointSetModel(
           points: [
             // Общие вершины
             Point(x: 0, y: 0),
@@ -275,7 +274,7 @@ void main() {
       // Устанавливаем точки для двух треугольников, центры вписанных окружностей которых
       // образуют вертикальную линию (угол 90 градусов с осью абсцисс)
       when(() => model.data).thenReturn(
-        AlgorithmLab0143DataModel(
+        PointSetModel(
           points: [
             // Треугольник A
             Point(x: 0, y: 0),

@@ -2,18 +2,15 @@ import 'package:lab_01_common/lab_01_common.dart';
 import 'package:flutter/foundation.dart';
 import 'dart:math';
 
-import 'data.dart';
-
 /// Алгоритм поиска двух треугольников, таких что прямая, проходящая через центры вписанных окружностей,
 /// образует с осью абсцисс максимальный угол
 class AlgorithmL01V43 implements Algorithm<FormsDataModel, ViewerResultModel> {
   @visibleForTesting
   const AlgorithmL01V43.fromModel(this._model);
 
-  factory AlgorithmL01V43() =>
-      AlgorithmL01V43.fromModel(AlgorithmL01V43DataModelImpl());
+  factory AlgorithmL01V43() => AlgorithmL01V43.fromModel(PointSetModelImpl());
 
-  final AlgorithmL01V43DataModelImpl _model;
+  final PointSetModelImpl _model;
 
   @override
   FormsDataModel getDataModel() => _model;

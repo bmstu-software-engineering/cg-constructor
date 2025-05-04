@@ -1,17 +1,14 @@
 import 'package:lab_01_common/lab_01_common.dart';
 import 'package:flutter/foundation.dart';
 
-import 'data.dart';
-
 /// Алгоритм поиска двух треугольников с максимальным отношением площадей
 class AlgorithmL01V41 implements Algorithm<FormsDataModel, ViewerResultModel> {
   @visibleForTesting
   const AlgorithmL01V41.fromModel(this._model);
 
-  factory AlgorithmL01V41() =>
-      AlgorithmL01V41.fromModel(AlgorithmL01V41DataModelImpl());
+  factory AlgorithmL01V41() => AlgorithmL01V41.fromModel(PointSetModelImpl());
 
-  final AlgorithmL01V41DataModelImpl _model;
+  final PointSetModelImpl _model;
 
   @override
   FormsDataModel getDataModel() => _model;

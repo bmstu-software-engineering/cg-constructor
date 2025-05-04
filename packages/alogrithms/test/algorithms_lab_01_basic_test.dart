@@ -1,31 +1,29 @@
 import 'package:alogrithms/algorithms/lab_01_basic/lab_01_basic.dart';
-import 'package:alogrithms/algorithms/lab_01_basic/lab_01_basic_data_model.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:lab_01_common/lab_01_common.dart';
 import 'package:mocktail/mocktail.dart';
 
-class AlgorithmL01VBasicDataModelImplMock extends Mock
-    implements AlgorithmL01VBasicDataModelImpl {}
+class PointSetModelImplMock extends Mock implements PointSetModelImpl {}
 
 void main() {
   late AlgorithmL01VBasic algorithm;
-  late AlgorithmL01VBasicDataModelImplMock model;
+  late PointSetModelImplMock model;
 
   setUp(() {
-    model = AlgorithmL01VBasicDataModelImplMock();
+    model = PointSetModelImplMock();
     algorithm = AlgorithmL01VBasic.fromModel(model);
   });
 
   group('AlgorithmL01VBasic - Тестирование', () {
     test('создание модели данных', () {
       final dataModel = algorithm.getDataModel();
-      expect(dataModel, isA<AlgorithmL01VBasicDataModelImplMock>());
+      expect(dataModel, isA<PointSetModelImplMock>());
     });
 
     test('базовая функциональность calculate с корректными данными', () {
       // Устанавливаем тестовые данные
       when(() => model.data).thenReturn(
-        AlgorithmLab01BasicDataModel(
+        PointSetModel(
           points: [Point(x: 0, y: 0), Point(x: 10, y: 0), Point(x: 5, y: 5)],
         ),
       );

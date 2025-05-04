@@ -1,8 +1,7 @@
 import 'package:alogrithms/alogrithms.dart';
 import 'package:figure_io/figure_io.dart';
 import 'package:flutter/material.dart';
-
-import 'data.dart';
+import 'package:models_data_ns/models_data_ns.dart';
 
 enum _AlgorithmVariant {
   move,
@@ -37,10 +36,10 @@ class AlgorithmL02
     with BaseAlgorithmWithCustomElement
     implements VariatedAlgorithm {
   final _holder = _FigureCollectionHolder();
-  final AlgorithmLab02DataModelImpl _model;
+  final GeometricTransformationModelImpl _model;
 
   factory AlgorithmL02() =>
-      AlgorithmL02.fromModel(AlgorithmLab02DataModelImpl());
+      AlgorithmL02.fromModel(GeometricTransformationModelImpl());
 
   AlgorithmL02.fromModel(this._model);
 

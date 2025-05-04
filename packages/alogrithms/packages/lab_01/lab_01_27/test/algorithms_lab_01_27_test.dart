@@ -3,16 +3,15 @@ import 'package:lab_01_27/algorithm.dart';
 import 'package:lab_01_common/lab_01_common.dart';
 import 'package:mocktail/mocktail.dart';
 
-// Создаем мок для AlgorithmL01V27DataModelImpl
-class AlgorithmL01V27DataModelImplMock extends Mock
-    implements AlgorithmL01V27DataModelImpl {}
+// Создаем мок для PointSetModelImpl
+class PointSetModelImplMock extends Mock implements PointSetModelImpl {}
 
 void main() {
   late AlgorithmL01V27 algorithm;
-  late AlgorithmL01V27DataModelImplMock model;
+  late PointSetModelImplMock model;
 
   setUp(() {
-    model = AlgorithmL01V27DataModelImplMock();
+    model = PointSetModelImplMock();
     algorithm = AlgorithmL01V27.fromModel(model);
   });
 
@@ -22,7 +21,7 @@ void main() {
       // Треугольник с вершинами в (0,0), (10,0), (5,10)
       // и несколько точек внутри треугольника
       when(() => model.data).thenReturn(
-        AlgorithmLab0127DataModel(
+        PointSetModel(
           points: [
             Point(x: 0, y: 0), // Вершина треугольника
             Point(x: 10, y: 0), // Вершина треугольника
@@ -149,7 +148,7 @@ void main() {
       () {
         // Устанавливаем недостаточное количество точек
         when(() => model.data).thenReturn(
-          AlgorithmLab0127DataModel(
+          PointSetModel(
             points: [
               Point(x: 0, y: 0),
               Point(
@@ -179,7 +178,7 @@ void main() {
       () {
         // Устанавливаем точки, лежащие на одной прямой
         when(() => model.data).thenReturn(
-          AlgorithmLab0127DataModel(
+          PointSetModel(
             points: [
               Point(x: 0, y: 0),
               Point(x: 1, y: 0),
@@ -205,7 +204,7 @@ void main() {
     test('тест с равномерным распределением точек в подтреугольниках', () {
       // Устанавливаем точки так, чтобы в каждом подтреугольнике было одинаковое количество точек
       when(() => model.data).thenReturn(
-        AlgorithmLab0127DataModel(
+        PointSetModel(
           points: [
             Point(x: 0, y: 0), // Вершина треугольника
             Point(x: 10, y: 0), // Вершина треугольника

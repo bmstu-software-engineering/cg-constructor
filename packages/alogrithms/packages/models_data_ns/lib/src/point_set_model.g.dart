@@ -1,16 +1,15 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'data.dart';
+part of 'point_set_model.dart';
 
 // **************************************************************************
 // FormGenerator
 // **************************************************************************
 
-/// Типизированная конфигурация формы для AlgorithmLab0145DataModel
-class AlgorithmLab0145DataModelFormConfig
-    extends TypedFormConfig<AlgorithmLab0145DataModel> {
+/// Типизированная конфигурация формы для PointSetModel
+class PointSetModelFormConfig extends TypedFormConfig<PointSetModel> {
   @override
-  String get name => 'AlgorithmLab0145DataModel';
+  String get name => 'PointSetModel';
 
   @override
   List<FieldConfigEntry> get fields => [
@@ -19,7 +18,7 @@ class AlgorithmLab0145DataModelFormConfig
       type: FieldType.list,
       config: ListFieldConfig<Point>(
         label: 'Множество точек',
-        minItems: 6,
+        minItems: 3,
         createItemField:
             () => PointField(config: PointFieldConfig(label: 'Точка')),
       ),
@@ -27,25 +26,23 @@ class AlgorithmLab0145DataModelFormConfig
   ];
 
   @override
-  AlgorithmLab0145DataModelFormModel createModel() =>
-      AlgorithmLab0145DataModelFormModel(config: toFormConfig());
+  PointSetModelFormModel createModel() =>
+      PointSetModelFormModel(config: toFormConfig());
 }
 
-/// Типизированная модель формы для AlgorithmLab0145DataModel
-class AlgorithmLab0145DataModelFormModel
-    extends TypedFormModel<AlgorithmLab0145DataModel> {
-  AlgorithmLab0145DataModelFormModel({required super.config});
+/// Типизированная модель формы для PointSetModel
+class PointSetModelFormModel extends TypedFormModel<PointSetModel> {
+  PointSetModelFormModel({required super.config});
 
   /// Поле для points
   ListField<Point, FormField<Point>> get pointsField =>
       getField<ListField<Point, FormField<Point>>>('points')!;
 
   @override
-  AlgorithmLab0145DataModel get values =>
-      AlgorithmLab0145DataModel(points: pointsField.value!);
+  PointSetModel get values => PointSetModel(points: pointsField.value!);
 
   @override
-  set values(AlgorithmLab0145DataModel newValues) {
+  set values(PointSetModel newValues) {
     pointsField.value = newValues.points;
   }
 

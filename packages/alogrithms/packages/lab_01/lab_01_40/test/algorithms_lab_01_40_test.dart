@@ -3,16 +3,15 @@ import 'package:lab_01_40/algorithm.dart';
 import 'package:lab_01_common/lab_01_common.dart';
 import 'package:mocktail/mocktail.dart';
 
-// Создаем мок для AlgorithmL01VBasicDataModelImpl
-class AlgorithmL01VBasicDataModelImplMock extends Mock
-    implements AlgorithmL01VBasicDataModelImpl {}
+// Создаем мок для PointSetModelImpl
+class DualPointSetModelImplMock extends Mock implements DualPointSetModelImpl {}
 
 void main() {
   late AlgorithmL01V40 algorithm;
-  late AlgorithmL01VBasicDataModelImplMock model;
+  late DualPointSetModelImpl model;
 
   setUp(() {
-    model = AlgorithmL01VBasicDataModelImplMock();
+    model = DualPointSetModelImplMock();
     algorithm = AlgorithmL01V40.fromModel(model);
   });
 
@@ -24,13 +23,13 @@ void main() {
         // Первое множество содержит треугольник с тупым углом при вершине (5, -1)
         // Второе множество содержит треугольник с тупым углом при вершине (5, 6)
         when(() => model.data).thenReturn(
-          AlgorithmLab01V40DataModel(
-            pointsFirst: [
+          DualPointSetModel(
+            firstPoints: [
               Point(x: 0, y: 0),
               Point(x: 10, y: 0),
               Point(x: 5, y: -1), // Вершина с тупым углом
             ],
-            pointsSecond: [
+            secondPoints: [
               Point(x: 0, y: 5),
               Point(x: 10, y: 5),
               Point(x: 5, y: 6), // Вершина с тупым углом
@@ -152,8 +151,8 @@ void main() {
       // Устанавливаем тестовые данные с остроугольными треугольниками в первом множестве
       // и треугольниками с тупыми углами во втором множестве
       when(() => model.data).thenReturn(
-        AlgorithmLab01V40DataModel(
-          pointsFirst: [
+        DualPointSetModel(
+          firstPoints: [
             Point(x: 0, y: 0),
             Point(x: 1, y: 0),
             Point(
@@ -161,7 +160,7 @@ void main() {
               y: 0.866,
             ), // Равносторонний треугольник (все углы 60°)
           ],
-          pointsSecond: [
+          secondPoints: [
             Point(x: 0, y: 5),
             Point(x: 10, y: 5),
             Point(x: 5, y: 6), // Треугольник с тупым углом
@@ -186,13 +185,13 @@ void main() {
       // Устанавливаем тестовые данные с треугольниками с тупыми углами в первом множестве
       // и остроугольными треугольниками во втором множестве
       when(() => model.data).thenReturn(
-        AlgorithmLab01V40DataModel(
-          pointsFirst: [
+        DualPointSetModel(
+          firstPoints: [
             Point(x: 0, y: 0),
             Point(x: 10, y: 0),
             Point(x: 5, y: -1), // Треугольник с тупым углом
           ],
-          pointsSecond: [
+          secondPoints: [
             Point(x: 3, y: 0),
             Point(x: 4, y: 0),
             Point(
@@ -219,8 +218,8 @@ void main() {
     test('тест с несколькими треугольниками с тупыми углами', () {
       // Устанавливаем тестовые данные с несколькими треугольниками с тупыми углами
       when(() => model.data).thenReturn(
-        AlgorithmLab01V40DataModel(
-          pointsFirst: [
+        DualPointSetModel(
+          firstPoints: [
             Point(x: 0, y: 0),
             Point(x: 10, y: 0),
             Point(x: 5, y: -1), // Треугольник с тупым углом при вершине (5, -1)
@@ -229,7 +228,7 @@ void main() {
               y: 10,
             ), // Добавляем еще одну точку для образования новых треугольников
           ],
-          pointsSecond: [
+          secondPoints: [
             Point(x: 0, y: 5),
             Point(x: 10, y: 5),
             Point(x: 5, y: 6), // Треугольник с тупым углом при вершине (5, 6)
@@ -293,12 +292,12 @@ void main() {
     test('тест на исключение InsufficientPointsException в первом множестве', () {
       // Устанавливаем недостаточное количество точек в первом множестве
       when(() => model.data).thenReturn(
-        AlgorithmLab01V40DataModel(
-          pointsFirst: [
+        DualPointSetModel(
+          firstPoints: [
             Point(x: 0, y: 0),
             Point(x: 1, y: 0), // Только 2 точки, недостаточно для треугольника
           ],
-          pointsSecond: [
+          secondPoints: [
             Point(x: 0, y: 5),
             Point(x: 10, y: 5),
             Point(x: 5, y: 6),
@@ -324,13 +323,13 @@ void main() {
       () {
         // Устанавливаем недостаточное количество точек во втором множестве
         when(() => model.data).thenReturn(
-          AlgorithmLab01V40DataModel(
-            pointsFirst: [
+          DualPointSetModel(
+            firstPoints: [
               Point(x: 0, y: 0),
               Point(x: 10, y: 0),
               Point(x: 5, y: -1),
             ],
-            pointsSecond: [
+            secondPoints: [
               Point(
                 x: 3,
                 y: 0,
@@ -364,7 +363,7 @@ void main() {
         ];
 
         when(() => model.data).thenReturn(
-          AlgorithmLab01V40DataModel(pointsFirst: points, pointsSecond: points),
+          DualPointSetModel(firstPoints: points, secondPoints: points),
         );
 
         // Проверяем, что при вызове calculate выбрасывается исключение CalculationException

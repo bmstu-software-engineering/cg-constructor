@@ -7,3 +7,4 @@ export 'src/algorithm_parts/obtuse_triangle_finder.dart';
 export 'src/algorithm_parts/triangle_median_calculator.dart';
 export 'src/algorithm_parts/point_in_triangle_checker.dart';
 export 'src/algorithm_parts/points_on_line_checker.dart';
+export 'package:models_data_ns/models_data_ns.dart';

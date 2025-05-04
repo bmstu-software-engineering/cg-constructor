@@ -11,6 +11,49 @@
 - `lab_01_42/` - алгоритм для варианта 42 (поиск двух треугольников с минимальным отношением периметров)
 - `lab_01_43/` - алгоритм для варианта 43 (поиск двух треугольников с максимальным углом между прямой через центры вписанных окружностей и осью абсцисс)
 
+## Общие модели данных
+
+Для ускорения разработки и переиспользования однотипных моделей данных, используйте пакет `models_data_ns`, который содержит обобщенные модели данных для различных типов алгоритмов:
+
+### Доступные модели
+
+1. **PointSetModel** - для алгоритмов, работающих с одним набором точек
+   ```dart
+   PointSetModel({required List<Point> points})
+   ```
+
+2. **PointSetWithReferencePointModel** - для алгоритмов, работающих с набором точек и дополнительной контрольной точкой
+   ```dart
+   PointSetWithReferencePointModel({
+     required List<Point> points,
+     required Point referencePoint,
+   })
+   ```
+
+3. **DualPointSetModel** - для алгоритмов, работающих с двумя наборами точек
+   ```dart
+   DualPointSetModel({
+     required List<Point> firstPoints,
+     required List<Point> secondPoints,
+   })
+   ```
+
+4. **GeometricTransformationModel** - для алгоритмов геометрических преобразований
+   ```dart
+   GeometricTransformationModel({
+     required Vector translation,
+     required Angle rotation,
+     required ScaleTransformationModel scaling,
+   })
+   ```
+
+### Преимущества использования общих моделей
+
+1. **Ускорение разработки**: Не нужно создавать новые модели для каждого алгоритма
+2. **Единообразие**: Все алгоритмы используют одинаковые модели данных
+3. **Упрощение кодогенерации**: Генерация кода для форм происходит один раз для каждой модели
+4. **Переиспользование**: Модели могут быть использованы в различных алгоритмах
+
 ## Инструкция по добавлению своего алгоритма
 
 ### 1. Создайте новую директорию для вашего алгоритма
@@ -51,6 +94,8 @@ dependencies:
     sdk: flutter
   lab_01_common:
     path: ../lab_01_common
+  models_data_ns:
+    path: ../../../packages/models_data_ns
 
 dev_dependencies:
   flutter_test:
@@ -59,54 +104,31 @@ dev_dependencies:
   mocktail: ^1.0.4
 ```
 
-#### 3.2. Реализуйте модель данных
+#### 3.2. Выберите подходящую модель данных
 
-Отредактируйте файл `lab_01_XX/lib/src/data.dart`:
+Вместо создания собственной модели данных, используйте одну из общих моделей из пакета `models_data_ns`. Выберите модель, которая лучше всего подходит для вашего алгоритма:
 
-```dart
-import 'package:lab_01_common/forms_annotations.dart';
-import 'package:lab_01_common/lab_01_common.dart';
+- **PointSetModel** - если ваш алгоритм работает с одним набором точек
+- **PointSetWithReferencePointModel** - если ваш алгоритм работает с набором точек и дополнительной контрольной точкой
+- **DualPointSetModel** - если ваш алгоритм работает с двумя наборами точек
+- **GeometricTransformationModel** - если ваш алгоритм выполняет геометрические преобразования
 
-part 'data.g.dart';
+Если ни одна из существующих моделей не подходит для вашего алгоритма, вы можете создать собственную модель данных, как описано ниже.
 
-/// Модель данных для вашего алгоритма
-@FormGen()
-class AlgorithmLab01XXDataModel implements AlgorithmData {
-  /// Определите необходимые поля данных с аннотациями для генерации форм
-  @ListFieldGen(
-    label: 'Множество точек',
-    itemConfig: PointFieldGen(),
-    minItems: 3, // Укажите минимальное количество точек, необходимое для вашего алгоритма
-  )
-  final List<Point> points;
+#### 3.2.1. (Опционально) Реализуйте собственную модель данных
 
-  /// Добавьте другие необходимые поля
+Если вам нужна модель не определённая в `models_data_ns` добавьте её в пакет `models_data_ns`. А также обновите данную документацию для переиспользования добавленной модели. 
 
-  /// Конструктор
-  const AlgorithmLab01XXDataModel({required this.points});
-}
-
-class AlgorithmL01VXXDataModelImpl implements FormsDataModel {
-  final _config = AlgorithmLab01XXDataModelFormConfig();
-  late final _model = _config.createModel();
-
-  @override
-  AlgorithmLab01XXDataModel get data => _model.values;
-
-  @override
-  DynamicFormModel get config => _model.toDynamicFormModel();
-}
-```
+Также запустите кодогенерацию в папке проекта `models_data_ns` используя команду ./codegen.sh в директории пакета `models_data_ns`.
 
 #### 3.3. Реализуйте алгоритм
 
-Отредактируйте файл `lab_01_XX/lib/src/algorithm.dart`:
+Отредактируйте файл `lab_01_XX/lib/src/algorithm.dart`, используя выбранную модель данных:
 
 ```dart
 import 'package:lab_01_common/lab_01_common.dart';
 import 'package:flutter/foundation.dart';
-
-import 'data.dart';
+import 'package:models_data_ns/models_data_ns.dart';
 
 /// Реализация вашего алгоритма
 class AlgorithmL01VXX implements Algorithm<FormsDataModel, ViewerResultModel> {
@@ -114,9 +136,9 @@ class AlgorithmL01VXX implements Algorithm<FormsDataModel, ViewerResultModel> {
   const AlgorithmL01VXX.fromModel(this._model);
 
   factory AlgorithmL01VXX() =>
-      AlgorithmL01VXX.fromModel(AlgorithmL01VXXDataModelImpl());
+      AlgorithmL01VXX.fromModel(PointSetModelImpl()); // Используйте подходящую модель
 
-  final AlgorithmL01VXXDataModelImpl _model;
+  final FormsDataModel _model;
 
   @override
   FormsDataModel getDataModel() => _model;
@@ -126,7 +148,9 @@ class AlgorithmL01VXX implements Algorithm<FormsDataModel, ViewerResultModel> {
 
   @override
   ViewerResultModel calculate() {
-    final points = _model.data.points;
+    // Получите данные из модели
+    final PointSetModel data = _model.data as PointSetModel;
+    final points = data.points;
     
     // Проверка на достаточное количество точек
     if (points.length < 3) { // Замените на нужное количество
@@ -211,20 +235,9 @@ library lab_01_XX;
 
 export 'src/factory.dart';
 export 'src/algorithm.dart';
-export 'src/data.dart';
 ```
 
-### 4. Сгенерируйте код для модели данных
-
-Запустите генерацию кода для модели данных:
-
-```bash
-./codegen.sh
-```
-
-Этот скрипт запустит генерацию кода для всех пакетов в проекте.
-
-### 5. Создайте тесты для вашего алгоритма
+### 4. Создайте тесты для вашего алгоритма
 
 Создайте файл `lab_01_XX/test/algorithms_lab_01_XX_test.dart` с тестами для вашего алгоритма:
 
@@ -233,17 +246,18 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:lab_01_XX/algorithm.dart';
 import 'package:lab_01_common/lab_01_common.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:models_data_ns/models_data_ns.dart';
 
-// Создаем мок для AlgorithmL01VXXDataModelImpl
-class AlgorithmL01VXXDataModelImplMock extends Mock
-    implements AlgorithmL01VXXDataModelImpl {}
+// Создаем мок для модели данных
+class PointSetModelImplMock extends Mock
+    implements PointSetModelImpl {}
 
 void main() {
   late AlgorithmL01VXX algorithm;
-  late AlgorithmL01VXXDataModelImplMock model;
+  late PointSetModelImplMock model;
 
   setUp(() {
-    model = AlgorithmL01VXXDataModelImplMock();
+    model = PointSetModelImplMock();
     algorithm = AlgorithmL01VXX.fromModel(model);
   });
 
@@ -251,7 +265,7 @@ void main() {
     test('базовый тест', () {
       // Устанавливаем тестовые данные
       when(() => model.data).thenReturn(
-        AlgorithmLab01XXDataModel(
+        PointSetModel(
           points: [
             Point(x: 0, y: 0),
             Point(x: 1, y: 0),
@@ -277,7 +291,7 @@ void main() {
       () {
         // Устанавливаем недостаточное количество точек
         when(() => model.data).thenReturn(
-          AlgorithmLab01XXDataModel(
+          PointSetModel(
             points: [
               Point(x: 0, y: 0),
               Point(x: 1, y: 0),
@@ -299,7 +313,9 @@ void main() {
 }
 ```
 
-### 6. Запустите тесты
+После написания тестов обязательно проверьте директорию на присутствие лишних файлов. Если они пристутсвуют удалите их.
+
+### 5. Запустите тесты
 
 Запустите тесты для вашего алгоритма:
 
@@ -327,26 +343,34 @@ void main() {
 
 Алгоритм находит два треугольника A и B, такие что отношение площадей Sa/Sb максимально, при условии, что никакие две точки обоих треугольников не совпадают.
 
+Для этого алгоритма подходит модель `PointSetModel` с минимальным количеством точек 6.
+
 ### Вариант 42: Поиск двух треугольников с минимальным отношением периметров
 
 Алгоритм находит два треугольника A и B, такие что отношение периметров Pa/Pb минимально, при условии, что никакие две точки обоих треугольников не совпадают.
+
+Для этого алгоритма подходит модель `PointSetModel` с минимальным количеством точек 6.
 
 ### Вариант 43: Поиск двух треугольников с максимальным углом между прямой через центры вписанных окружностей и осью абсцисс
 
 Алгоритм находит два треугольника A и B, такие что прямая, проходящая через центры вписанных окружностей, образует с осью абсцисс максимальный угол, при условии, что никакие две точки обоих треугольников не совпадают.
 
+Для этого алгоритма подходит модель `PointSetModel` с минимальным количеством точек 6.
+
 ## Советы по реализации алгоритмов
 
-1. **Проверка входных данных**: Всегда проверяйте, что входные данные соответствуют требованиям алгоритма (достаточное количество точек, отсутствие вырожденных треугольников и т.д.).
+1. **Выбор подходящей модели данных**: Выберите наиболее подходящую модель из пакета `models_data_ns` для вашего алгоритма. Это позволит сэкономить время на разработке и упростит интеграцию вашего алгоритма в общую систему.
 
-2. **Обработка исключительных ситуаций**: Используйте классы исключений из `lab_01_common` для обработки исключительных ситуаций:
+2. **Проверка входных данных**: Всегда проверяйте, что входные данные соответствуют требованиям алгоритма (достаточное количество точек, отсутствие вырожденных треугольников и т.д.).
+
+3. **Обработка исключительных ситуаций**: Используйте классы исключений из `lab_01_common` для обработки исключительных ситуаций:
    - `InsufficientPointsException` - недостаточное количество точек
    - `CalculationException` - ошибка в процессе вычислений
 
-3. **Визуализация результатов**: Используйте различные цвета для визуализации различных элементов результата. Добавляйте подробную текстовую информацию в формате Markdown.
+4. **Визуализация результатов**: Используйте различные цвета для визуализации различных элементов результата. Добавляйте подробную текстовую информацию в формате Markdown.
 
-4. **Тестирование**: Создавайте тесты для проверки корректности работы алгоритма в различных ситуациях, включая граничные случаи и исключительные ситуации.
+5. **Тестирование**: Создавайте тесты для проверки корректности работы алгоритма в различных ситуациях, включая граничные случаи и исключительные ситуации.
 
 ## Дополнительная информация
 
-Для более подробной информации о структуре проекта и интерфейсах алгоритмов см. документацию в пакетах `algorithm_interface` и `lab_01_common`.
+Для более подробной информации о структуре проекта и интерфейсах алгоритмов см. документацию в пакетах `algorithm_interface`, `lab_01_common` и `models_data_ns`.

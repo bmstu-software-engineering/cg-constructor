@@ -20,6 +20,8 @@ dependencies:
     path: ../../../../forms/packages/forms_annotations
   algorithm_interface:
     path: ../../algorithm_interface
+  models_data_ns:
+    path: ../../models_data_ns
 
 dev_dependencies:
   flutter_test:

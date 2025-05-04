@@ -3,16 +3,15 @@ import 'package:lab_01_45/algorithm.dart';
 import 'package:lab_01_common/lab_01_common.dart';
 import 'package:mocktail/mocktail.dart';
 
-// Создаем мок для AlgorithmL01V45DataModelImpl
-class AlgorithmL01V45DataModelImplMock extends Mock
-    implements AlgorithmL01V45DataModelImpl {}
+// Создаем мок для PointSetModelImpl
+class PointSetModelImplMock extends Mock implements PointSetModelImpl {}
 
 void main() {
   late AlgorithmL01V45 algorithm;
-  late AlgorithmL01V45DataModelImplMock model;
+  late PointSetModelImplMock model;
 
   setUp(() {
-    model = AlgorithmL01V45DataModelImplMock();
+    model = PointSetModelImplMock();
     algorithm = AlgorithmL01V45.fromModel(model);
   });
 
@@ -23,7 +22,7 @@ void main() {
         // Устанавливаем тестовые данные
         // Два треугольника с разным расположением
         when(() => model.data).thenReturn(
-          AlgorithmLab0145DataModel(
+          PointSetModel(
             points: [
               // Треугольник A
               Point(x: 0, y: 0),
@@ -157,7 +156,7 @@ void main() {
       () {
         // Устанавливаем недостаточное количество точек
         when(() => model.data).thenReturn(
-          AlgorithmLab0145DataModel(
+          PointSetModel(
             points: [
               Point(x: 0, y: 0),
               Point(x: 1, y: 0),
@@ -190,7 +189,7 @@ void main() {
       () {
         // Устанавливаем точки, лежащие на одной прямой
         when(() => model.data).thenReturn(
-          AlgorithmLab0145DataModel(
+          PointSetModel(
             points: [
               Point(x: 0, y: 0),
               Point(x: 1, y: 0),
@@ -224,7 +223,7 @@ void main() {
     test('тест с треугольниками, имеющими общие вершины', () {
       // Устанавливаем точки так, чтобы некоторые треугольники имели общие вершины
       when(() => model.data).thenReturn(
-        AlgorithmLab0145DataModel(
+        PointSetModel(
           points: [
             // Общие вершины
             Point(x: 0, y: 0),
@@ -272,7 +271,7 @@ void main() {
         // Устанавливаем точки для двух треугольников, барицентры которых
         // находятся на максимальном расстоянии друг от друга
         when(() => model.data).thenReturn(
-          AlgorithmLab0145DataModel(
+          PointSetModel(
             points: [
               // Треугольник A (в левом нижнем углу)
               Point(x: 0, y: 0),

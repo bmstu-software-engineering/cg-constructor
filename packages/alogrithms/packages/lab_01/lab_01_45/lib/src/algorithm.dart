@@ -1,17 +1,14 @@
 import 'package:lab_01_common/lab_01_common.dart';
 import 'package:flutter/foundation.dart';
 
-import 'data.dart';
-
 /// Алгоритм поиска двух треугольников, таких что расстояние между барицентрами треугольников максимально
 class AlgorithmL01V45 implements Algorithm<FormsDataModel, ViewerResultModel> {
   @visibleForTesting
   const AlgorithmL01V45.fromModel(this._model);
 
-  factory AlgorithmL01V45() =>
-      AlgorithmL01V45.fromModel(AlgorithmL01V45DataModelImpl());
+  factory AlgorithmL01V45() => AlgorithmL01V45.fromModel(PointSetModelImpl());
 
-  final AlgorithmL01V45DataModelImpl _model;
+  final PointSetModelImpl _model;
 
   @override
   FormsDataModel getDataModel() => _model;

@@ -1,6 +1,6 @@
 import 'package:algorithm_interface/algorithm_interface.dart';
 import 'package:flutter/foundation.dart';
-import 'lab_01_basic_data_model.dart';
+import 'package:models_data_ns/models_data_ns.dart';
 
 class AlgorithmL01VBasic
     implements Algorithm<FormsDataModel, ViewerResultModel> {
@@ -8,9 +8,9 @@ class AlgorithmL01VBasic
   const AlgorithmL01VBasic.fromModel(this._model);
 
   factory AlgorithmL01VBasic() =>
-      AlgorithmL01VBasic.fromModel(AlgorithmL01VBasicDataModelImpl());
+      AlgorithmL01VBasic.fromModel(PointSetModelImpl());
 
-  final AlgorithmL01VBasicDataModelImpl _model;
+  final PointSetModelImpl _model;
 
   @override
   FormsDataModel getDataModel() => _model;
