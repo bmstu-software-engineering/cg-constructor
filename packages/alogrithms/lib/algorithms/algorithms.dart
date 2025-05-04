@@ -19,3 +19,5 @@ export 'package:lab_01_53/algorithm.dart';
 export 'package:lab_01_54/algorithm.dart';
 export 'package:lab_01_55/algorithm.dart';
 export 'package:lab_01_56/algorithm.dart';
+
+export './lab_02/lab_02_factory.dart';
