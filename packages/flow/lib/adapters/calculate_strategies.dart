@@ -18,16 +18,24 @@ class GenericCalculateStrategy<DD extends FlowDrawData>
               ? _algorithm.calculateWithVariant(variant)
               : _algorithm.calculate();
 
-      if (result is! ViewerResultModel) {
-        throw Exception('Результат должен быть типа ViewerResultModel');
+      if (result is ViewerResultModel) {
+        return FlowDrawData(
+              points: result.points,
+              lines: result.lines,
+              markdownInfo: result.markdownInfo,
+            )
+            as DD;
+      } else if (result is ViewerResultModelV2) {
+        return FlowDrawData(
+              figureCollection: result.figureCollection,
+              markdownInfo: result.markdownInfo,
+            )
+            as DD;
+      } else {
+        throw Exception(
+          'Результат должен быть типа ViewerResultModel или ViewerResultModelV2',
+        );
       }
-
-      return FlowDrawData(
-            points: result.points,
-            lines: result.lines,
-            markdownInfo: result.markdownInfo,
-          )
-          as DD;
     } catch (e) {
       // Ошибка будет обработана в FlowBuilder
       rethrow;

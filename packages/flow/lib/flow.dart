@@ -1,7 +1,5 @@
 import 'package:alogrithms/alogrithms.dart';
-import 'package:algorithm_interface/algorithm_interface.dart';
 import 'package:flutter/material.dart';
-import 'package:models_ns/models_ns.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:viewer/viewer.dart';
 
@@ -256,11 +254,13 @@ abstract interface class FlowDataStrategy {
 final class FlowDrawData {
   final List<Point> points;
   final List<Line> lines;
+  final FigureCollection? figureCollection;
   final String? markdownInfo;
 
   const FlowDrawData({
     this.points = const [],
     this.lines = const [],
+    this.figureCollection,
     this.markdownInfo,
   });
 }
@@ -282,8 +282,13 @@ class ViewerFlowDrawStrategy implements FlowDrawStrategy {
   ViewerFlowDrawStrategy(this._viewer);
 
   @override
-  Future<void> draw(FlowDrawData drawData) async =>
+  Future<void> draw(FlowDrawData drawData) async {
+    if (drawData.figureCollection != null) {
+      _viewer.drawCollection(drawData.figureCollection!);
+    } else {
       _viewer.draw(drawData.lines, drawData.points);
+    }
+  }
 
   @override
   Widget buildWidget() => _viewer.buildWidget();
