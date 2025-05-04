@@ -26,8 +26,12 @@ mixin _$Triangle {
   String get color => throw _privateConstructorUsedError;
   double get thickness => throw _privateConstructorUsedError;
 
+  /// Serializes this Triangle to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of Triangle
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $TriangleCopyWith<Triangle> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -54,6 +58,8 @@ class _$TriangleCopyWithImpl<$Res, $Val extends Triangle>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of Triangle
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -87,6 +93,8 @@ class _$TriangleCopyWithImpl<$Res, $Val extends Triangle>
     ) as $Val);
   }
 
+  /// Create a copy of Triangle
+  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $PointCopyWith<$Res> get a {
@@ -95,6 +103,8 @@ class _$TriangleCopyWithImpl<$Res, $Val extends Triangle>
     });
   }
 
+  /// Create a copy of Triangle
+  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $PointCopyWith<$Res> get b {
@@ -103,6 +113,8 @@ class _$TriangleCopyWithImpl<$Res, $Val extends Triangle>
     });
   }
 
+  /// Create a copy of Triangle
+  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $PointCopyWith<$Res> get c {
@@ -138,6 +150,8 @@ class __$$TriangleImplCopyWithImpl<$Res>
       _$TriangleImpl _value, $Res Function(_$TriangleImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of Triangle
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -173,7 +187,6 @@ class __$$TriangleImplCopyWithImpl<$Res>
 }
 
 /// @nodoc
-
 @JsonSerializable()
 class _$TriangleImpl extends _Triangle {
   const _$TriangleImpl(
@@ -213,11 +226,13 @@ class _$TriangleImpl extends _Triangle {
                 other.thickness == thickness));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(runtimeType, a, b, c, color, thickness);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of Triangle
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$TriangleImplCopyWith<_$TriangleImpl> get copyWith =>
@@ -253,8 +268,11 @@ abstract class _Triangle extends Triangle {
   String get color;
   @override
   double get thickness;
+
+  /// Create a copy of Triangle
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$TriangleImplCopyWith<_$TriangleImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

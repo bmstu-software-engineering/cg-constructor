@@ -27,8 +27,12 @@ mixin _$Rectangle {
   String get color => throw _privateConstructorUsedError;
   double get thickness => throw _privateConstructorUsedError;
 
+  /// Serializes this Rectangle to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of Rectangle
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $RectangleCopyWith<Rectangle> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -62,6 +66,8 @@ class _$RectangleCopyWithImpl<$Res, $Val extends Rectangle>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of Rectangle
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -100,6 +106,8 @@ class _$RectangleCopyWithImpl<$Res, $Val extends Rectangle>
     ) as $Val);
   }
 
+  /// Create a copy of Rectangle
+  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $PointCopyWith<$Res> get topLeft {
@@ -108,6 +116,8 @@ class _$RectangleCopyWithImpl<$Res, $Val extends Rectangle>
     });
   }
 
+  /// Create a copy of Rectangle
+  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $PointCopyWith<$Res> get topRight {
@@ -116,6 +126,8 @@ class _$RectangleCopyWithImpl<$Res, $Val extends Rectangle>
     });
   }
 
+  /// Create a copy of Rectangle
+  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $PointCopyWith<$Res> get bottomRight {
@@ -124,6 +136,8 @@ class _$RectangleCopyWithImpl<$Res, $Val extends Rectangle>
     });
   }
 
+  /// Create a copy of Rectangle
+  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $PointCopyWith<$Res> get bottomLeft {
@@ -167,6 +181,8 @@ class __$$RectangleImplCopyWithImpl<$Res>
       _$RectangleImpl _value, $Res Function(_$RectangleImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of Rectangle
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -207,7 +223,6 @@ class __$$RectangleImplCopyWithImpl<$Res>
 }
 
 /// @nodoc
-
 @JsonSerializable()
 class _$RectangleImpl extends _Rectangle {
   const _$RectangleImpl(
@@ -254,12 +269,14 @@ class _$RectangleImpl extends _Rectangle {
                 other.thickness == thickness));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(runtimeType, topLeft, topRight, bottomRight,
       bottomLeft, color, thickness);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of Rectangle
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$RectangleImplCopyWith<_$RectangleImpl> get copyWith =>
@@ -298,8 +315,11 @@ abstract class _Rectangle extends Rectangle {
   String get color;
   @override
   double get thickness;
+
+  /// Create a copy of Rectangle
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$RectangleImplCopyWith<_$RectangleImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

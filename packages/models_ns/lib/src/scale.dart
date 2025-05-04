@@ -7,7 +7,6 @@ part 'scale.g.dart';
 
 /// Модель коэффициентов масштабирования
 @freezed
-@JsonSerializable()
 class Scale with _$Scale, DiagnosticableTreeMixin implements Validatable {
   /// Приватный конструктор
   const Scale._();

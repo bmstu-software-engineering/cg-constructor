@@ -21,6 +21,21 @@ class FigureCollection with _$FigureCollection {
 
     /// Список треугольников
     @Default([]) List<Triangle> triangles,
+
+    /// Список прямоугольников
+    @Default([]) List<Rectangle> rectangles,
+
+    /// Список квадратов
+    @Default([]) List<Square> squares,
+
+    /// Список кругов
+    @Default([]) List<Circle> circles,
+
+    /// Список эллипсов
+    @Default([]) List<Ellipse> ellipses,
+
+    /// Список дуг
+    @Default([]) List<Arc> arcs,
   }) = _FigureCollection;
 
   /// Создание коллекции из JSON

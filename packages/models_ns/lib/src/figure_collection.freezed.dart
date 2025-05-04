@@ -12,8 +12,7 @@ part of 'figure_collection.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
-);
+    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
 FigureCollection _$FigureCollectionFromJson(Map<String, dynamic> json) {
   return _FigureCollection.fromJson(json);
@@ -30,6 +29,21 @@ mixin _$FigureCollection {
   /// Список треугольников
   List<Triangle> get triangles => throw _privateConstructorUsedError;
 
+  /// Список прямоугольников
+  List<Rectangle> get rectangles => throw _privateConstructorUsedError;
+
+  /// Список квадратов
+  List<Square> get squares => throw _privateConstructorUsedError;
+
+  /// Список кругов
+  List<Circle> get circles => throw _privateConstructorUsedError;
+
+  /// Список эллипсов
+  List<Ellipse> get ellipses => throw _privateConstructorUsedError;
+
+  /// Список дуг
+  List<Arc> get arcs => throw _privateConstructorUsedError;
+
   /// Serializes this FigureCollection to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
 
@@ -43,11 +57,18 @@ mixin _$FigureCollection {
 /// @nodoc
 abstract class $FigureCollectionCopyWith<$Res> {
   factory $FigureCollectionCopyWith(
-    FigureCollection value,
-    $Res Function(FigureCollection) then,
-  ) = _$FigureCollectionCopyWithImpl<$Res, FigureCollection>;
+          FigureCollection value, $Res Function(FigureCollection) then) =
+      _$FigureCollectionCopyWithImpl<$Res, FigureCollection>;
   @useResult
-  $Res call({List<Point> points, List<Line> lines, List<Triangle> triangles});
+  $Res call(
+      {List<Point> points,
+      List<Line> lines,
+      List<Triangle> triangles,
+      List<Rectangle> rectangles,
+      List<Square> squares,
+      List<Circle> circles,
+      List<Ellipse> ellipses,
+      List<Arc> arcs});
 }
 
 /// @nodoc
@@ -68,50 +89,75 @@ class _$FigureCollectionCopyWithImpl<$Res, $Val extends FigureCollection>
     Object? points = null,
     Object? lines = null,
     Object? triangles = null,
+    Object? rectangles = null,
+    Object? squares = null,
+    Object? circles = null,
+    Object? ellipses = null,
+    Object? arcs = null,
   }) {
-    return _then(
-      _value.copyWith(
-            points:
-                null == points
-                    ? _value.points
-                    : points // ignore: cast_nullable_to_non_nullable
-                        as List<Point>,
-            lines:
-                null == lines
-                    ? _value.lines
-                    : lines // ignore: cast_nullable_to_non_nullable
-                        as List<Line>,
-            triangles:
-                null == triangles
-                    ? _value.triangles
-                    : triangles // ignore: cast_nullable_to_non_nullable
-                        as List<Triangle>,
-          )
-          as $Val,
-    );
+    return _then(_value.copyWith(
+      points: null == points
+          ? _value.points
+          : points // ignore: cast_nullable_to_non_nullable
+              as List<Point>,
+      lines: null == lines
+          ? _value.lines
+          : lines // ignore: cast_nullable_to_non_nullable
+              as List<Line>,
+      triangles: null == triangles
+          ? _value.triangles
+          : triangles // ignore: cast_nullable_to_non_nullable
+              as List<Triangle>,
+      rectangles: null == rectangles
+          ? _value.rectangles
+          : rectangles // ignore: cast_nullable_to_non_nullable
+              as List<Rectangle>,
+      squares: null == squares
+          ? _value.squares
+          : squares // ignore: cast_nullable_to_non_nullable
+              as List<Square>,
+      circles: null == circles
+          ? _value.circles
+          : circles // ignore: cast_nullable_to_non_nullable
+              as List<Circle>,
+      ellipses: null == ellipses
+          ? _value.ellipses
+          : ellipses // ignore: cast_nullable_to_non_nullable
+              as List<Ellipse>,
+      arcs: null == arcs
+          ? _value.arcs
+          : arcs // ignore: cast_nullable_to_non_nullable
+              as List<Arc>,
+    ) as $Val);
   }
 }
 
 /// @nodoc
 abstract class _$$FigureCollectionImplCopyWith<$Res>
     implements $FigureCollectionCopyWith<$Res> {
-  factory _$$FigureCollectionImplCopyWith(
-    _$FigureCollectionImpl value,
-    $Res Function(_$FigureCollectionImpl) then,
-  ) = __$$FigureCollectionImplCopyWithImpl<$Res>;
+  factory _$$FigureCollectionImplCopyWith(_$FigureCollectionImpl value,
+          $Res Function(_$FigureCollectionImpl) then) =
+      __$$FigureCollectionImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({List<Point> points, List<Line> lines, List<Triangle> triangles});
+  $Res call(
+      {List<Point> points,
+      List<Line> lines,
+      List<Triangle> triangles,
+      List<Rectangle> rectangles,
+      List<Square> squares,
+      List<Circle> circles,
+      List<Ellipse> ellipses,
+      List<Arc> arcs});
 }
 
 /// @nodoc
 class __$$FigureCollectionImplCopyWithImpl<$Res>
     extends _$FigureCollectionCopyWithImpl<$Res, _$FigureCollectionImpl>
     implements _$$FigureCollectionImplCopyWith<$Res> {
-  __$$FigureCollectionImplCopyWithImpl(
-    _$FigureCollectionImpl _value,
-    $Res Function(_$FigureCollectionImpl) _then,
-  ) : super(_value, _then);
+  __$$FigureCollectionImplCopyWithImpl(_$FigureCollectionImpl _value,
+      $Res Function(_$FigureCollectionImpl) _then)
+      : super(_value, _then);
 
   /// Create a copy of FigureCollection
   /// with the given fields replaced by the non-null parameter values.
@@ -121,40 +167,70 @@ class __$$FigureCollectionImplCopyWithImpl<$Res>
     Object? points = null,
     Object? lines = null,
     Object? triangles = null,
+    Object? rectangles = null,
+    Object? squares = null,
+    Object? circles = null,
+    Object? ellipses = null,
+    Object? arcs = null,
   }) {
-    return _then(
-      _$FigureCollectionImpl(
-        points:
-            null == points
-                ? _value._points
-                : points // ignore: cast_nullable_to_non_nullable
-                    as List<Point>,
-        lines:
-            null == lines
-                ? _value._lines
-                : lines // ignore: cast_nullable_to_non_nullable
-                    as List<Line>,
-        triangles:
-            null == triangles
-                ? _value._triangles
-                : triangles // ignore: cast_nullable_to_non_nullable
-                    as List<Triangle>,
-      ),
-    );
+    return _then(_$FigureCollectionImpl(
+      points: null == points
+          ? _value._points
+          : points // ignore: cast_nullable_to_non_nullable
+              as List<Point>,
+      lines: null == lines
+          ? _value._lines
+          : lines // ignore: cast_nullable_to_non_nullable
+              as List<Line>,
+      triangles: null == triangles
+          ? _value._triangles
+          : triangles // ignore: cast_nullable_to_non_nullable
+              as List<Triangle>,
+      rectangles: null == rectangles
+          ? _value._rectangles
+          : rectangles // ignore: cast_nullable_to_non_nullable
+              as List<Rectangle>,
+      squares: null == squares
+          ? _value._squares
+          : squares // ignore: cast_nullable_to_non_nullable
+              as List<Square>,
+      circles: null == circles
+          ? _value._circles
+          : circles // ignore: cast_nullable_to_non_nullable
+              as List<Circle>,
+      ellipses: null == ellipses
+          ? _value._ellipses
+          : ellipses // ignore: cast_nullable_to_non_nullable
+              as List<Ellipse>,
+      arcs: null == arcs
+          ? _value._arcs
+          : arcs // ignore: cast_nullable_to_non_nullable
+              as List<Arc>,
+    ));
   }
 }
 
 /// @nodoc
 @JsonSerializable()
 class _$FigureCollectionImpl extends _FigureCollection {
-  const _$FigureCollectionImpl({
-    final List<Point> points = const [],
-    final List<Line> lines = const [],
-    final List<Triangle> triangles = const [],
-  }) : _points = points,
-       _lines = lines,
-       _triangles = triangles,
-       super._();
+  const _$FigureCollectionImpl(
+      {final List<Point> points = const [],
+      final List<Line> lines = const [],
+      final List<Triangle> triangles = const [],
+      final List<Rectangle> rectangles = const [],
+      final List<Square> squares = const [],
+      final List<Circle> circles = const [],
+      final List<Ellipse> ellipses = const [],
+      final List<Arc> arcs = const []})
+      : _points = points,
+        _lines = lines,
+        _triangles = triangles,
+        _rectangles = rectangles,
+        _squares = squares,
+        _circles = circles,
+        _ellipses = ellipses,
+        _arcs = arcs,
+        super._();
 
   factory _$FigureCollectionImpl.fromJson(Map<String, dynamic> json) =>
       _$$FigureCollectionImplFromJson(json);
@@ -195,9 +271,69 @@ class _$FigureCollectionImpl extends _FigureCollection {
     return EqualUnmodifiableListView(_triangles);
   }
 
+  /// Список прямоугольников
+  final List<Rectangle> _rectangles;
+
+  /// Список прямоугольников
+  @override
+  @JsonKey()
+  List<Rectangle> get rectangles {
+    if (_rectangles is EqualUnmodifiableListView) return _rectangles;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_rectangles);
+  }
+
+  /// Список квадратов
+  final List<Square> _squares;
+
+  /// Список квадратов
+  @override
+  @JsonKey()
+  List<Square> get squares {
+    if (_squares is EqualUnmodifiableListView) return _squares;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_squares);
+  }
+
+  /// Список кругов
+  final List<Circle> _circles;
+
+  /// Список кругов
+  @override
+  @JsonKey()
+  List<Circle> get circles {
+    if (_circles is EqualUnmodifiableListView) return _circles;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_circles);
+  }
+
+  /// Список эллипсов
+  final List<Ellipse> _ellipses;
+
+  /// Список эллипсов
+  @override
+  @JsonKey()
+  List<Ellipse> get ellipses {
+    if (_ellipses is EqualUnmodifiableListView) return _ellipses;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_ellipses);
+  }
+
+  /// Список дуг
+  final List<Arc> _arcs;
+
+  /// Список дуг
+  @override
+  @JsonKey()
+  List<Arc> get arcs {
+    if (_arcs is EqualUnmodifiableListView) return _arcs;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_arcs);
+  }
+
   @override
   String toString() {
-    return 'FigureCollection(points: $points, lines: $lines, triangles: $triangles)';
+    return 'FigureCollection(points: $points, lines: $lines, triangles: $triangles, rectangles: $rectangles, squares: $squares, circles: $circles, ellipses: $ellipses, arcs: $arcs)';
   }
 
   @override
@@ -207,20 +343,28 @@ class _$FigureCollectionImpl extends _FigureCollection {
             other is _$FigureCollectionImpl &&
             const DeepCollectionEquality().equals(other._points, _points) &&
             const DeepCollectionEquality().equals(other._lines, _lines) &&
-            const DeepCollectionEquality().equals(
-              other._triangles,
-              _triangles,
-            ));
+            const DeepCollectionEquality()
+                .equals(other._triangles, _triangles) &&
+            const DeepCollectionEquality()
+                .equals(other._rectangles, _rectangles) &&
+            const DeepCollectionEquality().equals(other._squares, _squares) &&
+            const DeepCollectionEquality().equals(other._circles, _circles) &&
+            const DeepCollectionEquality().equals(other._ellipses, _ellipses) &&
+            const DeepCollectionEquality().equals(other._arcs, _arcs));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(
-    runtimeType,
-    const DeepCollectionEquality().hash(_points),
-    const DeepCollectionEquality().hash(_lines),
-    const DeepCollectionEquality().hash(_triangles),
-  );
+      runtimeType,
+      const DeepCollectionEquality().hash(_points),
+      const DeepCollectionEquality().hash(_lines),
+      const DeepCollectionEquality().hash(_triangles),
+      const DeepCollectionEquality().hash(_rectangles),
+      const DeepCollectionEquality().hash(_squares),
+      const DeepCollectionEquality().hash(_circles),
+      const DeepCollectionEquality().hash(_ellipses),
+      const DeepCollectionEquality().hash(_arcs));
 
   /// Create a copy of FigureCollection
   /// with the given fields replaced by the non-null parameter values.
@@ -229,22 +373,26 @@ class _$FigureCollectionImpl extends _FigureCollection {
   @pragma('vm:prefer-inline')
   _$$FigureCollectionImplCopyWith<_$FigureCollectionImpl> get copyWith =>
       __$$FigureCollectionImplCopyWithImpl<_$FigureCollectionImpl>(
-        this,
-        _$identity,
-      );
+          this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$FigureCollectionImplToJson(this);
+    return _$$FigureCollectionImplToJson(
+      this,
+    );
   }
 }
 
 abstract class _FigureCollection extends FigureCollection {
-  const factory _FigureCollection({
-    final List<Point> points,
-    final List<Line> lines,
-    final List<Triangle> triangles,
-  }) = _$FigureCollectionImpl;
+  const factory _FigureCollection(
+      {final List<Point> points,
+      final List<Line> lines,
+      final List<Triangle> triangles,
+      final List<Rectangle> rectangles,
+      final List<Square> squares,
+      final List<Circle> circles,
+      final List<Ellipse> ellipses,
+      final List<Arc> arcs}) = _$FigureCollectionImpl;
   const _FigureCollection._() : super._();
 
   factory _FigureCollection.fromJson(Map<String, dynamic> json) =
@@ -261,6 +409,26 @@ abstract class _FigureCollection extends FigureCollection {
   /// Список треугольников
   @override
   List<Triangle> get triangles;
+
+  /// Список прямоугольников
+  @override
+  List<Rectangle> get rectangles;
+
+  /// Список квадратов
+  @override
+  List<Square> get squares;
+
+  /// Список кругов
+  @override
+  List<Circle> get circles;
+
+  /// Список эллипсов
+  @override
+  List<Ellipse> get ellipses;
+
+  /// Список дуг
+  @override
+  List<Arc> get arcs;
 
   /// Create a copy of FigureCollection
   /// with the given fields replaced by the non-null parameter values.

@@ -9,7 +9,6 @@ part 'rectangle.g.dart';
 
 /// Модель прямоугольника
 @freezed
-@JsonSerializable()
 class Rectangle
     with _$Rectangle, DiagnosticableTreeMixin
     implements Validatable {
@@ -103,10 +102,6 @@ class Rectangle
     const epsilon = 1e-10;
     return (width - height).abs() < epsilon;
   }
-
-  @override
-  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) =>
-      'Rectangle(topLeft: $topLeft, topRight: $topRight, bottomRight: $bottomRight, bottomLeft: $bottomLeft, color: $color, thickness: $thickness)';
 
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {

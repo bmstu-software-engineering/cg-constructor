@@ -25,8 +25,12 @@ mixin _$Point {
   String get color => throw _privateConstructorUsedError;
   double get thickness => throw _privateConstructorUsedError;
 
+  /// Serializes this Point to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of Point
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $PointCopyWith<Point> get copyWith => throw _privateConstructorUsedError;
 }
 
@@ -48,6 +52,8 @@ class _$PointCopyWithImpl<$Res, $Val extends Point>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of Point
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -95,6 +101,8 @@ class __$$PointImplCopyWithImpl<$Res>
       _$PointImpl _value, $Res Function(_$PointImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of Point
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -164,7 +172,9 @@ class _$PointImpl extends _Point with DiagnosticableTreeMixin {
       ..add(DiagnosticsProperty('thickness', thickness));
   }
 
-  @JsonKey(ignore: true)
+  /// Create a copy of Point
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$PointImplCopyWith<_$PointImpl> get copyWith =>
@@ -196,8 +206,11 @@ abstract class _Point extends Point {
   String get color;
   @override
   double get thickness;
+
+  /// Create a copy of Point
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$PointImplCopyWith<_$PointImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

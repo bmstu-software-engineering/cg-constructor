@@ -23,8 +23,12 @@ mixin _$Scale {
   double get x => throw _privateConstructorUsedError;
   double get y => throw _privateConstructorUsedError;
 
+  /// Serializes this Scale to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of Scale
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $ScaleCopyWith<Scale> get copyWith => throw _privateConstructorUsedError;
 }
 
@@ -46,6 +50,8 @@ class _$ScaleCopyWithImpl<$Res, $Val extends Scale>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of Scale
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -83,6 +89,8 @@ class __$$ScaleImplCopyWithImpl<$Res>
       _$ScaleImpl _value, $Res Function(_$ScaleImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of Scale
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -103,7 +111,6 @@ class __$$ScaleImplCopyWithImpl<$Res>
 }
 
 /// @nodoc
-
 @JsonSerializable()
 class _$ScaleImpl extends _Scale {
   const _$ScaleImpl({required this.x, required this.y}) : super._();
@@ -125,11 +132,13 @@ class _$ScaleImpl extends _Scale {
             (identical(other.y, y) || other.y == y));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(runtimeType, x, y);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of Scale
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$ScaleImplCopyWith<_$ScaleImpl> get copyWith =>
@@ -154,8 +163,11 @@ abstract class _Scale extends Scale {
   double get x;
   @override
   double get y;
+
+  /// Create a copy of Scale
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$ScaleImplCopyWith<_$ScaleImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

@@ -9,7 +9,6 @@ part 'polygon.g.dart';
 
 /// Модель многоугольника
 @freezed
-@JsonSerializable()
 class Polygon with _$Polygon, DiagnosticableTreeMixin implements Validatable {
   /// Приватный конструктор
   const Polygon._();

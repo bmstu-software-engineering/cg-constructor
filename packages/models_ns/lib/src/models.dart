@@ -7,4 +7,8 @@ export 'scale.dart';
 export 'polygon.dart';
 export 'triangle.dart';
 export 'rectangle.dart';
+export 'square.dart';
+export 'circle.dart';
+export 'ellipse.dart';
+export 'arc.dart';
 export 'figure_collection.dart';

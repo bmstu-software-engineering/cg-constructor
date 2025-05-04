@@ -22,8 +22,12 @@ Angle _$AngleFromJson(Map<String, dynamic> json) {
 mixin _$Angle {
   double get value => throw _privateConstructorUsedError;
 
+  /// Serializes this Angle to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of Angle
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $AngleCopyWith<Angle> get copyWith => throw _privateConstructorUsedError;
 }
 
@@ -45,6 +49,8 @@ class _$AngleCopyWithImpl<$Res, $Val extends Angle>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of Angle
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -77,6 +83,8 @@ class __$$AngleImplCopyWithImpl<$Res>
       _$AngleImpl _value, $Res Function(_$AngleImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of Angle
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -92,7 +100,6 @@ class __$$AngleImplCopyWithImpl<$Res>
 }
 
 /// @nodoc
-
 @JsonSerializable()
 class _$AngleImpl extends _Angle {
   const _$AngleImpl({required this.value}) : super._();
@@ -111,11 +118,13 @@ class _$AngleImpl extends _Angle {
             (identical(other.value, value) || other.value == value));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(runtimeType, value);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of Angle
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$AngleImplCopyWith<_$AngleImpl> get copyWith =>
@@ -137,8 +146,11 @@ abstract class _Angle extends Angle {
 
   @override
   double get value;
+
+  /// Create a copy of Angle
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$AngleImplCopyWith<_$AngleImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

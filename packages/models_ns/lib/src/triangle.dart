@@ -9,7 +9,6 @@ part 'triangle.g.dart';
 
 /// Модель треугольника
 @freezed
-@JsonSerializable()
 class Triangle with _$Triangle, DiagnosticableTreeMixin implements Validatable {
   /// Приватный конструктор
   const Triangle._();

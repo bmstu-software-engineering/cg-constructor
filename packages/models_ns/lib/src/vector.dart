@@ -8,7 +8,6 @@ part 'vector.g.dart';
 
 /// Модель вектора перемещения
 @freezed
-@JsonSerializable()
 class Vector with _$Vector, DiagnosticableTreeMixin implements Validatable {
   /// Приватный конструктор
   const Vector._();
