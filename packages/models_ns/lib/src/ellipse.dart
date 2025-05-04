@@ -1,15 +1,19 @@
+import 'dart:convert';
 import 'dart:math' as math;
 import 'package:flutter/foundation.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+
+import 'figure.dart';
 import 'point.dart';
-import 'validatable.dart';
+import 'vector.dart';
+import 'scale.dart';
 
 part 'ellipse.freezed.dart';
 part 'ellipse.g.dart';
 
 /// Модель эллипса
 @freezed
-class Ellipse with _$Ellipse, DiagnosticableTreeMixin implements Validatable {
+class Ellipse with _$Ellipse, DiagnosticableTreeMixin implements Figure {
   /// Приватный конструктор
   const Ellipse._();
 
@@ -31,6 +35,66 @@ class Ellipse with _$Ellipse, DiagnosticableTreeMixin implements Validatable {
   /// Создает эллипс из JSON
   factory Ellipse.fromJson(Map<String, dynamic> json) =>
       _$EllipseFromJson(json);
+
+  /// Название фигуры
+  @override
+  String get name => 'Эллипс';
+
+  /// Преобразует эллипс в список точек
+  @override
+  List<Point> toPoints() => [
+        center,
+        Point(
+          x: center.x + semiMajorAxis,
+          y: center.y,
+          color: color,
+          thickness: thickness,
+        ),
+        Point(
+          x: center.x,
+          y: center.y + semiMinorAxis,
+          color: color,
+          thickness: thickness,
+        ),
+      ];
+
+  /// Перемещает эллипс на вектор
+  @override
+  Ellipse move(Vector vector) => Ellipse(
+        center: center.move(vector),
+        semiMajorAxis: semiMajorAxis,
+        semiMinorAxis: semiMinorAxis,
+        color: color,
+        thickness: thickness,
+      );
+
+  /// Масштабирует эллипс относительно центра
+  @override
+  Ellipse scale(Point scaleCenter, Scale scale) {
+    final newCenter = center.scale(scaleCenter, scale);
+    return Ellipse(
+      center: newCenter,
+      semiMajorAxis: semiMajorAxis * scale.x,
+      semiMinorAxis: semiMinorAxis * scale.y,
+      color: color,
+      thickness: thickness,
+    );
+  }
+
+  /// Поворачивает эллипс вокруг центра на угол в градусах
+  @override
+  Ellipse rotate(Point rotationCenter, double degrees) {
+    // Для эллипса поворот вокруг его центра не меняет его форму,
+    // только положение центра
+    final newCenter = center.rotate(rotationCenter, degrees);
+    return Ellipse(
+      center: newCenter,
+      semiMajorAxis: semiMajorAxis,
+      semiMinorAxis: semiMinorAxis,
+      color: color,
+      thickness: thickness,
+    );
+  }
 
   /// Валидирует эллипс
   @override
@@ -65,6 +129,7 @@ class Ellipse with _$Ellipse, DiagnosticableTreeMixin implements Validatable {
   }
 
   /// Вычисляет периметр эллипса (приближенно по формуле Рамануджана)
+  @override
   double get perimeter {
     final a = semiMajorAxis;
     final b = semiMinorAxis;
@@ -73,7 +138,12 @@ class Ellipse with _$Ellipse, DiagnosticableTreeMixin implements Validatable {
   }
 
   /// Вычисляет площадь эллипса
+  @override
   double get area => math.pi * semiMajorAxis * semiMinorAxis;
+
+  /// Преобразует эллипс в строку JSON
+  @override
+  String toJsonString() => jsonEncode(toJson());
 
   /// Получает точку на эллипсе по заданному углу (в радианах)
   Point pointAtAngle(double angle) {
@@ -92,7 +162,7 @@ class Ellipse with _$Ellipse, DiagnosticableTreeMixin implements Validatable {
 
   @override
   String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) =>
-      'Ellipse(center: $center, semiMajorAxis: $semiMajorAxis, semiMinorAxis: $semiMinorAxis, color: $color, thickness: $thickness)';
+      'Эллипс(center: $center, semiMajorAxis: $semiMajorAxis, semiMinorAxis: $semiMinorAxis, color: $color, thickness: $thickness)';
 
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {

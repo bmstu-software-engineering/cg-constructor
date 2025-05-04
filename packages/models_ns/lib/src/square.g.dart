@@ -15,7 +15,7 @@ _$SquareImpl _$$SquareImplFromJson(Map<String, dynamic> json) => _$SquareImpl(
 
 Map<String, dynamic> _$$SquareImplToJson(_$SquareImpl instance) =>
     <String, dynamic>{
-      'center': instance.center,
+      'center': instance.center.toJson(),
       'sideLength': instance.sideLength,
       'color': instance.color,
       'thickness': instance.thickness,

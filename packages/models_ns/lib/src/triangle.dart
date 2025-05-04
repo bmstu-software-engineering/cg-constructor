@@ -1,15 +1,19 @@
+import 'dart:convert';
 import 'dart:math' as math;
 import 'package:flutter/foundation.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+
+import 'figure.dart';
 import 'point.dart';
-import 'validatable.dart';
+import 'vector.dart';
+import 'scale.dart';
 
 part 'triangle.freezed.dart';
 part 'triangle.g.dart';
 
 /// Модель треугольника
 @freezed
-class Triangle with _$Triangle, DiagnosticableTreeMixin implements Validatable {
+class Triangle with _$Triangle, DiagnosticableTreeMixin implements Figure {
   /// Приватный конструктор
   const Triangle._();
 
@@ -32,8 +36,43 @@ class Triangle with _$Triangle, DiagnosticableTreeMixin implements Validatable {
   factory Triangle.fromJson(Map<String, dynamic> json) =>
       _$TriangleFromJson(json);
 
+  /// Название фигуры
+  @override
+  String get name => 'Треугольник';
+
   /// Список точек треугольника
-  List<Point> get points => [a, b, c];
+  @override
+  List<Point> toPoints() => [a, b, c];
+
+  /// Перемещает треугольник на вектор
+  @override
+  Triangle move(Vector vector) => Triangle(
+        a: a.move(vector),
+        b: b.move(vector),
+        c: c.move(vector),
+        color: color,
+        thickness: thickness,
+      );
+
+  /// Масштабирует треугольник относительно центра
+  @override
+  Triangle scale(Point center, Scale scale) => Triangle(
+        a: a.scale(center, scale),
+        b: b.scale(center, scale),
+        c: c.scale(center, scale),
+        color: color,
+        thickness: thickness,
+      );
+
+  /// Поворачивает треугольник вокруг центра на угол в градусах
+  @override
+  Triangle rotate(Point center, double degrees) => Triangle(
+        a: a.rotate(center, degrees),
+        b: b.rotate(center, degrees),
+        c: c.rotate(center, degrees),
+        color: color,
+        thickness: thickness,
+      );
 
   /// Валидирует треугольник
   @override
@@ -56,20 +95,27 @@ class Triangle with _$Triangle, DiagnosticableTreeMixin implements Validatable {
   double get sideCA => _calculateDistance(a.x - c.x, a.y - c.y);
 
   /// Вычисляет периметр треугольника
+  @override
   double get perimeter => sideAB + sideBC + sideCA;
 
   /// Вычисляет площадь треугольника по формуле Герона
+  @override
   double get area {
     final s = perimeter / 2;
     return math.sqrt(s * (s - sideAB) * (s - sideBC) * (s - sideCA));
   }
 
   /// Вычисляет центр треугольника (центроид)
+  @override
   Point get center {
     final sumX = a.x + b.x + c.x;
     final sumY = a.y + b.y + c.y;
     return Point(x: sumX / 3, y: sumY / 3);
   }
+
+  /// Преобразует треугольник в строку JSON
+  @override
+  String toJsonString() => jsonEncode(toJson());
 
   /// Вспомогательный метод для вычисления расстояния
   double _calculateDistance(double dx, double dy) {
@@ -84,7 +130,9 @@ class Triangle with _$Triangle, DiagnosticableTreeMixin implements Validatable {
 
     // Проверяем с небольшой погрешностью из-за вычислений с плавающей точкой
     const epsilon = 1e-10;
-    return (ab - bc).abs() < epsilon && (bc - ca).abs() < epsilon;
+    return (ab - bc).abs() < epsilon &&
+        (bc - ca).abs() < epsilon &&
+        (ca - ab).abs() < epsilon;
   }
 
   /// Проверяет, является ли треугольник равнобедренным
@@ -115,7 +163,7 @@ class Triangle with _$Triangle, DiagnosticableTreeMixin implements Validatable {
 
   @override
   String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) =>
-      'Triangle(a: $a, b: $b, c: $c, color: $color, thickness: $thickness)';
+      'Треугольник(a: $a, b: $b, c: $c, color: $color, thickness: $thickness)';
 
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
@@ -123,7 +171,7 @@ class Triangle with _$Triangle, DiagnosticableTreeMixin implements Validatable {
     properties.add(DiagnosticsProperty<Point>('a', a));
     properties.add(DiagnosticsProperty<Point>('b', b));
     properties.add(DiagnosticsProperty<Point>('c', c));
-    properties.add(IterableProperty<Point>('points', points));
+    properties.add(IterableProperty<Point>('points', toPoints()));
     properties.add(StringProperty('color', color));
     properties.add(DoubleProperty('thickness', thickness));
     properties.add(DoubleProperty('sideAB', sideAB));

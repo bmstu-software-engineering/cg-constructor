@@ -1,15 +1,19 @@
+import 'dart:convert';
 import 'dart:math' as math;
 import 'package:flutter/foundation.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+
+import 'figure.dart';
 import 'point.dart';
-import 'validatable.dart';
+import 'vector.dart';
+import 'scale.dart';
 
 part 'circle.freezed.dart';
 part 'circle.g.dart';
 
 /// Модель круга
 @freezed
-class Circle with _$Circle, DiagnosticableTreeMixin implements Validatable {
+class Circle with _$Circle, DiagnosticableTreeMixin implements Figure {
   /// Приватный конструктор
   const Circle._();
 
@@ -28,6 +32,59 @@ class Circle with _$Circle, DiagnosticableTreeMixin implements Validatable {
 
   /// Создает круг из JSON
   factory Circle.fromJson(Map<String, dynamic> json) => _$CircleFromJson(json);
+
+  /// Название фигуры
+  @override
+  String get name => 'Круг';
+
+  /// Преобразует круг в список точек
+  @override
+  List<Point> toPoints() => [
+        center,
+        Point(
+          x: center.x + radius,
+          y: center.y,
+          color: color,
+          thickness: thickness,
+        ),
+      ];
+
+  /// Перемещает круг на вектор
+  @override
+  Circle move(Vector vector) => Circle(
+        center: center.move(vector),
+        radius: radius,
+        color: color,
+        thickness: thickness,
+      );
+
+  /// Масштабирует круг относительно центра
+  @override
+  Circle scale(Point scaleCenter, Scale scale) {
+    // Для круга используем среднее значение масштаба
+    final newCenter = center.scale(scaleCenter, scale);
+    final scaleFactor = (scale.x + scale.y) / 2;
+    return Circle(
+      center: newCenter,
+      radius: radius * scaleFactor,
+      color: color,
+      thickness: thickness,
+    );
+  }
+
+  /// Поворачивает круг вокруг центра на угол в градусах
+  @override
+  Circle rotate(Point rotationCenter, double degrees) {
+    // Для круга поворот вокруг его центра не меняет его форму,
+    // только положение центра
+    final newCenter = center.rotate(rotationCenter, degrees);
+    return Circle(
+      center: newCenter,
+      radius: radius,
+      color: color,
+      thickness: thickness,
+    );
+  }
 
   /// Валидирует круг
   @override
@@ -48,8 +105,17 @@ class Circle with _$Circle, DiagnosticableTreeMixin implements Validatable {
   /// Вычисляет длину окружности
   double get circumference => 2 * math.pi * radius;
 
+  /// Вычисляет периметр круга (длина окружности)
+  @override
+  double get perimeter => circumference;
+
   /// Вычисляет площадь круга
+  @override
   double get area => math.pi * radius * radius;
+
+  /// Преобразует круг в строку JSON
+  @override
+  String toJsonString() => jsonEncode(toJson());
 
   /// Получает точку на окружности по заданному углу (в радианах)
   Point pointAtAngle(double angle) {
@@ -61,7 +127,7 @@ class Circle with _$Circle, DiagnosticableTreeMixin implements Validatable {
 
   @override
   String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) =>
-      'Circle(center: $center, radius: $radius, color: $color, thickness: $thickness)';
+      'Круг(center: $center, radius: $radius, color: $color, thickness: $thickness)';
 
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {

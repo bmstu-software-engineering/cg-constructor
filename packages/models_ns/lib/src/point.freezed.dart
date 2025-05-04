@@ -134,7 +134,7 @@ class __$$PointImplCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$PointImpl extends _Point with DiagnosticableTreeMixin {
+class _$PointImpl extends _Point {
   const _$PointImpl(
       {required this.x,
       required this.y,
@@ -155,22 +155,6 @@ class _$PointImpl extends _Point with DiagnosticableTreeMixin {
   @override
   @JsonKey()
   final double thickness;
-
-  @override
-  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
-    return 'Point(x: $x, y: $y, color: $color, thickness: $thickness)';
-  }
-
-  @override
-  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
-    super.debugFillProperties(properties);
-    properties
-      ..add(DiagnosticsProperty('type', 'Point'))
-      ..add(DiagnosticsProperty('x', x))
-      ..add(DiagnosticsProperty('y', y))
-      ..add(DiagnosticsProperty('color', color))
-      ..add(DiagnosticsProperty('thickness', thickness));
-  }
 
   /// Create a copy of Point
   /// with the given fields replaced by the non-null parameter values.

@@ -17,7 +17,7 @@ _$EllipseImpl _$$EllipseImplFromJson(Map<String, dynamic> json) =>
 
 Map<String, dynamic> _$$EllipseImplToJson(_$EllipseImpl instance) =>
     <String, dynamic>{
-      'center': instance.center,
+      'center': instance.center.toJson(),
       'semiMajorAxis': instance.semiMajorAxis,
       'semiMinorAxis': instance.semiMinorAxis,
       'color': instance.color,

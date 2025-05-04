@@ -15,7 +15,7 @@ _$CircleImpl _$$CircleImplFromJson(Map<String, dynamic> json) => _$CircleImpl(
 
 Map<String, dynamic> _$$CircleImplToJson(_$CircleImpl instance) =>
     <String, dynamic>{
-      'center': instance.center,
+      'center': instance.center.toJson(),
       'radius': instance.radius,
       'color': instance.color,
       'thickness': instance.thickness,

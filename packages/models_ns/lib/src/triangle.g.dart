@@ -17,9 +17,9 @@ _$TriangleImpl _$$TriangleImplFromJson(Map<String, dynamic> json) =>
 
 Map<String, dynamic> _$$TriangleImplToJson(_$TriangleImpl instance) =>
     <String, dynamic>{
-      'a': instance.a,
-      'b': instance.b,
-      'c': instance.c,
+      'a': instance.a.toJson(),
+      'b': instance.b.toJson(),
+      'c': instance.c.toJson(),
       'color': instance.color,
       'thickness': instance.thickness,
     };

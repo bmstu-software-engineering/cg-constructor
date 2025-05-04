@@ -161,7 +161,7 @@ class __$$LineImplCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$LineImpl extends _Line with DiagnosticableTreeMixin {
+class _$LineImpl extends _Line {
   const _$LineImpl(
       {required this.a,
       required this.b,
@@ -182,22 +182,6 @@ class _$LineImpl extends _Line with DiagnosticableTreeMixin {
   @override
   @JsonKey()
   final double thickness;
-
-  @override
-  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
-    return 'Line(a: $a, b: $b, color: $color, thickness: $thickness)';
-  }
-
-  @override
-  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
-    super.debugFillProperties(properties);
-    properties
-      ..add(DiagnosticsProperty('type', 'Line'))
-      ..add(DiagnosticsProperty('a', a))
-      ..add(DiagnosticsProperty('b', b))
-      ..add(DiagnosticsProperty('color', color))
-      ..add(DiagnosticsProperty('thickness', thickness));
-  }
 
   /// Create a copy of Line
   /// with the given fields replaced by the non-null parameter values.

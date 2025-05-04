@@ -1,15 +1,19 @@
+import 'dart:convert';
 import 'dart:math' as math;
 import 'package:flutter/foundation.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+
+import 'figure.dart';
 import 'point.dart';
-import 'validatable.dart';
+import 'vector.dart';
+import 'scale.dart';
 
 part 'arc.freezed.dart';
 part 'arc.g.dart';
 
 /// Модель дуги
 @freezed
-class Arc with _$Arc, DiagnosticableTreeMixin implements Validatable {
+class Arc with _$Arc, DiagnosticableTreeMixin implements Figure {
   /// Приватный конструктор
   const Arc._();
 
@@ -33,6 +37,60 @@ class Arc with _$Arc, DiagnosticableTreeMixin implements Validatable {
   /// Создает дугу из JSON
   factory Arc.fromJson(Map<String, dynamic> json) => _$ArcFromJson(json);
 
+  /// Название фигуры
+  @override
+  String get name => 'Дуга';
+
+  /// Преобразует дугу в список точек
+  @override
+  List<Point> toPoints() => [
+        center,
+        startPoint,
+        endPoint,
+      ];
+
+  /// Перемещает дугу на вектор
+  @override
+  Arc move(Vector vector) => Arc(
+        center: center.move(vector),
+        radius: radius,
+        startAngle: startAngle,
+        endAngle: endAngle,
+        color: color,
+        thickness: thickness,
+      );
+
+  /// Масштабирует дугу относительно центра
+  @override
+  Arc scale(Point scaleCenter, Scale scale) {
+    // Для дуги используем среднее значение масштаба
+    final newCenter = center.scale(scaleCenter, scale);
+    final scaleFactor = (scale.x + scale.y) / 2;
+    return Arc(
+      center: newCenter,
+      radius: radius * scaleFactor,
+      startAngle: startAngle,
+      endAngle: endAngle,
+      color: color,
+      thickness: thickness,
+    );
+  }
+
+  /// Поворачивает дугу вокруг центра на угол в градусах
+  @override
+  Arc rotate(Point rotationCenter, double degrees) {
+    final radians = degrees * (math.pi / 180);
+    final newCenter = center.rotate(rotationCenter, degrees);
+    return Arc(
+      center: newCenter,
+      radius: radius,
+      startAngle: startAngle + radians,
+      endAngle: endAngle + radians,
+      color: color,
+      thickness: thickness,
+    );
+  }
+
   /// Валидирует дугу
   @override
   String? validate() {
@@ -52,6 +110,12 @@ class Arc with _$Arc, DiagnosticableTreeMixin implements Validatable {
     final start = _normalizeAngle(startAngle);
     final end = _normalizeAngle(endAngle);
 
+    // Проверяем, является ли дуга полной окружностью
+    if ((end - start).abs() < 1e-10 ||
+        (end - start - 2 * math.pi).abs() < 1e-10) {
+      return 2 * math.pi;
+    }
+
     // Вычисляем угол дуги
     if (end >= start) {
       return end - start;
@@ -69,6 +133,10 @@ class Arc with _$Arc, DiagnosticableTreeMixin implements Validatable {
   /// Вычисляет длину дуги
   double get length => radius * angle;
 
+  /// Вычисляет периметр дуги (длина дуги + 2 радиуса, если не полная окружность)
+  @override
+  double get perimeter => isFullCircle ? length : length + 2 * radius;
+
   /// Вычисляет площадь сектора, образованного дугой
   double get sectorArea => 0.5 * radius * radius * angle;
 
@@ -77,6 +145,14 @@ class Arc with _$Arc, DiagnosticableTreeMixin implements Validatable {
     final theta = angle;
     return 0.5 * radius * radius * (theta - math.sin(theta));
   }
+
+  /// Вычисляет площадь фигуры (площадь сектора)
+  @override
+  double get area => sectorArea;
+
+  /// Преобразует дугу в строку JSON
+  @override
+  String toJsonString() => jsonEncode(toJson());
 
   /// Получает начальную точку дуги
   Point get startPoint => Point(
@@ -125,7 +201,7 @@ class Arc with _$Arc, DiagnosticableTreeMixin implements Validatable {
 
   @override
   String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) =>
-      'Arc(center: $center, radius: $radius, startAngle: $startAngle, endAngle: $endAngle, color: $color, thickness: $thickness)';
+      'Дуга(center: $center, radius: $radius, startAngle: $startAngle, endAngle: $endAngle, color: $color, thickness: $thickness)';
 
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
@@ -138,8 +214,10 @@ class Arc with _$Arc, DiagnosticableTreeMixin implements Validatable {
     properties.add(DoubleProperty('thickness', thickness));
     properties.add(DoubleProperty('angle', angle));
     properties.add(DoubleProperty('length', length));
+    properties.add(DoubleProperty('perimeter', perimeter));
     properties.add(DoubleProperty('sectorArea', sectorArea));
     properties.add(DoubleProperty('segmentArea', segmentArea));
+    properties.add(DoubleProperty('area', area));
     properties.add(DiagnosticsProperty<Point>('startPoint', startPoint));
     properties.add(DiagnosticsProperty<Point>('endPoint', endPoint));
     properties.add(DiagnosticsProperty<bool>('isFullCircle', isFullCircle));

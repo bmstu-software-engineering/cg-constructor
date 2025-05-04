@@ -17,7 +17,7 @@ _$PolygonImpl _$$PolygonImplFromJson(Map<String, dynamic> json) =>
 
 Map<String, dynamic> _$$PolygonImplToJson(_$PolygonImpl instance) =>
     <String, dynamic>{
-      'points': instance.points,
+      'points': instance.points.map((e) => e.toJson()).toList(),
       'color': instance.color,
       'thickness': instance.thickness,
     };

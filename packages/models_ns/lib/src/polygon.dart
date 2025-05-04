@@ -1,15 +1,19 @@
+import 'dart:convert';
 import 'dart:math' as math;
 import 'package:flutter/foundation.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+
+import 'figure.dart';
 import 'point.dart';
-import 'validatable.dart';
+import 'vector.dart';
+import 'scale.dart';
 
 part 'polygon.freezed.dart';
 part 'polygon.g.dart';
 
 /// Модель многоугольника
 @freezed
-class Polygon with _$Polygon, DiagnosticableTreeMixin implements Validatable {
+class Polygon with _$Polygon, DiagnosticableTreeMixin implements Figure {
   /// Приватный конструктор
   const Polygon._();
 
@@ -28,6 +32,38 @@ class Polygon with _$Polygon, DiagnosticableTreeMixin implements Validatable {
   factory Polygon.fromJson(Map<String, dynamic> json) =>
       _$PolygonFromJson(json);
 
+  /// Название фигуры
+  @override
+  String get name => 'Многоугольник';
+
+  /// Преобразует многоугольник в список точек
+  @override
+  List<Point> toPoints() => points;
+
+  /// Перемещает многоугольник на вектор
+  @override
+  Polygon move(Vector vector) => Polygon(
+        points: points.map((p) => p.move(vector)).toList(),
+        color: color,
+        thickness: thickness,
+      );
+
+  /// Масштабирует многоугольник относительно центра
+  @override
+  Polygon scale(Point scaleCenter, Scale scale) => Polygon(
+        points: points.map((p) => p.scale(scaleCenter, scale)).toList(),
+        color: color,
+        thickness: thickness,
+      );
+
+  /// Поворачивает многоугольник вокруг центра на угол в градусах
+  @override
+  Polygon rotate(Point rotationCenter, double degrees) => Polygon(
+        points: points.map((p) => p.rotate(rotationCenter, degrees)).toList(),
+        color: color,
+        thickness: thickness,
+      );
+
   /// Валидирует многоугольник
   @override
   String? validate() {
@@ -42,6 +78,7 @@ class Polygon with _$Polygon, DiagnosticableTreeMixin implements Validatable {
   bool isValid() => validate() == null;
 
   /// Вычисляет периметр многоугольника
+  @override
   double get perimeter {
     if (points.isEmpty) return 0;
 
@@ -59,6 +96,7 @@ class Polygon with _$Polygon, DiagnosticableTreeMixin implements Validatable {
   }
 
   /// Вычисляет площадь многоугольника
+  @override
   double get area {
     if (points.length < 3) return 0;
 
@@ -74,6 +112,7 @@ class Polygon with _$Polygon, DiagnosticableTreeMixin implements Validatable {
   }
 
   /// Вычисляет центр многоугольника (центроид)
+  @override
   Point get center {
     if (points.isEmpty) {
       return const Point(x: 0, y: 0);
@@ -90,6 +129,10 @@ class Polygon with _$Polygon, DiagnosticableTreeMixin implements Validatable {
     return Point(x: sumX / points.length, y: sumY / points.length);
   }
 
+  /// Преобразует многоугольник в строку JSON
+  @override
+  String toJsonString() => jsonEncode(toJson());
+
   /// Вспомогательный метод для вычисления расстояния
   double _distance(double dx, double dy) {
     return math.sqrt(dx * dx + dy * dy);
@@ -97,7 +140,7 @@ class Polygon with _$Polygon, DiagnosticableTreeMixin implements Validatable {
 
   @override
   String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) =>
-      'Polygon(points: $points, color: $color, thickness: $thickness)';
+      'Многоугольник(points: $points, color: $color, thickness: $thickness)';
 
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {

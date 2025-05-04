@@ -18,10 +18,10 @@ _$RectangleImpl _$$RectangleImplFromJson(Map<String, dynamic> json) =>
 
 Map<String, dynamic> _$$RectangleImplToJson(_$RectangleImpl instance) =>
     <String, dynamic>{
-      'topLeft': instance.topLeft,
-      'topRight': instance.topRight,
-      'bottomRight': instance.bottomRight,
-      'bottomLeft': instance.bottomLeft,
+      'topLeft': instance.topLeft.toJson(),
+      'topRight': instance.topRight.toJson(),
+      'bottomRight': instance.bottomRight.toJson(),
+      'bottomLeft': instance.bottomLeft.toJson(),
       'color': instance.color,
       'thickness': instance.thickness,
     };

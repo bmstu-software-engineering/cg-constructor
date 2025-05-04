@@ -46,12 +46,12 @@ _$FigureCollectionImpl _$$FigureCollectionImplFromJson(
 Map<String, dynamic> _$$FigureCollectionImplToJson(
         _$FigureCollectionImpl instance) =>
     <String, dynamic>{
-      'points': instance.points,
-      'lines': instance.lines,
-      'triangles': instance.triangles,
-      'rectangles': instance.rectangles,
-      'squares': instance.squares,
-      'circles': instance.circles,
-      'ellipses': instance.ellipses,
-      'arcs': instance.arcs,
+      'points': instance.points.map((e) => e.toJson()).toList(),
+      'lines': instance.lines.map((e) => e.toJson()).toList(),
+      'triangles': instance.triangles.map((e) => e.toJson()).toList(),
+      'rectangles': instance.rectangles.map((e) => e.toJson()).toList(),
+      'squares': instance.squares.map((e) => e.toJson()).toList(),
+      'circles': instance.circles.map((e) => e.toJson()).toList(),
+      'ellipses': instance.ellipses.map((e) => e.toJson()).toList(),
+      'arcs': instance.arcs.map((e) => e.toJson()).toList(),
     };

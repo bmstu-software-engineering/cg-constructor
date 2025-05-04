@@ -15,8 +15,8 @@ _$LineImpl _$$LineImplFromJson(Map<String, dynamic> json) => _$LineImpl(
 
 Map<String, dynamic> _$$LineImplToJson(_$LineImpl instance) =>
     <String, dynamic>{
-      'a': instance.a,
-      'b': instance.b,
+      'a': instance.a.toJson(),
+      'b': instance.b.toJson(),
       'color': instance.color,
       'thickness': instance.thickness,
     };

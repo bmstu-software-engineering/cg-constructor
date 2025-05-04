@@ -12,3 +12,4 @@ export 'circle.dart';
 export 'ellipse.dart';
 export 'arc.dart';
 export 'figure_collection.dart';
+export 'figure.dart';

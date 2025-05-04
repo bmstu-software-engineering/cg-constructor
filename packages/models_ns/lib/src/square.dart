@@ -1,15 +1,19 @@
+import 'dart:convert';
 import 'dart:math' as math;
 import 'package:flutter/foundation.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+
+import 'figure.dart';
 import 'point.dart';
-import 'validatable.dart';
+import 'vector.dart';
+import 'scale.dart';
 
 part 'square.freezed.dart';
 part 'square.g.dart';
 
 /// Модель квадрата
 @freezed
-class Square with _$Square, DiagnosticableTreeMixin implements Validatable {
+class Square with _$Square, DiagnosticableTreeMixin implements Figure {
   /// Приватный конструктор
   const Square._();
 
@@ -29,6 +33,52 @@ class Square with _$Square, DiagnosticableTreeMixin implements Validatable {
   /// Создает квадрат из JSON
   factory Square.fromJson(Map<String, dynamic> json) => _$SquareFromJson(json);
 
+  /// Название фигуры
+  @override
+  String get name => 'Квадрат';
+
+  /// Преобразует квадрат в список точек
+  @override
+  List<Point> toPoints() => [center, topRight];
+
+  /// Перемещает квадрат на вектор
+  @override
+  Square move(Vector vector) => Square(
+        center: center.move(vector),
+        sideLength: sideLength,
+        color: color,
+        thickness: thickness,
+      );
+
+  /// Масштабирует квадрат относительно центра
+  @override
+  Square scale(Point scaleCenter, Scale scale) {
+    // Для квадрата используем только один коэффициент масштабирования,
+    // чтобы сохранить пропорции
+    final newCenter = center.scale(scaleCenter, scale);
+    final scaleFactor = (scale.x + scale.y) / 2;
+    return Square(
+      center: newCenter,
+      sideLength: sideLength * scaleFactor,
+      color: color,
+      thickness: thickness,
+    );
+  }
+
+  /// Поворачивает квадрат вокруг центра на угол в градусах
+  @override
+  Square rotate(Point rotationCenter, double degrees) {
+    // Для квадрата поворот вокруг его центра не меняет его форму,
+    // только положение центра
+    final newCenter = center.rotate(rotationCenter, degrees);
+    return Square(
+      center: newCenter,
+      sideLength: sideLength,
+      color: color,
+      thickness: thickness,
+    );
+  }
+
   /// Валидирует квадрат
   @override
   String? validate() {
@@ -43,10 +93,16 @@ class Square with _$Square, DiagnosticableTreeMixin implements Validatable {
   bool isValid() => validate() == null;
 
   /// Вычисляет периметр квадрата
+  @override
   double get perimeter => 4 * sideLength;
 
   /// Вычисляет площадь квадрата
+  @override
   double get area => sideLength * sideLength;
+
+  /// Преобразует квадрат в строку JSON
+  @override
+  String toJsonString() => jsonEncode(toJson());
 
   /// Вычисляет диагональ квадрата
   double get diagonal => sideLength * math.sqrt(2);
@@ -80,7 +136,7 @@ class Square with _$Square, DiagnosticableTreeMixin implements Validatable {
 
   @override
   String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) =>
-      'Square(center: $center, sideLength: $sideLength, color: $color, thickness: $thickness)';
+      'Квадрат(center: $center, sideLength: $sideLength, color: $color, thickness: $thickness)';
 
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {

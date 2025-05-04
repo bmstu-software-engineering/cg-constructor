@@ -16,7 +16,7 @@ _$ArcImpl _$$ArcImplFromJson(Map<String, dynamic> json) => _$ArcImpl(
     );
 
 Map<String, dynamic> _$$ArcImplToJson(_$ArcImpl instance) => <String, dynamic>{
-      'center': instance.center,
+      'center': instance.center.toJson(),
       'radius': instance.radius,
       'startAngle': instance.startAngle,
       'endAngle': instance.endAngle,
