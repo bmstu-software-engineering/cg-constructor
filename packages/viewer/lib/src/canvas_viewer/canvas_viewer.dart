@@ -8,6 +8,7 @@ import 'package:rxdart/subjects.dart';
 import 'package:viewer/src/canvas_viewer/canvas_painter_with_collection.dart';
 
 import '../viewer_interface.dart';
+import 'canvas_calculator.dart';
 import 'canvas_painter.dart';
 
 /// Реализация Viewer с использованием Canvas для отрисовки
@@ -58,8 +59,13 @@ class CanvasViewer with DiagnosticableTreeMixin implements Viewer {
   @override
   Stream<Point> get pointsStream => _pointsStreamController.stream;
 
+  // Калькулятор для расчётов
+  late final CanvasCalculator _calculator;
+
   CanvasViewer({this.padding = 40.0, bool useCollection = false})
-    : _useCollection = useCollection;
+    : _useCollection = useCollection {
+    _calculator = CanvasCalculator(padding);
+  }
 
   @override
   void draw(List<Line> lines, List<Point> points) {
@@ -350,6 +356,7 @@ class CanvasViewer with DiagnosticableTreeMixin implements Viewer {
       thickness: 5.0, // Можно сделать настраиваемым
     );
 
+    _collection = _collection.copyWith(points: [..._collection.points, point]);
     // Добавляем точку к существующим
     _points = [..._points, point];
 
@@ -366,9 +373,14 @@ class CanvasViewer with DiagnosticableTreeMixin implements Viewer {
 
   /// Преобразует координаты экрана в координаты модели
   Offset _convertToModelCoordinates(double screenX, double screenY) {
+    // Обновляем значения калькулятора текущими значениями масштаба и смещения
+    _calculator.scale = _currentScale;
+    _calculator.offsetX = _currentOffset.dx;
+    _calculator.offsetY = _currentOffset.dy;
+
     // Обратное преобразование с учетом масштаба и смещения
-    final modelX = (screenX - _currentOffset.dx) / _currentScale;
-    final modelY = (screenY - _currentOffset.dy) / _currentScale;
+    final modelX = (screenX - _calculator.offsetX) / _calculator.scale;
+    final modelY = (screenY - _calculator.offsetY) / _calculator.scale;
     return Offset(modelX, modelY);
   }
 
@@ -379,6 +391,18 @@ class CanvasViewer with DiagnosticableTreeMixin implements Viewer {
       return;
     }
 
+    // Используем калькулятор для расчета ограничивающего прямоугольника
+    // Создаем временный размер для вызова метода калькулятора
+    final tempSize = Size(800, 600); // Размер не важен для расчета boundingBox
+
+    // Вызываем метод калькулятора для расчета ограничивающего прямоугольника
+    if (_useCollection) {
+      _calculator.calculateScaleAndOffsetForCollection(tempSize, _collection);
+    } else {
+      _calculator.calculateScaleAndOffset(tempSize, _lines, _points);
+    }
+
+    // Получаем минимальные и максимальные координаты из результатов расчета
     double minX = double.infinity;
     double minY = double.infinity;
     double maxX = double.negativeInfinity;
@@ -538,15 +562,17 @@ class CanvasViewer with DiagnosticableTreeMixin implements Viewer {
 
 /// Фабрика для создания экземпляров CanvasViewer
 class CanvasViewerFactory implements ViewerFactory {
+  final bool useCollection;
+  final double padding;
+  final bool pointInputModeEnabled;
+  final void Function(Point point)? onPointAdded;
+
   const CanvasViewerFactory({
     this.padding = 40.0,
     this.pointInputModeEnabled = false,
     this.onPointAdded,
+    this.useCollection = false,
   });
-
-  final double padding;
-  final bool pointInputModeEnabled;
-  final void Function(Point point)? onPointAdded;
 
   @override
   Viewer create({
@@ -554,7 +580,7 @@ class CanvasViewerFactory implements ViewerFactory {
     bool pointInputModeEnabled = false,
     void Function(Point point)? onPointAdded,
   }) {
-    final viewer = CanvasViewer(padding: padding);
+    final viewer = CanvasViewer(padding: padding, useCollection: useCollection);
 
     // Применяем настройки из параметров конструктора, если не переопределены
     final usePointInputMode =

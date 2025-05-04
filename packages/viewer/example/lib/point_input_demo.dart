@@ -178,9 +178,9 @@ class _TwoViewersWithPointInputDemoState
   @override
   void initState() {
     super.initState();
-    _viewer1 = CanvasViewerFactory().create(
-      pointInputModeEnabled: _pointInputModeEnabled1,
-    );
+    _viewer1 = CanvasViewerFactory(
+      useCollection: true,
+    ).create(pointInputModeEnabled: _pointInputModeEnabled1);
     _viewer2 = CanvasViewerFactory().create(
       pointInputModeEnabled: _pointInputModeEnabled2,
     );
