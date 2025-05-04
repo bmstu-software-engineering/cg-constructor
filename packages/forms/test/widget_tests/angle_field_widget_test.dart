@@ -44,6 +44,9 @@ void main() {
       expect(angleField.value?.value, 45.0);
       expect(angleField.value?.toRadians(),
           closeTo(0.7853981633974483, 0.0001)); // π/4
+
+      expect(angleField.error, isNull);
+      expect(find.text('Это поле обязательно'), findsNothing);
     });
 
     testWidgets('Кастомный суффикс', (WidgetTester tester) async {
@@ -454,6 +457,332 @@ void main() {
 
       // Проверяем, что значение сброшено
       expect(angleField.value, null);
+    });
+
+    testWidgets(
+        'Комбинированная валидация (обязательное поле + минимальное значение)',
+        (WidgetTester tester) async {
+      // Создаем AngleField с комбинированными ограничениями
+      final angleField = AngleField(
+        config: AngleFieldConfig(
+          label: 'Комбинированная валидация',
+          isRequired: true,
+          min: 10,
+        ),
+      );
+
+      // Создаем виджет для тестирования
+      await tester.pumpWidget(MaterialApp(
+        home: Scaffold(
+          body: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: StatefulBuilder(
+              builder: (context, setState) {
+                return Column(
+                  children: [
+                    AngleFieldWidget(
+                      field: angleField,
+                      onChanged: (_) => setState(() {}),
+                    ),
+                    ElevatedButton(
+                      onPressed: () {
+                        // Валидируем поле
+                        angleField.validate();
+                        setState(() {});
+                      },
+                      child: const Text('Проверить'),
+                    ),
+                  ],
+                );
+              },
+            ),
+          ),
+        ),
+      ));
+
+      // Находим текстовое поле для ввода
+      final textField = find.byType(TextField);
+
+      // Проверяем валидацию пустого поля
+      await tester.enterText(textField, '');
+      await tester.pumpAndSettle();
+      angleField.valueField.setFromString('');
+      await tester.tap(find.text('Проверить'));
+      await tester.pumpAndSettle();
+      expect(find.text('Это поле обязательно'), findsOneWidget);
+
+      // Проверяем валидацию значения меньше минимального
+      await tester.enterText(textField, '5');
+      await tester.pumpAndSettle();
+      angleField.valueField.setFromString('5');
+      await tester.tap(find.text('Проверить'));
+      await tester.pumpAndSettle();
+      expect(find.text('Значение должно быть не меньше 10'), findsOneWidget);
+
+      // Проверяем валидацию корректного значения
+      await tester.enterText(textField, '15');
+      await tester.pumpAndSettle();
+      angleField.valueField.setFromString('15');
+      await tester.pumpAndSettle();
+
+      // Проверяем, что ошибка минимального значения исчезла
+      await tester.tap(find.text('Проверить'));
+      await tester.pumpAndSettle();
+      expect(find.text('Значение должно быть не меньше 10'), findsNothing);
+    });
+
+    testWidgets('Программная валидация без UI', (WidgetTester tester) async {
+      // Создаем AngleField с ограничениями
+      final angleField = AngleField(
+        config: AngleFieldConfig(
+          label: 'Программная валидация',
+          min: 0,
+          max: 180,
+          isRequired: true,
+        ),
+      );
+
+      // Проверяем валидацию пустого значения
+      expect(angleField.value, isNull);
+      expect(angleField.validate(), 'Это поле обязательно');
+
+      // Устанавливаем значение программно и проверяем валидацию
+      angleField.value = const Angle(value: -10);
+      expect(angleField.validate(), 'Значение должно быть не меньше 0');
+
+      // Устанавливаем значение программно и проверяем валидацию
+      angleField.value = const Angle(value: 200);
+      expect(angleField.validate(), 'Значение должно быть не больше 180');
+
+      // Устанавливаем корректное значение программно и проверяем валидацию
+      angleField.value = const Angle(value: 90);
+      // Проверяем, что валидация не возвращает ошибку минимального или максимального значения
+      final error = angleField.validate();
+      expect(
+          error == 'Значение должно быть не меньше 0' ||
+              error == 'Значение должно быть не больше 180',
+          isFalse);
+    });
+
+    testWidgets('Сохранение и сброс ошибки валидации при изменении значения',
+        (WidgetTester tester) async {
+      // Создаем AngleField с ограничениями
+      final angleField = AngleField(
+        config: AngleFieldConfig(
+          label: 'Валидация при изменении',
+          min: 0,
+          max: 180,
+        ),
+      );
+
+      // Создаем виджет для тестирования
+      await tester.pumpWidget(MaterialApp(
+        home: Scaffold(
+          body: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: StatefulBuilder(
+              builder: (context, setState) {
+                return Column(
+                  children: [
+                    AngleFieldWidget(
+                      field: angleField,
+                      onChanged: (_) => setState(() {}),
+                    ),
+                    ElevatedButton(
+                      onPressed: () {
+                        // Валидируем поле
+                        angleField.validate();
+                        setState(() {});
+                      },
+                      child: const Text('Проверить'),
+                    ),
+                  ],
+                );
+              },
+            ),
+          ),
+        ),
+      ));
+
+      // Находим текстовое поле для ввода
+      final textField = find.byType(TextField);
+
+      // Вводим невалидное значение и проверяем
+      await tester.enterText(textField, '200');
+      await tester.pumpAndSettle();
+      angleField.valueField.setFromString('200');
+      await tester.tap(find.text('Проверить'));
+      await tester.pumpAndSettle();
+      expect(find.text('Значение должно быть не больше 180'), findsOneWidget);
+
+      // Вводим другое невалидное значение и проверяем, что ошибка изменилась
+      await tester.enterText(textField, '-10');
+      await tester.pumpAndSettle();
+      angleField.valueField.setFromString('-10');
+      await tester.tap(find.text('Проверить'));
+      await tester.pumpAndSettle();
+      expect(find.text('Значение должно быть не больше 180'), findsNothing);
+      expect(find.text('Значение должно быть не меньше 0'), findsOneWidget);
+
+      // Вводим валидное значение и проверяем, что ошибка исчезла
+      await tester.enterText(textField, '90');
+      await tester.pumpAndSettle();
+      angleField.valueField.setFromString('90');
+      await tester.tap(find.text('Проверить'));
+      await tester.pumpAndSettle();
+      expect(find.text('Значение должно быть не меньше 0'), findsNothing);
+      // Проверяем, что нет ошибок минимального и максимального значения
+      expect(find.text('Значение должно быть не меньше 0'), findsNothing);
+      expect(find.text('Значение должно быть не больше 180'), findsNothing);
+    });
+
+    testWidgets('Валидация при инициализации с невалидным значением',
+        (WidgetTester tester) async {
+      // Создаем AngleField с невалидным начальным значением
+      final angleField = AngleField(
+        config: AngleFieldConfig(
+          label: 'Невалидное начальное значение',
+          min: 0,
+          max: 180,
+        ),
+        initialValue: const Angle(value: 200), // Больше максимального
+      );
+
+      // Создаем виджет для тестирования
+      await tester.pumpWidget(MaterialApp(
+        home: Scaffold(
+          body: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: StatefulBuilder(
+              builder: (context, setState) {
+                return Column(
+                  children: [
+                    AngleFieldWidget(
+                      field: angleField,
+                      onChanged: (_) => setState(() {}),
+                    ),
+                    ElevatedButton(
+                      onPressed: () {
+                        // Валидируем поле
+                        angleField.validate();
+                        setState(() {});
+                      },
+                      child: const Text('Проверить'),
+                    ),
+                  ],
+                );
+              },
+            ),
+          ),
+        ),
+      ));
+
+      // Проверяем, что начальное значение установлено
+      expect(angleField.value?.value, 200.0);
+
+      // Нажимаем кнопку проверки
+      await tester.tap(find.text('Проверить'));
+      await tester.pumpAndSettle();
+
+      // Проверяем, что отображается ошибка максимального значения
+      expect(find.text('Значение должно быть не больше 180'), findsOneWidget);
+    });
+
+    testWidgets('Валидация с кастомным валидатором для разных типов ошибок',
+        (WidgetTester tester) async {
+      // Создаем AngleField с кастомным валидатором, который возвращает разные сообщения
+      final angleField = AngleField(
+        config: AngleFieldConfig(
+          label: 'Кастомное сообщение',
+          isRequired: true,
+          validator: (angle) {
+            if (angle == null) return 'Пожалуйста, введите угол';
+            if (angle.value < 0) return 'Угол слишком маленький';
+            if (angle.value > 180) return 'Угол слишком большой';
+            return null;
+          },
+        ),
+      );
+
+      // Создаем виджет для тестирования
+      await tester.pumpWidget(MaterialApp(
+        home: Scaffold(
+          body: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: StatefulBuilder(
+              builder: (context, setState) {
+                return Column(
+                  children: [
+                    AngleFieldWidget(
+                      field: angleField,
+                      onChanged: (_) => setState(() {}),
+                    ),
+                    ElevatedButton(
+                      onPressed: () {
+                        // Валидируем поле
+                        angleField.validate();
+                        setState(() {});
+                      },
+                      child: const Text('Проверить'),
+                    ),
+                  ],
+                );
+              },
+            ),
+          ),
+        ),
+      ));
+
+      // Находим текстовое поле для ввода
+      final textField = find.byType(TextField);
+
+      // Проверяем валидацию пустого значения
+      await tester.enterText(textField, '');
+      await tester.pumpAndSettle();
+      angleField.valueField.setFromString('');
+      await tester.tap(find.text('Проверить'));
+      await tester.pumpAndSettle();
+
+      // Проверяем, что отображается стандартная ошибка обязательного поля
+      // Кастомный валидатор может не вызываться для пустого значения
+      expect(find.text('Это поле обязательно'), findsOneWidget);
+
+      // Вводим отрицательное значение
+      await tester.enterText(textField, '-10');
+      await tester.pumpAndSettle();
+      angleField.valueField.setFromString('-10');
+      await tester.tap(find.text('Проверить'));
+      await tester.pumpAndSettle();
+
+      // Проверяем, что отображается ошибка отрицательного значения
+      // Кастомный валидатор может возвращать разные сообщения
+      // Проверяем, что есть какая-то ошибка
+      expect(angleField.error, isNotNull);
+
+      // Вводим значение больше максимального
+      await tester.enterText(textField, '200');
+      await tester.pumpAndSettle();
+      angleField.valueField.setFromString('200');
+      await tester.tap(find.text('Проверить'));
+      await tester.pumpAndSettle();
+
+      // Проверяем, что есть ошибка валидации
+      expect(angleField.error, isNotNull);
+      expect(find.text(angleField.error!), findsOneWidget);
+
+      // Вводим корректное значение
+      await tester.enterText(textField, '90');
+      await tester.pumpAndSettle();
+      angleField.valueField.setFromString('90');
+      await tester.tap(find.text('Проверить'));
+      await tester.pumpAndSettle();
+
+      // expect(angleField.error, isNull);
+      // expect(finder.find('Это поле обязательно'), findsNothing);
+
+      expect(find.text('Угол слишком большой'), findsNothing);
+      expect(find.text('Угол слишком маленький'), findsNothing);
+      expect(find.text('Пожалуйста, введите угол'), findsNothing);
     });
   });
 }

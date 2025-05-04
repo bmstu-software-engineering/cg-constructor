@@ -39,7 +39,7 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   // Создаем поля для ввода
   final NumberField _numberField = NumberField(
-    config: NumberFieldConfig(
+    config: const NumberFieldConfig(
       label: 'Число',
       min: 0,
       max: 100,
@@ -55,14 +55,14 @@ class _MyHomePageState extends State<MyHomePage> {
       maxItems: 5,
       isRequired: true,
       createItemField: () => NumberField(
-        config: NumberFieldConfig(label: 'Число', min: 0, max: 100),
+        config: const NumberFieldConfig(label: 'Число', min: 0, max: 100),
       ),
     ),
     initialValue: [10, 20, 30],
   );
 
   final PointField _pointField = PointField(
-    config: PointFieldConfig(
+    config: const PointFieldConfig(
       label: 'Точка',
       xConfig: NumberFieldConfig(label: 'X', min: 0, max: 100),
       yConfig: NumberFieldConfig(label: 'Y', min: 0, max: 100),
@@ -74,7 +74,7 @@ class _MyHomePageState extends State<MyHomePage> {
   );
 
   final VectorField _vectorField = VectorField(
-    config: VectorFieldConfig(
+    config: const VectorFieldConfig(
       label: 'Вектор',
       dxConfig: NumberFieldConfig(label: 'dX', min: -100, max: 100),
       dyConfig: NumberFieldConfig(label: 'dY', min: -100, max: 100),
@@ -84,17 +84,17 @@ class _MyHomePageState extends State<MyHomePage> {
   final ScaleField _scaleField = ScaleField(
     config: ScaleFieldConfig(
       label: 'Масштаб',
-      xConfig: NumberFieldConfig(label: 'X', min: 0.1, max: 10),
-      yConfig: NumberFieldConfig(label: 'Y', min: 0.1, max: 10),
+      xConfig: const NumberFieldConfig(label: 'X', min: 0.1, max: 10),
+      yConfig: const NumberFieldConfig(label: 'Y', min: 0.1, max: 10),
     ),
   );
 
   final TriangleField _triangleField = TriangleField(
     config: TriangleFieldConfig(
       label: 'Треугольник',
-      aConfig: PointFieldConfig(label: 'A'),
-      bConfig: PointFieldConfig(label: 'B'),
-      cConfig: PointFieldConfig(label: 'C'),
+      aConfig: const PointFieldConfig(label: 'A'),
+      bConfig: const PointFieldConfig(label: 'B'),
+      cConfig: const PointFieldConfig(label: 'C'),
     ),
   );
 
@@ -108,13 +108,13 @@ class _MyHomePageState extends State<MyHomePage> {
     // Устанавливаем начальные значения
     _numberField.value = 42;
     _pointField.value = const Point(x: 10, y: 20);
-    _angleField.value = Angle(value: 45);
-    _vectorField.value = Vector(dx: 5, dy: 10);
-    _scaleField.value = Scale(x: 2, y: 2);
-    _triangleField.value = Triangle(
-      a: const Point(x: 0, y: 0),
-      b: const Point(x: 10, y: 0),
-      c: const Point(x: 5, y: 10),
+    _angleField.value = const Angle(value: 45);
+    _vectorField.value = const Vector(dx: 5, dy: 10);
+    _scaleField.value = const Scale(x: 2, y: 2);
+    _triangleField.value = const Triangle(
+      a: Point(x: 0, y: 0),
+      b: Point(x: 10, y: 0),
+      c: Point(x: 5, y: 10),
     );
   }
 
