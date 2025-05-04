@@ -5,12 +5,14 @@ import 'package:flutter/material.dart';
 enum _AlgorithmVariant {
   move,
   scale,
-  rotate;
+  rotate,
+  revert;
 
   String get title => switch (this) {
     move => 'Переместить',
     scale => 'Масштабировать',
     rotate => 'Повернуть',
+    revert => 'Шаг назад',
   };
 
   static _AlgorithmVariant fromString(String string) =>
@@ -51,15 +53,33 @@ class AlgorithmL02
       throw UnimplementedError('Не применимо к данному алгоритму');
 
   @override
-  ResultModel calculateWithVariant(
-    String? variant,
-  ) => switch (_AlgorithmVariant.fromString(
-    variant ?? (throw UnimplementedError('Не применимо к данному алгоритму')),
-  )) {
-    _AlgorithmVariant.move => throw UnimplementedError(),
-    _AlgorithmVariant.scale => throw UnimplementedError(),
-    _AlgorithmVariant.rotate => throw UnimplementedError(),
-  };
+  ResultModel calculateWithVariant(String? variant) =>
+      switch (_AlgorithmVariant.fromString(
+        variant ??
+            (throw UnimplementedError('Не применимо к данному алгоритму')),
+      )) {
+        _AlgorithmVariant.move => ViewerResultModelV2(
+          figureCollection: _holder.last.move(_model.data.translation),
+        ),
+        _AlgorithmVariant.scale => ViewerResultModelV2(
+          figureCollection: _holder.last.scale(
+            _model.data.scaling.center,
+            _model.data.scaling.scale,
+          ),
+        ),
+        _AlgorithmVariant.rotate => ViewerResultModelV2(
+          figureCollection: _holder.last.rotate(
+            _model.data.rotation.center,
+            _model.data.rotation.angle.value,
+          ),
+        ),
+        _AlgorithmVariant.revert => ViewerResultModelV2(
+          figureCollection: _holder.last.let((_) {
+            _holder.revert();
+            return _holder.last;
+          }),
+        ),
+      }..let((result) => _holder.add(result.figureCollection));
 
   @override
   List<AlgorithmVariant> getAvailableVariants() =>
@@ -69,4 +89,8 @@ class AlgorithmL02
 
   @override
   FormsDataModel getDataModel() => _model;
+}
+
+extension<T> on T {
+  R let<R>(R Function(T that) op) => op(this);
 }

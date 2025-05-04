@@ -18,6 +18,21 @@ class ScaleTransformationModel {
   const ScaleTransformationModel({required this.center, required this.scale});
 }
 
+/// Модель для параметров поворотма
+@FormGen()
+class RotateTransformationModel {
+  /// Центр масштабирования
+  @PointFieldGen(label: 'Центр поворота')
+  final Point center;
+
+  /// Коэффициенты масштабирования
+  @AngleFieldGen(label: 'Угол поворота')
+  final Angle angle;
+
+  /// Конструктор
+  const RotateTransformationModel({required this.center, required this.angle});
+}
+
 /// Обобщенная модель данных для алгоритмов геометрических преобразований
 @FormGen()
 class GeometricTransformationModel implements AlgorithmData {
@@ -26,8 +41,8 @@ class GeometricTransformationModel implements AlgorithmData {
   final Vector translation;
 
   /// Угол поворота
-  @AngleFieldGen(label: 'Угол поворота')
-  final Angle rotation;
+  @FieldGenAnnotation(label: 'Параметры поворота')
+  final RotateTransformationModel rotation;
 
   /// Параметры масштабирования
   @FieldGenAnnotation(label: 'Параметры масштабирования')

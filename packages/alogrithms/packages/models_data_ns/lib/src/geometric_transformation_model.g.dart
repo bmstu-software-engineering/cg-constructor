@@ -77,6 +77,69 @@ class ScaleTransformationModelFormModel
   }
 }
 
+/// Типизированная конфигурация формы для RotateTransformationModel
+class RotateTransformationModelFormConfig
+    extends TypedFormConfig<RotateTransformationModel> {
+  @override
+  String get name => 'RotateTransformationModel';
+
+  @override
+  List<FieldConfigEntry> get fields => [
+    FieldConfigEntry(
+      id: 'center',
+      type: FieldType.point,
+      config: PointFieldConfig(label: 'Центр поворота', isRequired: true),
+    ),
+    FieldConfigEntry(
+      id: 'angle',
+      type: FieldType.angle,
+      config: AngleFieldConfig(label: 'Угол поворота'),
+    ),
+  ];
+
+  @override
+  RotateTransformationModelFormModel createModel() =>
+      RotateTransformationModelFormModel(config: toFormConfig());
+}
+
+/// Типизированная модель формы для RotateTransformationModel
+class RotateTransformationModelFormModel
+    extends TypedFormModel<RotateTransformationModel> {
+  RotateTransformationModelFormModel({required super.config});
+
+  /// Поле для center
+  FormField<Point> get centerField => getField<FormField<Point>>('center')!;
+
+  /// Поле для angle
+  AngleField get angleField => getField<AngleField>('angle')!;
+
+  @override
+  RotateTransformationModel get values => RotateTransformationModel(
+    center: centerField.value!,
+    angle: angleField.value!,
+  );
+
+  @override
+  set values(RotateTransformationModel newValues) {
+    centerField.value = newValues.center;
+    angleField.value = newValues.angle;
+  }
+
+  @override
+  Map<String, dynamic> toMap() => {
+    'center': centerField.value,
+    'angle': angleField.value,
+  };
+
+  @override
+  void fromMap(Map<String, dynamic> map) {
+    if (map.containsKey('center')) {
+      centerField.value = map['center'] as Point;
+    }
+    if (map.containsKey('angle')) angleField.value = map['angle'] as Angle;
+  }
+}
+
 /// Типизированная конфигурация формы для GeometricTransformationModel
 class GeometricTransformationModelFormConfig
     extends TypedFormConfig<GeometricTransformationModel> {
@@ -92,8 +155,15 @@ class GeometricTransformationModelFormConfig
     ),
     FieldConfigEntry(
       id: 'rotation',
-      type: FieldType.angle,
-      config: AngleFieldConfig(label: 'Угол поворота'),
+      type: FieldType.form,
+      config: FormFieldConfig<RotateTransformationModel>(
+        label: 'Параметры поворота',
+        createFormModel:
+            () => RotateTransformationModelFormModel(
+              config: RotateTransformationModelFormConfig().toFormConfig(),
+            ),
+        isRequired: true,
+      ),
     ),
     FieldConfigEntry(
       id: 'scaling',
@@ -123,7 +193,8 @@ class GeometricTransformationModelFormModel
   VectorField get translationField => getField<VectorField>('translation')!;
 
   /// Поле для rotation
-  AngleField get rotationField => getField<AngleField>('rotation')!;
+  FormField<RotateTransformationModel> get rotationField =>
+      getField<FormField<RotateTransformationModel>>('rotation')!;
 
   /// Поле для scaling
   FormField<ScaleTransformationModel> get scalingField =>
@@ -146,7 +217,10 @@ class GeometricTransformationModelFormModel
   @override
   Map<String, dynamic> toMap() => {
     'translation': translationField.value,
-    'rotation': rotationField.value,
+    'rotation':
+        rotationField.value != null
+            ? (rotationField as NestedFormField).toMap()
+            : null,
     'scaling':
         scalingField.value != null
             ? (scalingField as NestedFormField).toMap()
@@ -157,8 +231,19 @@ class GeometricTransformationModelFormModel
   void fromMap(Map<String, dynamic> map) {
     if (map.containsKey('translation'))
       translationField.value = map['translation'] as Vector;
-    if (map.containsKey('rotation'))
-      rotationField.value = map['rotation'] as Angle;
+    if (map.containsKey('rotation')) {
+      final nestedMap = map['rotation'] as Map<String, dynamic>;
+      if (rotationField.value == null) {
+        // Создаем новую вложенную форму
+        final nestedFormModel =
+            RotateTransformationModelFormConfig().createModel();
+        nestedFormModel.fromMap(nestedMap);
+        rotationField.value = nestedFormModel.values;
+      } else {
+        // Используем существующую вложенную форму
+        (rotationField as NestedFormField).fromMap(nestedMap);
+      }
+    }
     if (map.containsKey('scaling')) {
       final nestedMap = map['scaling'] as Map<String, dynamic>;
       if (scalingField.value == null) {
