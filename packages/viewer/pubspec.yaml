@@ -15,6 +15,7 @@ dependencies:
   json_annotation: ^4.8.1
   models_ns:
     path: ../models_ns
+  rxdart: ^0.28.0
 
 dev_dependencies:
   flutter_test:

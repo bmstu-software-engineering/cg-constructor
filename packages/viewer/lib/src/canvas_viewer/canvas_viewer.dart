@@ -4,8 +4,11 @@ import 'dart:math';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:models_ns/models_ns.dart';
+import 'package:rxdart/subjects.dart';
+import 'package:viewer/src/canvas_viewer/canvas_painter_with_collection.dart';
 
-import 'viewer_interface.dart';
+import '../viewer_interface.dart';
+import 'canvas_painter.dart';
 
 /// Реализация Viewer с использованием Canvas для отрисовки
 class CanvasViewer with DiagnosticableTreeMixin implements Viewer {
@@ -21,6 +24,7 @@ class CanvasViewer with DiagnosticableTreeMixin implements Viewer {
   Offset _currentOffset = Offset.zero;
 
   // Ограничивающий прямоугольник для всех точек и линий
+  @Deprecated('Не используется в этом виджете')
   Rect? _boundingBox;
 
   // Флаг, указывающий, нужно ли отображать координаты
@@ -45,6 +49,7 @@ class CanvasViewer with DiagnosticableTreeMixin implements Viewer {
   double get currentScale => _currentScale;
   Offset get currentOffset => _currentOffset;
   Rect? get boundingBox => _boundingBox;
+  @override
   bool get showCoordinates => _showCoordinates;
 
   @override
@@ -53,10 +58,13 @@ class CanvasViewer with DiagnosticableTreeMixin implements Viewer {
   @override
   Stream<Point> get pointsStream => _pointsStreamController.stream;
 
-  CanvasViewer({this.padding = 40.0});
+  CanvasViewer({this.padding = 40.0, bool useCollection = false})
+    : _useCollection = useCollection;
 
   @override
   void draw(List<Line> lines, List<Point> points) {
+    _collection = _collection.copyWith(lines: lines, points: points);
+
     _lines = List.from(lines);
     _points = List.from(points);
     _needsRescale = true;
@@ -64,8 +72,11 @@ class CanvasViewer with DiagnosticableTreeMixin implements Viewer {
     _draw();
   }
 
+  var _collection = FigureCollection();
+
   @override
   void drawCollection(FigureCollection collection) {
+    _collection = collection;
     // Создаем списки для хранения всех линий и точек
     final allLines = <Line>[];
     final allPoints = <Point>[];
@@ -284,11 +295,14 @@ class CanvasViewer with DiagnosticableTreeMixin implements Viewer {
     }
   }
 
-  final _updateStream = StreamController.broadcast();
+  final _updateStream = BehaviorSubject.seeded(null);
+  final bool _useCollection;
+
   void _draw() => _updateStream.add(null);
 
   @override
   void clean() {
+    _collection = FigureCollection();
     _lines = [];
     _points = [];
     _boundingBox = null;
@@ -414,26 +428,43 @@ class CanvasViewer with DiagnosticableTreeMixin implements Viewer {
                     'canvas_viewer_${_lines.length}_${_points.length}_${_showCoordinates ? 'with_coords' : 'no_coords'}_${_pointInputModeEnabled ? 'input_mode' : 'view_mode'}',
                   ),
                   size: Size(constraints.maxWidth, constraints.maxHeight),
-                  painter: _CanvasPainter(
-                    padding,
-                    lines: _lines,
-                    points: _points,
-                    needsRescale: _needsRescale,
-                    showCoordinates: _showCoordinates,
-                    onRescaled: (scale, offset) {
-                      _currentScale = scale;
-                      _currentOffset = offset;
-                      // НИКОГДА НЕ ИЗМЕНЯЙ ЭТО ЗНАЧЕНИЕ
-                      // ТУТ ТОЧНО ДОЛЖЕН БЫТЬ true
-                      _needsRescale = true;
-                    },
-                  ),
+                  painter: _buildPainter(),
                 ),
               ),
             );
           },
         ),
   );
+
+  CustomPainter _buildPainter() =>
+      _useCollection
+          ? CanvasPainterWithCollection(
+            padding,
+            collection: _collection,
+            needsRescale: _needsRescale,
+            showCoordinates: _showCoordinates,
+            onRescaled: (scale, offset) {
+              _currentScale = scale;
+              _currentOffset = offset;
+              // НИКОГДА НЕ ИЗМЕНЯЙ ЭТО ЗНАЧЕНИЕ
+              // ТУТ ТОЧНО ДОЛЖЕН БЫТЬ true
+              _needsRescale = true;
+            },
+          )
+          : CanvasPainter(
+            padding,
+            lines: _lines,
+            points: _points,
+            needsRescale: _needsRescale,
+            showCoordinates: _showCoordinates,
+            onRescaled: (scale, offset) {
+              _currentScale = scale;
+              _currentOffset = offset;
+              // НИКОГДА НЕ ИЗМЕНЯЙ ЭТО ЗНАЧЕНИЕ
+              // ТУТ ТОЧНО ДОЛЖЕН БЫТЬ true
+              _needsRescale = true;
+            },
+          );
 
   /// Возвращает текущее состояние масштабирования и отображения для тестирования
   Map<String, dynamic> getScalingState() {
@@ -502,253 +533,6 @@ class CanvasViewer with DiagnosticableTreeMixin implements Viewer {
   @override
   String toStringShort() {
     return 'CanvasViewer(lines: ${_lines.length}, points: ${_points.length}, showCoordinates: $_showCoordinates, pointInputMode: $_pointInputModeEnabled)';
-  }
-}
-
-/// Класс для отрисовки на Canvas
-class _CanvasPainter extends CustomPainter {
-  final List<Line> lines;
-  final List<Point> points;
-  final bool needsRescale;
-  final bool showCoordinates;
-  final Function(double scale, Offset offset) onRescaled;
-
-  // Параметры масштабирования
-  double _scale = 1.0;
-  double _offsetX = 0.0;
-  double _offsetY = 0.0;
-
-  // Отступы от краев
-  final double _padding;
-
-  _CanvasPainter(
-    this._padding, {
-    required this.lines,
-    required this.points,
-    required this.needsRescale,
-    required this.onRescaled,
-    this.showCoordinates = false,
-  });
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    // Проверяем, есть ли что отрисовывать
-    bool hasContent = lines.isNotEmpty || points.isNotEmpty;
-
-    if (!hasContent) return;
-
-    if (needsRescale) {
-      _calculateScaleAndOffset(size);
-      onRescaled(_scale, Offset(_offsetX, _offsetY));
-    }
-
-    // Отрисовка линий
-    for (final line in lines) {
-      final paint =
-          Paint()
-            ..color = _parseColor(line.color)
-            ..strokeWidth = line.thickness
-            ..style = PaintingStyle.stroke;
-
-      final p1 = _transformPoint(line.a, size);
-      final p2 = _transformPoint(line.b, size);
-
-      canvas.drawLine(p1, p2, paint);
-    }
-
-    // Отрисовка точек
-    for (final point in points) {
-      final paint =
-          Paint()
-            ..color = _parseColor(point.color)
-            ..strokeWidth = point.thickness
-            ..style = PaintingStyle.fill;
-
-      final p = _transformPoint(point, size);
-
-      canvas.drawCircle(p, point.thickness * 2, paint);
-    }
-
-    // Отрисовка координат, если включено
-    if (showCoordinates) {
-      _drawCoordinates(canvas, size);
-    }
-  }
-
-  /// Отрисовывает координаты точек и концов линий
-  void _drawCoordinates(Canvas canvas, Size size) {
-    // Определяем размер текста в зависимости от масштаба
-    final fontSize = max(10.0, min(14.0, _scale * 3));
-
-    final textStyle = TextStyle(
-      color: Colors.black,
-      fontSize: fontSize,
-      fontWeight: FontWeight.bold,
-    );
-
-    final bgPaint =
-        Paint()
-          ..color = Colors.white.withOpacity(0.7)
-          ..style = PaintingStyle.fill;
-
-    final borderPaint =
-        Paint()
-          ..color = Colors.black
-          ..style = PaintingStyle.stroke
-          ..strokeWidth = 1.0;
-
-    // Отрисовка координат для точек
-    for (final point in points) {
-      final p = _transformPoint(point, size);
-      final text =
-          '(${point.x.toStringAsFixed(1)}, ${point.y.toStringAsFixed(1)})';
-
-      _drawCoordinateText(canvas, p, text, textStyle, bgPaint, borderPaint);
-    }
-
-    // Отрисовка координат для начала и конца линий
-    final processedPoints = <String>{};
-
-    for (final line in lines) {
-      // Для начала линии
-      final p1 = _transformPoint(line.a, size);
-      final key1 = '${line.a.x},${line.a.y}';
-
-      if (!processedPoints.contains(key1)) {
-        final text1 =
-            '(${line.a.x.toStringAsFixed(1)}, ${line.a.y.toStringAsFixed(1)})';
-        _drawCoordinateText(canvas, p1, text1, textStyle, bgPaint, borderPaint);
-        processedPoints.add(key1);
-      }
-
-      // Для конца линии
-      final p2 = _transformPoint(line.b, size);
-      final key2 = '${line.b.x},${line.b.y}';
-
-      if (!processedPoints.contains(key2)) {
-        final text2 =
-            '(${line.b.x.toStringAsFixed(1)}, ${line.b.y.toStringAsFixed(1)})';
-        _drawCoordinateText(canvas, p2, text2, textStyle, bgPaint, borderPaint);
-        processedPoints.add(key2);
-      }
-    }
-  }
-
-  /// Отрисовывает текст с координатами рядом с точкой
-  void _drawCoordinateText(
-    Canvas canvas,
-    Offset point,
-    String text,
-    TextStyle textStyle,
-    Paint bgPaint,
-    Paint borderPaint,
-  ) {
-    // Создаем текстовый спан
-    final textSpan = TextSpan(text: text, style: textStyle);
-    final textPainter = TextPainter(
-      text: textSpan,
-      textDirection: TextDirection.ltr,
-    );
-    textPainter.layout();
-
-    // Рассчитываем позицию для текста
-    final textWidth = textPainter.width;
-    final textHeight = textPainter.height;
-
-    // Смещение текста от точки
-    final offsetX = 10.0;
-    final offsetY = -textHeight / 2;
-
-    final bgRect = Rect.fromLTWH(
-      point.dx + offsetX,
-      point.dy + offsetY,
-      textWidth + 6,
-      textHeight + 4,
-    );
-
-    // Если масштаб слишком мал, рисуем линию от точки к тексту
-    if (_scale < 0.5) {
-      canvas.drawLine(
-        point,
-        Offset(bgRect.left, bgRect.center.dy),
-        borderPaint,
-      );
-    }
-
-    // Рисуем фон для текста
-    final bgRRect = RRect.fromRectAndRadius(bgRect, const Radius.circular(4));
-    canvas.drawRRect(bgRRect, bgPaint);
-    canvas.drawRRect(bgRRect, borderPaint);
-
-    // Рисуем текст
-    textPainter.paint(canvas, Offset(bgRect.left + 3, bgRect.top + 2));
-  }
-
-  /// Преобразует строку цвета в объект Color
-  Color _parseColor(String colorString) {
-    if (colorString.startsWith('#')) {
-      return Color(int.parse(colorString.substring(1), radix: 16) | 0xFF000000);
-    }
-    return Colors.black;
-  }
-
-  /// Преобразует координаты точки с учетом масштаба и смещения
-  Offset _transformPoint(Point point, Size size) {
-    return Offset(point.x * _scale + _offsetX, point.y * _scale + _offsetY);
-  }
-
-  /// Рассчитывает масштаб и смещение для оптимального отображения
-  void _calculateScaleAndOffset(Size size) {
-    // Проверяем, есть ли что отрисовывать
-    bool hasContent = lines.isNotEmpty || points.isNotEmpty;
-
-    if (!hasContent) return;
-
-    // Находим минимальные и максимальные координаты
-    double minX = double.infinity;
-    double minY = double.infinity;
-    double maxX = double.negativeInfinity;
-    double maxY = double.negativeInfinity;
-
-    // Проверяем точки в линиях
-    for (final line in lines) {
-      minX = min(minX, min(line.a.x, line.b.x));
-      minY = min(minY, min(line.a.y, line.b.y));
-      maxX = max(maxX, max(line.a.x, line.b.x));
-      maxY = max(maxY, max(line.a.y, line.b.y));
-    }
-
-    // Проверяем отдельные точки
-    for (final point in points) {
-      minX = min(minX, point.x);
-      minY = min(minY, point.y);
-      maxX = max(maxX, point.x);
-      maxY = max(maxY, point.y);
-    }
-
-    // Рассчитываем масштаб с учетом отступов
-    final width = maxX - minX;
-    final height = maxY - minY;
-
-    if (width <= 0 || height <= 0) return;
-
-    final scaleX = (size.width - 2 * _padding) / width;
-    final scaleY = (size.height - 2 * _padding) / height;
-
-    // Выбираем минимальный масштаб, чтобы все поместилось
-    _scale = min(scaleX, scaleY);
-
-    // Рассчитываем смещение для центрирования
-    _offsetX = (size.width - width * _scale) / 2 - minX * _scale;
-    _offsetY = (size.height - height * _scale) / 2 - minY * _scale;
-  }
-
-  @override
-  bool shouldRepaint(covariant _CanvasPainter oldDelegate) {
-    return oldDelegate.lines != lines ||
-        oldDelegate.points != points ||
-        oldDelegate.needsRescale != needsRescale ||
-        oldDelegate.showCoordinates != showCoordinates;
   }
 }
 

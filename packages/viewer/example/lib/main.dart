@@ -3,6 +3,7 @@ import 'package:models_ns/models_ns.dart';
 import 'package:viewer/viewer.dart';
 
 import 'coordinates_demo.dart';
+import 'figure_collection_demo.dart';
 import 'point_input_demo.dart';
 
 void main() {
@@ -110,6 +111,16 @@ class HomeScreen extends StatelessWidget {
         title: 'Два виджета с вводом точек',
         description: 'Два Viewer с разными настройками ввода точек',
         builder: (context) => const TwoViewersWithPointInputDemo(),
+      ),
+      DemoOption(
+        title: 'Коллекции фигур',
+        description: 'Viewer с различными типами фигур из FigureCollection',
+        builder: (context) => const FigureCollectionDemo(),
+      ),
+      DemoOption(
+        title: 'Два виджета с коллекциями фигур',
+        description: 'Два Viewer с разными коллекциями фигур',
+        builder: (context) => const TwoViewersWithFigureCollectionsDemo(),
       ),
     ];
 
