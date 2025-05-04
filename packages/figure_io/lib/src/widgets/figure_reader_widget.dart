@@ -2,13 +2,11 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-// Условный импорт для dart:io, который не доступен на веб-платформе
 import 'package:models_ns/models_ns.dart';
 import '../services/figure_reader.dart';
 
 // Импортируем dart:io только если не веб-платформа
-// ignore: uri_does_not_exist
-import 'dart:io' if (dart.library.js) 'dart:typed_data' as io;
+import 'dart:io' as io show File;
 
 /// Виджет для чтения фигур из JSON-файла
 class FigureReaderWidget extends StatefulWidget {
@@ -115,9 +113,14 @@ class _FigureReaderWidgetState extends State<FigureReaderWidget> {
             // Если нет байтов, но есть путь, используем его
             try {
               // Используем dart:io для создания File
-              // ignore: undefined_class
-              final dynamic file = io.File(filePath);
-              await _figureReader.readFromFile(file);
+              if (!kIsWeb) {
+                final file = io.File(filePath);
+                await _figureReader.readFromFile(file);
+              } else {
+                throw UnsupportedError(
+                  'Метод readFromFile не поддерживается на веб-платформе',
+                );
+              }
             } catch (e) {
               // Если не удалось создать File, выбрасываем исключение
               throw Exception('Не удалось открыть файл: $e');
