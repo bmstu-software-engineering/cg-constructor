@@ -64,6 +64,226 @@ class CanvasViewer with DiagnosticableTreeMixin implements Viewer {
     _draw();
   }
 
+  @override
+  void drawCollection(FigureCollection collection) {
+    // Создаем списки для хранения всех линий и точек
+    final allLines = <Line>[];
+    final allPoints = <Point>[];
+
+    // Добавляем точки из коллекции
+    allPoints.addAll(collection.points);
+
+    // Добавляем линии из коллекции
+    allLines.addAll(collection.lines);
+
+    // Преобразуем треугольники в линии
+    for (final triangle in collection.triangles) {
+      allLines.add(
+        Line(
+          a: triangle.a,
+          b: triangle.b,
+          color: triangle.color,
+          thickness: triangle.thickness,
+        ),
+      );
+      allLines.add(
+        Line(
+          a: triangle.b,
+          b: triangle.c,
+          color: triangle.color,
+          thickness: triangle.thickness,
+        ),
+      );
+      allLines.add(
+        Line(
+          a: triangle.c,
+          b: triangle.a,
+          color: triangle.color,
+          thickness: triangle.thickness,
+        ),
+      );
+    }
+
+    // Преобразуем прямоугольники в линии
+    for (final rectangle in collection.rectangles) {
+      allLines.add(
+        Line(
+          a: rectangle.topLeft,
+          b: rectangle.topRight,
+          color: rectangle.color,
+          thickness: rectangle.thickness,
+        ),
+      );
+      allLines.add(
+        Line(
+          a: rectangle.topRight,
+          b: rectangle.bottomRight,
+          color: rectangle.color,
+          thickness: rectangle.thickness,
+        ),
+      );
+      allLines.add(
+        Line(
+          a: rectangle.bottomRight,
+          b: rectangle.bottomLeft,
+          color: rectangle.color,
+          thickness: rectangle.thickness,
+        ),
+      );
+      allLines.add(
+        Line(
+          a: rectangle.bottomLeft,
+          b: rectangle.topLeft,
+          color: rectangle.color,
+          thickness: rectangle.thickness,
+        ),
+      );
+    }
+
+    // Преобразуем квадраты в линии
+    for (final square in collection.squares) {
+      final points = square.points;
+      allLines.add(
+        Line(
+          a: points[0],
+          b: points[1],
+          color: square.color,
+          thickness: square.thickness,
+        ),
+      );
+      allLines.add(
+        Line(
+          a: points[1],
+          b: points[2],
+          color: square.color,
+          thickness: square.thickness,
+        ),
+      );
+      allLines.add(
+        Line(
+          a: points[2],
+          b: points[3],
+          color: square.color,
+          thickness: square.thickness,
+        ),
+      );
+      allLines.add(
+        Line(
+          a: points[3],
+          b: points[0],
+          color: square.color,
+          thickness: square.thickness,
+        ),
+      );
+    }
+
+    // Преобразуем круги в набор линий (аппроксимация)
+    for (final circle in collection.circles) {
+      _approximateCircle(circle, allLines);
+    }
+
+    // Преобразуем эллипсы в набор линий (аппроксимация)
+    for (final ellipse in collection.ellipses) {
+      _approximateEllipse(ellipse, allLines);
+    }
+
+    // Преобразуем дуги в набор линий (аппроксимация)
+    for (final arc in collection.arcs) {
+      _approximateArc(arc, allLines);
+    }
+
+    // Отрисовываем все линии и точки
+    draw(allLines, allPoints);
+  }
+
+  /// Аппроксимирует круг набором линий
+  void _approximateCircle(Circle circle, List<Line> lines) {
+    const segments = 36; // Количество сегментов для аппроксимации
+    final angleStep = 2 * pi / segments;
+
+    for (int i = 0; i < segments; i++) {
+      final angle1 = i * angleStep;
+      final angle2 = (i + 1) * angleStep;
+
+      final p1 = Point(
+        x: circle.center.x + circle.radius * cos(angle1),
+        y: circle.center.y + circle.radius * sin(angle1),
+      );
+
+      final p2 = Point(
+        x: circle.center.x + circle.radius * cos(angle2),
+        y: circle.center.y + circle.radius * sin(angle2),
+      );
+
+      lines.add(
+        Line(a: p1, b: p2, color: circle.color, thickness: circle.thickness),
+      );
+    }
+  }
+
+  /// Аппроксимирует эллипс набором линий
+  void _approximateEllipse(Ellipse ellipse, List<Line> lines) {
+    const segments = 36; // Количество сегментов для аппроксимации
+    final angleStep = 2 * pi / segments;
+
+    for (int i = 0; i < segments; i++) {
+      final angle1 = i * angleStep;
+      final angle2 = (i + 1) * angleStep;
+
+      final p1 = Point(
+        x: ellipse.center.x + ellipse.semiMajorAxis * cos(angle1),
+        y: ellipse.center.y + ellipse.semiMinorAxis * sin(angle1),
+      );
+
+      final p2 = Point(
+        x: ellipse.center.x + ellipse.semiMajorAxis * cos(angle2),
+        y: ellipse.center.y + ellipse.semiMinorAxis * sin(angle2),
+      );
+
+      lines.add(
+        Line(a: p1, b: p2, color: ellipse.color, thickness: ellipse.thickness),
+      );
+    }
+  }
+
+  /// Аппроксимирует дугу набором линий
+  void _approximateArc(Arc arc, List<Line> lines) {
+    const segmentsPerFullCircle =
+        36; // Количество сегментов для полной окружности
+
+    // Нормализуем углы в диапазоне [0, 2π]
+    final startAngle = arc.startAngle % (2 * pi);
+    final endAngle = arc.endAngle % (2 * pi);
+
+    // Вычисляем угол дуги
+    var arcAngle = endAngle - startAngle;
+    if (arcAngle < 0) arcAngle += 2 * pi;
+
+    // Вычисляем количество сегментов для дуги
+    final segments = max(
+      1,
+      (segmentsPerFullCircle * arcAngle / (2 * pi)).round(),
+    );
+    final angleStep = arcAngle / segments;
+
+    for (int i = 0; i < segments; i++) {
+      final angle1 = startAngle + i * angleStep;
+      final angle2 = startAngle + (i + 1) * angleStep;
+
+      final p1 = Point(
+        x: arc.center.x + arc.radius * cos(angle1),
+        y: arc.center.y + arc.radius * sin(angle1),
+      );
+
+      final p2 = Point(
+        x: arc.center.x + arc.radius * cos(angle2),
+        y: arc.center.y + arc.radius * sin(angle2),
+      );
+
+      lines.add(Line(a: p1, b: p2, color: arc.color, thickness: arc.thickness));
+    }
+  }
+
   final _updateStream = StreamController.broadcast();
   void _draw() => _updateStream.add(null);
 
@@ -312,7 +532,10 @@ class _CanvasPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    if (lines.isEmpty && points.isEmpty) return;
+    // Проверяем, есть ли что отрисовывать
+    bool hasContent = lines.isNotEmpty || points.isNotEmpty;
+
+    if (!hasContent) return;
 
     if (needsRescale) {
       _calculateScaleAndOffset(size);
@@ -476,7 +699,10 @@ class _CanvasPainter extends CustomPainter {
 
   /// Рассчитывает масштаб и смещение для оптимального отображения
   void _calculateScaleAndOffset(Size size) {
-    if (lines.isEmpty && points.isEmpty) return;
+    // Проверяем, есть ли что отрисовывать
+    bool hasContent = lines.isNotEmpty || points.isNotEmpty;
+
+    if (!hasContent) return;
 
     // Находим минимальные и максимальные координаты
     double minX = double.infinity;
