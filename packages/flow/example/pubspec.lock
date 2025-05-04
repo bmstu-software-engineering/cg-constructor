@@ -248,6 +248,62 @@ packages:
       relative: true
     source: path
     version: "0.0.1"
+  lab_01_49:
+    dependency: transitive
+    description:
+      path: "../../alogrithms/packages/lab_01/lab_01_49"
+      relative: true
+    source: path
+    version: "0.0.1"
+  lab_01_50:
+    dependency: transitive
+    description:
+      path: "../../alogrithms/packages/lab_01/lab_01_50"
+      relative: true
+    source: path
+    version: "0.0.1"
+  lab_01_51:
+    dependency: transitive
+    description:
+      path: "../../alogrithms/packages/lab_01/lab_01_51"
+      relative: true
+    source: path
+    version: "0.0.1"
+  lab_01_52:
+    dependency: transitive
+    description:
+      path: "../../alogrithms/packages/lab_01/lab_01_52"
+      relative: true
+    source: path
+    version: "0.0.1"
+  lab_01_53:
+    dependency: transitive
+    description:
+      path: "../../alogrithms/packages/lab_01/lab_01_53"
+      relative: true
+    source: path
+    version: "0.0.1"
+  lab_01_54:
+    dependency: transitive
+    description:
+      path: "../../alogrithms/packages/lab_01/lab_01_54"
+      relative: true
+    source: path
+    version: "0.0.1"
+  lab_01_55:
+    dependency: transitive
+    description:
+      path: "../../alogrithms/packages/lab_01/lab_01_55"
+      relative: true
+    source: path
+    version: "0.0.1"
+  lab_01_56:
+    dependency: transitive
+    description:
+      path: "../../alogrithms/packages/lab_01/lab_01_56"
+      relative: true
+    source: path
+    version: "0.0.1"
   lab_01_common:
     dependency: transitive
     description:
@@ -319,6 +375,13 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.16.0"
+  models_data_ns:
+    dependency: transitive
+    description:
+      path: "../../alogrithms/packages/models_data_ns"
+      relative: true
+    source: path
+    version: "0.0.1"
   models_ns:
     dependency: "direct main"
     description:

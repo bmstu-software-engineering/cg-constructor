@@ -49,6 +49,22 @@ dependencies:
     path: ./packages/lab_01/lab_01_47  
   lab_01_48:
     path: ./packages/lab_01/lab_01_48  
+  lab_01_49:
+    path: ./packages/lab_01/lab_01_49 
+  lab_01_50:
+    path: ./packages/lab_01/lab_01_50  
+  lab_01_51:
+    path: ./packages/lab_01/lab_01_51  
+  lab_01_52:
+    path: ./packages/lab_01/lab_01_52  
+  lab_01_53:
+    path: ./packages/lab_01/lab_01_53  
+  lab_01_54:
+    path: ./packages/lab_01/lab_01_54  
+  lab_01_55:
+    path: ./packages/lab_01/lab_01_55  
+  lab_01_56:
+    path: ./packages/lab_01/lab_01_56
   rxdart: ^0.28.0
   models_data_ns: 
     path: ./packages/models_data_ns
