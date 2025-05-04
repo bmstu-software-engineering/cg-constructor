@@ -76,3 +76,13 @@ class ViewerResultModel implements ResultModel {
     this.lines = const [],
   });
 }
+
+class ViewerResultModelV2 implements ResultModel {
+  final FigureCollection figureCollection;
+  final String? markdownInfo;
+
+  const ViewerResultModelV2({
+    required this.figureCollection,
+    this.markdownInfo,
+  });
+}

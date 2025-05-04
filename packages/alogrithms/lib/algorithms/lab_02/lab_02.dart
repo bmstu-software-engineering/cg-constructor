@@ -1,7 +1,6 @@
 import 'package:alogrithms/alogrithms.dart';
 import 'package:figure_io/figure_io.dart';
 import 'package:flutter/material.dart';
-import 'package:models_data_ns/models_data_ns.dart';
 
 enum _AlgorithmVariant {
   move,
