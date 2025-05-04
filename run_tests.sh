@@ -33,7 +33,15 @@ run_tests_in_package() {
         # Запускаем тесты и перенаправляем вывод в лог-файл
         echo "Выполнение тестов в пакете $package..." >> "$log_file"
         fvm flutter pub run build_runner build --delete-conflicting-outputs >> "$log_file" 2>&1
-        fvm flutter test -r failures-only --no-pub >> "$log_file" 2>&1
+        
+        # Проверяем наличие скрипта run_tests.sh и запускаем его, если он существует
+        if [ -f "run_tests.sh" ]; then
+            echo "Запуск run_tests.sh в пакете $package..." >> "$log_file"
+            chmod +x run_tests.sh
+            ./run_tests.sh >> "$log_file" 2>&1
+        else
+            fvm flutter test -r failures-only --no-pub >> "$log_file" 2>&1
+        fi
         
         # Сохраняем код возврата
         local exit_code=$?
@@ -99,12 +107,16 @@ for i in "${!pids[@]}"; do
         exit_code=1
     fi
     
-    # Всегда выводим содержимое лог-файла
-    echo "Результаты тестов для пакета $package:"
-    if [ -f "$TEMP_DIR/$package.log" ]; then
-        cat "$TEMP_DIR/$package.log"
+    # Выводим содержимое лог-файла только если тесты завершились с ошибкой
+    if [ "$exit_code" -ne 0 ]; then
+        echo "Результаты тестов для пакета $package:"
+        if [ -f "$TEMP_DIR/$package.log" ]; then
+            cat "$TEMP_DIR/$package.log"
+        else
+            echo "Лог-файл для пакета $package не найден"
+        fi
     else
-        echo "Лог-файл для пакета $package не найден"
+        echo "Тесты для пакета $package успешно пройдены."
     fi
     
     # Обновляем флаг ошибок
